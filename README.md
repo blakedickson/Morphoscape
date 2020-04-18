@@ -3,5 +3,6 @@ Morphoscape: An R package for the contruction and analysis of adaptive landscape
 
 To install morphoscape from GitHub you will need to install the devtools package and run install_github("blakedickson/Morphospace")
 
-install.packages("devtools")
+<pre><code>install.packages("devtools")
 devtools::install_github("blakedickson/Morphospace")
+</code></pre>
