@@ -90,7 +90,7 @@ plot.surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
               axes = axes,
               ...)
         points(x = x, y = y, cex = (Csize/max(Csize))+1 ,
-               pch = pch, bg = pt.col,
+               pch = pch, bg = pt.col)
 
     }
     if (method == "poly"){
