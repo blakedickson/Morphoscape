@@ -472,3 +472,61 @@ trans.surface <- function(X, Y, binary = F) {
 
 
 
+#' Calculate the best model fits
+#'
+#' @param X A weights matrix generated from search.w.exhaustive()
+#' @param sortby c("z", "lik", "dis"). Which optimization vector to sort by.
+#'   Defaults to "lik"
+#' @param percentile percentile (alpha) cuttoff. Defaults to 0.99 (0.01)
+#' @param method method by which to calculate top fits. Method = "quantile"
+#'   simply caclulates the average weights from top percentile set by the user.
+#'   Method = "chi-squared" calculates the best significant models based on the
+#'   log-likelihood ratio distribution.
+#' @author Blake Dickson and Katrina Jones
+#' @return A list containing wn the best averaged model weights, wn.se the
+#'   standard error, wn.sd te standard deviation and wn.range, the range of top
+#'   wn values
+#' @export
+#'
+#' @examples
+calc.best.wn <- function(X, sortby = "lik", percentile = 0.99, method=c("quantile")){
+    X <- X[ order( X[ , sortby], decreasing = T), ]
+    if(method=="quantile"){
+        X.top <- X[ X[ , sortby] > quantile( X[, sortby], probs = percentile) , ]
+    }
+    if(method=="chi-squared"){
+        critval <- qchisq(1 - percentile, 1)
+        x <- ( -2*( X$lik - X$lik[1]) )
+        X.top <- X[ 1:length( which( x < critval) ), ]
+    }
+    wn <- colMeans( X.top[, -match(c("z", "lik", "dis"), colnames(X))] )
+    wn.se <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, plotrix::std.error)
+    wn.sd <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, sd)
+    wn.range <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, range)
+    return(list(wn=wn, wn.se=wn.se, wn.sd=wn.sd, wn.range=wn.range))
+}
+
+
+
+#' Pairwise significance testing between group model fits
+#'
+#' @param X1,X2 Dataframe containing Wn model fits for two groups  
+#' @param p.val 
+#'
+#' @return List containing p.values and matching weights
+#' @author Katrina Jones
+#' @export
+#'
+#' @examples
+lscp.pairwise<-function(X1, X2, p.val = 0.99){
+    #get top 1% based on likelihood
+    besta<-grpa[order(grpa$lik,decreasing = T),][1:round(nrow(grpa)*0.01),]
+    bestb<-grpb[order(grpb$lik,decreasing = T),][1:round(nrow(grpb)*0.01),]
+    #Check for matching models
+    m<-match(besta$X,bestb$X)
+    n.match<-length(m[!is.na(m)])
+    p.match<- n.match/length(m)
+    return(list(n.match= n.match, p.val=p.match, matching=besta[na.omit(m),]))
+}
+
+
