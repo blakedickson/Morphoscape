@@ -111,3 +111,6 @@ euc.dists <- function(X1, X2) {
   mean.dist <- mean(min.dists)
   return(list(dists = dists, min.distance = min.dists, mean.distance = mean.dist))
 }
+
+
+
