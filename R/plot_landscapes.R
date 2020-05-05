@@ -63,7 +63,7 @@ plot.image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can
 #' @param pt.col set point colour.
 #' @param ... other parameters to pass onto plot()
 #'
-#' @export plot.surf,plot
+#' @export
 #' 
 #' @examples X
 plot.surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nlevels=40,points=NULL,tree = NULL, axes=T,
