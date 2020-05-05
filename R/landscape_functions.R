@@ -116,7 +116,7 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
         fn.surf <- list(poly = poly, surface = poly.surf)
         # attr(fn.surf,"Class") <- "fn.surf"
         
-        return(list(poly = poly, surface = poly.surf))
+        return(fn.surf)
     }
 
     ### ADD CLASS AND S3 METHOPDS FOR PLOTTING
@@ -126,7 +126,7 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
         return(Kr)
 
     }
-
+    return(list(poly = poly, surface = poly.surf))
 }
 
 
