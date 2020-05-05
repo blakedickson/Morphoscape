@@ -112,6 +112,7 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
         poly.surf<-trmat(poly, range[1,1], range[1,2],
                          range[2,1], range[2,2], npoints) # evaluate grid points over surface
         poly.surf$z <- scale.z(poly.surf$z)
+        class(poly.surf) <- "surf"
         return(list(poly = poly, surface = poly.surf))
     }
 
@@ -197,7 +198,9 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
     z <- (zraw - min(zraw))
     z <- z / max(z)
 
-    adap.surface <- list(surface = list(x = x, y = y, z = z),
+    surface <- list(x = x, y = y, z = z)
+    class(surface) <- "surf"
+    adap.surface <- list(surface = surface,
                          zraw = zraw,model=list(Fn=Fn,wn=wn))
     attr(adap.surface, "Class") <- "adap.lscp"
 
@@ -458,7 +461,7 @@ sum.surface <- function(landscapes) {
     }
     lscp.sum <- Reduce("+", L)
     L <- list(x = landscapes[[1]]$surface$x, y = landscapes[[1]]$surface$y, z = lscp.sum)
-    class(L) <- "surface"
+    class(L) <- "surf"
     return(L)
 }
 
@@ -480,7 +483,7 @@ trans.surface <- function(X, Y, binary = F) {
         bn <- L$surface$z > 1
         L$surface$z[bn] <- 1
     }
-    class(L) <- "surface"
+    class(L) <- "surf"
     return(L)
 }
 
