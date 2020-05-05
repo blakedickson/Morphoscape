@@ -4,7 +4,7 @@
 \alias{Pareto}
 \title{Calculate pareto front between two landscapes}
 \usage{
-Pareto(surf.1, surf.2, plot = F, a = NULL)
+Pareto(surf.1, surf.2, plot = F, a = NULL, ...)
 }
 \arguments{
 \item{surf.1, surf2}{surface objects}
@@ -12,6 +12,8 @@ Pareto(surf.1, surf.2, plot = F, a = NULL)
 \item{plot}{logical, plot pareto front}
 
 \item{a}{sequence from 1-0 to calculate the pareto transtion}
+
+\item{...}{additional parameters for plot.surf}
 }
 \value{
 a list containing the pareto transition
