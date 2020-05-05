@@ -4,7 +4,7 @@
 \alias{Pareto}
 \title{Calculate pareto front between two landscapes}
 \usage{
-Pareto(surf.1, surf.2, plot = F, a = NULL, ...)
+Pareto(surf.1, surf.2, plot = F, a = NULL, smooth = "spline", ...)
 }
 \arguments{
 \item{surf.1, surf2}{surface objects}
