@@ -112,11 +112,11 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
         poly.surf<-trmat(poly, range[1,1], range[1,2],
                          range[2,1], range[2,2], npoints) # evaluate grid points over surface
         poly.surf$z <- scale.z(poly.surf$z)
-        # attr(poly.surf, "Class") <- "surf"
+        attr(poly.surf, "Class") <- "surf"
         fn.surf <- list(poly = poly, surface = poly.surf)
-        attr(fn.surf,"Class") <- "fn.surf"
+        # attr(fn.surf,"Class") <- "fn.surf"
         
-        return(fn.surf)
+        return(list(poly = poly, surface = poly.surf))
     }
 
     ### ADD CLASS AND S3 METHOPDS FOR PLOTTING
