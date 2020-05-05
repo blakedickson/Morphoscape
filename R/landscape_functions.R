@@ -112,7 +112,7 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
         poly.surf<-trmat(poly, range[1,1], range[1,2],
                          range[2,1], range[2,2], npoints) # evaluate grid points over surface
         poly.surf$z <- scale.z(poly.surf$z)
-        attr(poly.surf, "Class") <- "surf"
+        # attr(poly.surf, "Class") <- "surf"
         fn.surf <- list(poly = poly, surface = poly.surf)
         attr(fn.surf,"Class") <- "fn.surf"
         
@@ -152,7 +152,7 @@ multi.fnc.surface <- function(X, method = "poly", npoints = NULL,...){
                                        fnc.name = names(X)[l],...)
     }
     names(multi.surf) = names(X)
-    attr(multi.surf,"Class") <- "multi.Fnc.surf"
+    # attr(multi.surf,"Class") <- "multi.Fnc.surf"
     return(multi.surf)
 }
 
