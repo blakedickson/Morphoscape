@@ -374,12 +374,15 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
 
 #' Calculate pareto front between two landscapes
 #'
-#' @param surf.1,surf2 surface objects 
+#' @param surf.1,surf2 surface objects
 #' @param plot logical, plot pareto front
 #' @param a sequence from 1-0 to calculate the pareto transtion
 #' @param ... additional parameters for plot.surf
+#' @param smooth optional c("spline", "kernel"), determines which smoothing
+#'   method to use. The "spline" method will fail if mulitple values of Y exist
+#'   for a given X, in which case use "kernel"
 #'
-#' @return a list containing the pareto transition 
+#' @return a list containing the pareto transition
 #' @export
 #'
 #' @examples X
