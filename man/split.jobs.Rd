@@ -5,9 +5,15 @@
 \title{Splits a weights dataframe into a number of jobs to be computed separately}
 \usage{
 \method{split}{jobs}(weights, njobs, dir = NULL)
+
+\method{split}{jobs}(weights, njobs, dir = NULL)
 }
 \arguments{
-\item{njobs}{The number of jobs to split into}
+\item{weights}{}
+
+\item{njobs}{}
+
+\item{dir}{}
 
 \item{weights.df}{A dataframe of weight combinations to split.
 Can be generated from generate_weights}
@@ -19,9 +25,13 @@ Defaults to FALSE}
 }
 \value{
 Writes njobs number of job files to be computed separatley
+
+
 }
 \description{
 Splits a weights dataframe into a number of jobs to be computed separately
+
+Title
 }
 \examples{
 X X

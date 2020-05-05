@@ -112,6 +112,16 @@ reduce_ans <- function(ans.dir, sortby = c("z","lik","dist")){
 }
 
 
+#' Title
+#'
+#' @param ans.dir 
+#' @param result.dir 
+#' @param sortby 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 reduce_dir <- function(ans.dir, result.dir, sortby = c("z","lik","dist")){
 
   unlink(result.dir, recursive = T)
@@ -134,6 +144,16 @@ reduce_dir <- function(ans.dir, result.dir, sortby = c("z","lik","dist")){
 
 }
 
+#' Title
+#'
+#' @param weights 
+#' @param njobs 
+#' @param dir 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 split.jobs <- function(weights, njobs, dir = NULL){
 
   to <- floor(seq(0, nrow(weights), length.out = njobs+1))
@@ -163,6 +183,19 @@ split.jobs <- function(weights, njobs, dir = NULL){
 
 }
 
+#' Title
+#'
+#' @param Fn.surfaces 
+#' @param morphospace 
+#' @param dir 
+#' @param perms 
+#' @param step 
+#' @param njobs 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 init.QTM.cluster <- function(Fn.surfaces, morphospace, dir, perms = NULL, step = NULL, njobs){
 
   if(!dir.exists(dir)){
