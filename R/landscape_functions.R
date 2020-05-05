@@ -112,18 +112,20 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
         poly.surf<-trmat(poly, range[1,1], range[1,2],
                          range[2,1], range[2,2], npoints) # evaluate grid points over surface
         poly.surf$z <- scale.z(poly.surf$z)
-        class(poly.surf) <- "surf"
-        return(list(poly = poly, surface = poly.surf))
+        attr(poly.surf, "Class") <- "surf"
+        fn.surf <- list(poly = poly, surface = poly.surf)
+        attr(fn.surf,"Class") <- "fn.surf"
+        
+        return(fn.surf)
     }
 
-
+    ### ADD CLASS AND S3 METHOPDS FOR PLOTTING
     if (method == "kriging"){
-        Kr <- kriging(x = x, y = y, response =z)
+        Kr <- kriging(x = x, y = y, response = z)
+        
         return(Kr)
 
     }
-
-    return(list(poly = poly, surface = poly.surf))
 
 }
 
@@ -199,7 +201,8 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
     z <- z / max(z)
 
     surface <- list(x = x, y = y, z = z)
-    class(surface) <- "surf"
+    attr(surface, "Class") <- "surf"
+    
     adap.surface <- list(surface = surface,
                          zraw = zraw,model=list(Fn=Fn,wn=wn))
     attr(adap.surface, "Class") <- "adap.lscp"
