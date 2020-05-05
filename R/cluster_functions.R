@@ -11,7 +11,7 @@
 #' @return Writes njobs number of job files to be computed separatley
 #' @export
 #'
-#' @examples
+#' @examples X X
 split.jobs <- function(weights, njobs, dir = NULL){
 
   to <- floor(seq(0, nrow(weights), length.out = njobs+1))
@@ -90,7 +90,7 @@ loadRData <- function(fileName){
 #' @return returns a combined matrix of all computed weight combinations
 #' @export
 #'
-#' @examples
+#' @examples X
 reduce_ans <- function(ans.dir, sortby = c("z","lik","dist")){
   ls <- list.files(ans.dir)
   ans <- NULL

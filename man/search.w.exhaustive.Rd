@@ -6,31 +6,26 @@
 morphospace}
 \usage{
 search.w.exhaustive(
+  step = NULL,
   Zprime,
   Fn,
-  weights.df = NULL,
-  step = NULL,
-  xmar = xmar,
-  ymar = ymar,
   Cluster = F,
   method = c("mean", "sum"),
-  optimum = c("absolute")
+  optimum = c("absolute"),
+  xmar = xmar,
+  ymar = ymar,
+  weights.df = NULL
 )
 }
 \arguments{
-\item{Zprime}{Numeric vector of length=2, or Nx2 matrix containing x,y
-coordiates to optimize for}
-
-\item{Fn}{A multi.fnc.surface list containing traits to model for}
-
-\item{weights.df}{An optional matrix containing all possible combinations of
-wn given n number of traits.}
-
 \item{step}{Optional numeric. The degree by which to vary wn by. Required if
 weights.df is not provided. Smaller step sizes require exponentially more
  computation time.}
 
-\item{xmar, ymar}{Numeric vector containing min/max margins for morphospace}
+\item{Zprime}{Numeric vector of length=2, or Nx2 matrix containing x,y
+coordiates to optimize for}
+
+\item{Fn}{A multi.fnc.surface list containing traits to model for}
 
 \item{Cluster}{logical. Split computation across multiple machines.
 Currently not working}
@@ -42,6 +37,11 @@ Zprime coordintes are provided. Both produce similar results, but have
 \item{optimum}{Criteria to optimize for and sort results by. Currently only
 "absolute" height on the landscape is supported, though all optimization
 metrics are returned. See details.}
+
+\item{xmar, ymar}{Numeric vector containing min/max margins for morphospace}
+
+\item{weights.df}{An optional matrix containing all possible combinations of
+wn given n number of traits.}
 }
 \value{
 A matrix containing three optimization metrics for all combinations
@@ -54,4 +54,7 @@ morphospace
 }
 \details{
 
+}
+\examples{
+X
 }

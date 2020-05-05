@@ -5,18 +5,25 @@
 \title{Produces a 3D polynomial surface of a single functional dataframe.
     Useful for testing and checking data}
 \usage{
-fnc.surface(X, npoly, npoints = NULL, fnc.name = NULL)
+fnc.surface(
+  X,
+  method = "poly",
+  npoints = NULL,
+  fnc.name = NULL,
+  range = NULL,
+  ...
+)
 }
 \arguments{
 \item{X}{An x,y,z funtional dataframe produced by fnc_dataframe}
-
-\item{npoly}{Numeric. Determines the degree of polynomial to apply to the
-surface. Usually 3rd order polynomials produce the best fit}
 
 \item{npoints}{Numeric. Optional argument to up or downsample the number x,y
 grid points. Defaults to the number of observations in X}
 
 \item{fnc.name}{Optional string to label the functional surface}
+
+\item{npoly}{Numeric. Determines the degree of polynomial to apply to the
+surface. Usually 3rd order polynomials produce the best fit}
 }
 \value{
 Returns a list of polynomial surface objects:
@@ -27,4 +34,7 @@ Returns a list of polynomial surface objects:
 \description{
 Produces a 3D polynomial surface of a single functional dataframe.
     Useful for testing and checking data
+}
+\examples{
+X
 }

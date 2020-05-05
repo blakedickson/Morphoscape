@@ -5,7 +5,7 @@
 #'   or the user can provide separate xyz vectors
 #' @param ... parameters to pass onto image()
 #'
-#' @examples
+#' @examples X
 plot.image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can be an xyz dataframe (such as from fnc.df), or the user can provide separate xyz vectors
     if (is.vector(x)){
         X <- data.frame(x,y,z)
@@ -64,7 +64,7 @@ plot.image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can
 #' @param ... other parameters to pass onto plot()
 #'
 #'
-#' @examples
+#' @examples X
 plot.surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nlevels=40,points=NULL,tree = NULL, axes=T,
                       node.points = NULL, max.point=T, palette=viridis, box=F,
                       pch = 21, pt.col= NULL, ...){

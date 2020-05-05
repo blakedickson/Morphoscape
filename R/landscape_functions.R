@@ -10,7 +10,7 @@
 #'     morphospace
 #' @param z A Numeric vector or matrix containing covariate observations corresponding to
 #'     x,y coordinates. Can contain more than one covariate
-#' @param row.names
+#' @param row.names row names
 #' @param func.names An optional string containing the names for traits given
 #'     in z
 #' @param array An optional logical argument to return a 3D array rather than a
@@ -24,7 +24,7 @@
 #'     labelled by 'func.names'
 #' @export
 #'
-#' @examples
+#' @examples X
 fnc.dataframe <- function(x, y, z, row.names, func.names=NULL, array = F, scale = T){
     z <- as.matrix(z)
 
@@ -80,7 +80,7 @@ fnc.dataframe <- function(x, y, z, row.names, func.names=NULL, array = F, scale 
 #'     surface: the polynomial surface fit to X
 #' @export
 #'
-#' @examples
+#' @examples X
 fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, range = NULL, ...){
     X <- as.matrix(X)
 
@@ -140,7 +140,7 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
 #'     functional surfaces. See fnc.surface for details
 #' @export
 #'
-#' @examples
+#' @examples X
 multi.fnc.surface <- function(X, method = "poly", npoints = NULL,...){
 
     multi.surf <- list()
@@ -171,7 +171,7 @@ multi.fnc.surface <- function(X, method = "poly", npoints = NULL,...){
 #'   landscape
 #' @export
 #'
-#' @examples
+#' @examples X
 adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
 
     if(length(Fn[[1]]) == 3) {
@@ -220,7 +220,7 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples X
 generate.weights <- function(step, nvar, varnames = NULL, time.est = F,
                              verbose = T, ...) {
     n = 1/step
@@ -252,7 +252,7 @@ generate.weights <- function(step, nvar, varnames = NULL, time.est = F,
 #' @return Returns an estimate time
 #' @export
 #'
-#' @examples
+#' @examples X
 time.est <- function(num.perm, nvar, Fn, xmar, ymar) {
 
     if (length(Fn[[1]]) == 3) {
@@ -307,7 +307,7 @@ time.est <- function(num.perm, nvar, Fn, xmar, ymar) {
 #' @export
 #' @details
 #'
-#' @examples
+#' @examples X
 search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
                                 method = c("mean","sum"),
                                 optimum = c("absolute"),
@@ -371,17 +371,17 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
     return(weights.df)
 }
 
-#' Calculates a pareto front between two adaptive surfaces.
-#'   Still under development
+
+#' Calculate pareto front between two landscapes
 #'
-#' @param surf.1,surf.2 adap.surface objects
-#' @param plot logical. plot pareto front?
-#' @param a
+#' @param surf.1,surf2 surface objects 
+#' @param plot logical, plot pareto front
+#' @param a sequence from 1-0 to calculate the pareto transtion
 #'
-#' @return
+#' @return a list containing the pareto transition 
 #' @export
 #'
-#' @examples
+#' @examples X
 Pareto <- function(surf.1,surf.2,plot=F,a=NULL){
 
     if (is.null(a)){
@@ -434,7 +434,7 @@ Pareto <- function(surf.1,surf.2,plot=F,a=NULL){
 #' @return Returns a combined adpative landscape
 #' @export
 #'
-#' @examples
+#' @examples X
 sum.surface <- function(landscapes) {
     L <- list()
     for (l in 1:length(landscapes)) {
@@ -455,7 +455,7 @@ sum.surface <- function(landscapes) {
 #' @return Returns a $surface object
 #' @export
 #'
-#' @examples
+#' @examples X
 trans.surface <- function(X, Y, binary = F) {
     L <- X
     L$surface$z <- (X$surface$z + 1)/(Y$surface$z + 1)
@@ -488,7 +488,7 @@ trans.surface <- function(X, Y, binary = F) {
 #'   wn values
 #' @export
 #'
-#' @examples
+#' @examples X
 calc.best.wn <- function(X, sortby = "lik", percentile = 0.99, method=c("quantile")){
     X <- X[ order( X[ , sortby], decreasing = T), ]
     if(method=="quantile"){
@@ -517,7 +517,7 @@ calc.best.wn <- function(X, sortby = "lik", percentile = 0.99, method=c("quantil
 #' @author Katrina Jones
 #' @export
 #'
-#' @examples
+#' @examples X
 lscp.pairwise<-function(X1, X2, p.val = 0.99){
     #get top 1% based on likelihood
     besta<-grpa[order(grpa$lik,decreasing = T),][1:round(nrow(grpa)*0.01),]

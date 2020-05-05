@@ -16,7 +16,7 @@
 #'  the landscape and a cont.mapped tree object
 #' @export
 #'
-#' @examples
+#' @examples X
 surfaceAlongTree <- function(tree, tip.scores, node.scores = NULL, landscape,
                              palette.cols = NULL, plot = T, palette = NULL, binary=F){
     ### landscpe can either be a functio0nal landscape, adaptive landsape or a dataframe with XYZ coordinates
@@ -88,7 +88,7 @@ surfaceAlongTree <- function(tree, tip.scores, node.scores = NULL, landscape,
 #' @return returns node pc scores
 #' @export
 #'
-#' @examples
+#' @examples X
 anc_scores <- function(scores, tree, drop = F) {
 
     if (!isTRUE(tree$tip.label %in% row.names(scores))) {

@@ -5,16 +5,16 @@
 \title{Produces a list of polynomial surface fits from multiple functional
     dataframes. Is essentailly an apply wrapper for fnc.surface}
 \usage{
-multi.fnc.surface(X, npoly = 3, npoints = NULL)
+multi.fnc.surface(X, method = "poly", npoints = NULL, ...)
 }
 \arguments{
 \item{X}{A list of x,y,z functonal dataframes from 'fnc_dataframe'}
 
-\item{npoly}{Numeric. Determines the degree of polynomial to apply to the
-surface. Usually 3rd order polynomials produce the best fit}
-
 \item{npoints}{Numeric. Optional argument to up or downsample the number x,y
 grid points. Defaults to the number of observations in X}
+
+\item{npoly}{Numeric. Determines the degree of polynomial to apply to the
+surface. Usually 3rd order polynomials produce the best fit}
 }
 \value{
 Returns a multi.fnc.surface object. A list containing N number of
@@ -23,4 +23,7 @@ Returns a multi.fnc.surface object. A list containing N number of
 \description{
 Produces a list of polynomial surface fits from multiple functional
     dataframes. Is essentailly an apply wrapper for fnc.surface
+}
+\examples{
+X
 }

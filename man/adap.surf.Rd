@@ -27,3 +27,6 @@ A polynomial function and surface defining the summed adaptive
 Calculate combined surface calculate W on the adaptive landscape
  W = w1*F1 + w2*F2 (Polly et al, 2016)
 }
+\examples{
+X
+}
