@@ -13,6 +13,10 @@ Pareto(surf.1, surf.2, plot = F, a = NULL, smooth = "spline", ...)
 
 \item{a}{sequence from 1-0 to calculate the pareto transtion}
 
+\item{smooth}{optional c("spline", "kernel"), determines which smoothing
+method to use. The "spline" method will fail if mulitple values of Y exist
+for a given X, in which case use "kernel"}
+
 \item{...}{additional parameters for plot.surf}
 }
 \value{

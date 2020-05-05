@@ -3,6 +3,7 @@
 S3method(split,jobs)
 S3method(sum,surface)
 S3method(time,est)
+export("plot.surf,plot")
 export(Pareto)
 export(adap.surf)
 export(anc_scores)
