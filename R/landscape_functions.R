@@ -377,12 +377,13 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
 #' @param surf.1,surf2 surface objects 
 #' @param plot logical, plot pareto front
 #' @param a sequence from 1-0 to calculate the pareto transtion
+#' @param ... additional parameters for plot.surf
 #'
 #' @return a list containing the pareto transition 
 #' @export
 #'
 #' @examples X
-Pareto <- function(surf.1,surf.2,plot=F,a=NULL){
+Pareto <- function(surf.1,surf.2,plot=F,a=NULL, ...){
 
     if (is.null(a)){
         a <- seq(1,0, by= -0.025)
@@ -400,7 +401,7 @@ Pareto <- function(surf.1,surf.2,plot=F,a=NULL){
         comb$z <- surf.1$z*a[i] + surf.2$z*b[i]
         if (plot){
           dev.off()
-          plot.surf(comb,main="Combined",PCA=gPCA.MST)
+          plot.surf(comb,main="Combined",...)
 
         }
 
