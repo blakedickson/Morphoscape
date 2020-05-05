@@ -19,3 +19,6 @@ reduce_dir(ans.dir, result.dir, sortby = c("z", "lik", "dist"))
 \description{
 Title
 }
+\examples{
+X
+}

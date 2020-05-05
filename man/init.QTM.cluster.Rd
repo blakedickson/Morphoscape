@@ -32,3 +32,6 @@ init.QTM.cluster(
 \description{
 Title
 }
+\examples{
+X
+}

@@ -121,7 +121,7 @@ reduce_ans <- function(ans.dir, sortby = c("z","lik","dist")){
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples X
 reduce_dir <- function(ans.dir, result.dir, sortby = c("z","lik","dist")){
 
   unlink(result.dir, recursive = T)
@@ -153,7 +153,7 @@ reduce_dir <- function(ans.dir, result.dir, sortby = c("z","lik","dist")){
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples X
 split.jobs <- function(weights, njobs, dir = NULL){
 
   to <- floor(seq(0, nrow(weights), length.out = njobs+1))
@@ -195,7 +195,7 @@ split.jobs <- function(weights, njobs, dir = NULL){
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples X
 init.QTM.cluster <- function(Fn.surfaces, morphospace, dir, perms = NULL, step = NULL, njobs){
 
   if(!dir.exists(dir)){

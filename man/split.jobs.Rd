@@ -35,4 +35,5 @@ Title
 }
 \examples{
 X X
+X
 }

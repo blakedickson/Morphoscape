@@ -4,7 +4,7 @@
 
 Fnc.surf <- function(perf.surface, Zprime) {
   Zprime <- matrix(Zprime, ncol = 2)
-  pred <- predict(perf.surface, x = Zprime[, 1], y = Zprime[, 2])
+  pred <- predict.trls(perf.surface, x = Zprime[, 1], y = Zprime[, 2])
   return(pred)
 }
 
@@ -84,6 +84,15 @@ lik_Zprime <- function(wn, Zprime, Fn, xmar = xmar, ymar = ymar, method = c("mea
   return(X)
 }
 
+#' Title
+#'
+#' @param surface 
+#' @param Zprime 
+#'
+#' @return
+#' @export
+#'
+#' @examples X
 predict.surf <- function(surface, Zprime) {
   X <- expand.grid(surface$x, surface$y)
   colnames(X) <- c("x", "y")
