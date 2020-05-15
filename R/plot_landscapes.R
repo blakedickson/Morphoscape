@@ -154,7 +154,7 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
     }
 }
 
-plot.adpt <- function(x, ...){
+plot_adpt <- function(x, ...){
     
 }
 

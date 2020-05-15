@@ -241,7 +241,7 @@ generate.weights <- function(step, nvar, varnames = NULL, time.est = F,
     if (time.est) {
         xmar<-range(Fn[[1]][[1]]$x)
         ymar<-range(Fn[[1]][[1]]$y)
-        time.est(num.perm = nrow(weights), nvar = nvar, Fn = Fn,
+        time_est(num.perm = nrow(weights), nvar = nvar, Fn = Fn,
                  xmar = xmar, ymar = ymar)
     }
 
@@ -259,7 +259,7 @@ generate.weights <- function(step, nvar, varnames = NULL, time.est = F,
 #' @export
 #'
 #' @examples X
-time.est <- function(num.perm, nvar, Fn, xmar, ymar) {
+time_est <- function(num.perm, nvar, Fn, xmar, ymar) {
 
     if (length(Fn[[1]]) == 3) {
         Fn.tmp <- list()
@@ -457,7 +457,7 @@ pareto <- function(surf.1,surf.2,plot=F,a=NULL, smooth = c("spline","kernel"), .
 #' @export
 #'
 #' @examples X
-sum.surface <- function(landscapes) {
+sum_surface <- function(landscapes) {
     L <- list()
     for (l in 1:length(landscapes)) {
         L[[l]] <- landscapes[[l]]$surface$z
