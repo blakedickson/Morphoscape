@@ -6,7 +6,7 @@
 #' @param ... parameters to pass onto image()
 #'
 #' @examples X
-plot.image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can be an xyz dataframe (such as from fnc.df), or the user can provide separate xyz vectors
+plot_image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can be an xyz dataframe (such as from fnc.df), or the user can provide separate xyz vectors
     if (is.vector(x)){
         X <- data.frame(x,y,z)
     } else{

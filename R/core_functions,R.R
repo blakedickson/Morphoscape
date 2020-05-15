@@ -93,7 +93,7 @@ lik_Zprime <- function(wn, Zprime, Fn, xmar = xmar, ymar = ymar, method = c("mea
 #' @export
 #'
 #' @examples X
-predict.surf <- function(surface, Zprime) {
+predict_surf <- function(surface, Zprime) {
   X <- expand.grid(surface$x, surface$y)
   colnames(X) <- c("x", "y")
   z <- as.vector(surface$z)

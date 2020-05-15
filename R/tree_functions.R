@@ -38,9 +38,9 @@ surfaceAlongTree <- function(tree, tip.scores, node.scores = NULL, landscape,
         node.scores <- anc_scores(tip.scores, tree)
     }
 
-    tip.pred <- predict.surf(surface = surface, Zprime = tip.scores)$pred
+    tip.pred <- predict_surf(surface = surface, Zprime = tip.scores)$pred
     names(tip.pred) <- row.names(tip.scores)
-    node.pred <- predict.surf(surface = surface, Zprime = node.scores)$pred
+    node.pred <- predict_surf(surface = surface, Zprime = node.scores)$pred
     names(node.pred) <- row.names(node.scores)
 
 
