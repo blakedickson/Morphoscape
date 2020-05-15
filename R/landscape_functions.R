@@ -380,7 +380,7 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
 
 #' Calculate pareto front between two landscapes
 #'
-#' @param surf.1,surf2 surface objects
+#' @param surf.1,surf.2 surface objects
 #' @param plot logical, plot pareto front
 #' @param a sequence from 1-0 to calculate the pareto transtion
 #' @param ... additional parameters for plot.surf
@@ -392,7 +392,7 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
 #' @export
 #'
 #' @examples X
-Pareto <- function(surf.1,surf.2,plot=F,a=NULL, smooth = "spline", ...){
+pareto <- function(surf.1,surf.2,plot=F,a=NULL, smooth = c("spline","kernel"), ...){
 
     if (is.null(a)){
         a <- seq(1,0, by= -0.025)
@@ -410,7 +410,7 @@ Pareto <- function(surf.1,surf.2,plot=F,a=NULL, smooth = "spline", ...){
         comb$z <- surf.1$z*a[i] + surf.2$z*b[i]
         if (plot){
           dev.off()
-          plot.surf(comb,main="Combined",...)
+          plot_surf(comb,main="Combined",...)
 
         }
 
