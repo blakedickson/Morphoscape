@@ -63,8 +63,10 @@ fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
         }
 
         names(fnc.array) <- func.names
+        attr(fnc.array, "class") <- "fnc.df"
     }
 
+    
     return(fnc.array)
 }
 
@@ -140,7 +142,7 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
 #' Produces a list of polynomial surface fits from multiple functional
 #'     dataframes. Is essentailly an apply wrapper for fnc.surface
 #'
-#' @param X A list of x,y,z functonal dataframes from 'fnc_dataframe'
+#' @param X A data table of XY coordinates and Z trait values, or a list of x,y,z functonal dataframes from 'fnc.dataframe'
 #' @param ... Paramaters to pass onto fnc.surface and plot         
 #'
 #' @return Returns a multi.fnc.surface object. A list containing N number of
@@ -150,6 +152,10 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
 #' @examples X
 multi.fnc.surface <- function(X, ...){
 
+    if( class (X) != "fnc.df"){
+        X <- fnc.dataframe(X)
+    }
+    
     multi.surf <- list()
     for(l in 1:length(X)){
         multi.surf[[l]] <- fnc.surface(X[[l]],
