@@ -6,10 +6,7 @@
 #' Coerces XY coordinate data and covariate data into a list, or optionally into
 #'    a 3D array
 #'
-#' @param x,y A numeric vectors with x,y coordinates of observations in
-#'     morphospace
-#' @param z A Numeric vector or matrix containing covariate observations corresponding to
-#'     x,y coordinates. Can contain more than one covariate
+#' @param X A matrix with the first two columns containing the XY coordinates, and subsequent columns contianing trait data
 #' @param row.names row names
 #' @param func.names An optional string containing the names for traits given
 #'     in z
@@ -25,9 +22,17 @@
 #' @export
 #'
 #' @examples X
-fnc.dataframe <- function(x, y, z, row.names, func.names=NULL, array = F, scale = T){
-    z <- as.matrix(z)
+fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
+    
+        x <- X[,1] 
+        y <- X[,2]
+        z <- as.matrix(X[, -c(1:2)])
 
+    if(is.null(func.names)){
+        
+        func.names <- colnames(X)[-c(1,2)]
+        
+    }    
     if (scale){
         if (ncol(z)<1){
             z  <- apply(z, MARGIN = 2, FUN = function(z){
@@ -73,7 +78,9 @@ fnc.dataframe <- function(x, y, z, row.names, func.names=NULL, array = F, scale 
 #' @param npoints Numeric. Optional argument to up or downsample the number x,y
 #'     grid points. Defaults to the number of observations in X
 #' @param fnc.name Optional string to label the functional surface
-#'
+#' @param plot Logical. Plot surfaces. Defaults to true
+#' @param pad Add padding to range data. Defaults to adding 20% on all range margins
+#' @param ... optional paramaters to pass onto plot    
 #' @return Returns a list of polynomial surface objects:
 #'     poly: the polynomial model applied to X
 #'     summary: the polynomial model summary
@@ -81,7 +88,7 @@ fnc.dataframe <- function(x, y, z, row.names, func.names=NULL, array = F, scale 
 #' @export
 #'
 #' @examples X
-fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, range = NULL, ...){
+fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2, fnc.name = NULL, range = NULL, ...){
     X <- as.matrix(X)
 
     X <- na.omit(X)
@@ -93,7 +100,7 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
 
     if (is.null(range)){
         range <- rbind(range(x),
-                       range(y))
+                       range(y)*pad)
 
     }
 
@@ -134,22 +141,19 @@ fnc.surface <- function(X,method = "poly", npoints = NULL, fnc.name = NULL, rang
 #'     dataframes. Is essentailly an apply wrapper for fnc.surface
 #'
 #' @param X A list of x,y,z functonal dataframes from 'fnc_dataframe'
-#' @param npoly Numeric. Determines the degree of polynomial to apply to the
-#'     surface. Usually 3rd order polynomials produce the best fit
-#' @param npoints Numeric. Optional argument to up or downsample the number x,y
-#'     grid points. Defaults to the number of observations in X
+#' @param ... Paramaters to pass onto fnc.surface and plot         
 #'
 #' @return Returns a multi.fnc.surface object. A list containing N number of
 #'     functional surfaces. See fnc.surface for details
 #' @export
 #'
 #' @examples X
-multi.fnc.surface <- function(X, method = "poly", npoints = NULL,...){
+multi.fnc.surface <- function(X, ...){
 
     multi.surf <- list()
     for(l in 1:length(X)){
-        multi.surf[[l]] <- fnc.surface(X[[l]], method = method,
-                                       fnc.name = names(X)[l],...)
+        multi.surf[[l]] <- fnc.surface(X[[l]],
+                                       fnc.name = names(X)[l], ...)
     }
     names(multi.surf) = names(X)
     # attr(multi.surf,"Class") <- "multi.Fnc.surf"
@@ -487,7 +491,18 @@ trans.surface <- function(X, Y, binary = F) {
     return(L)
 }
 
+sub_surface <- function(surf.1, surf.2 ){
+    L <- X
+    L$surface$z <- (X$surface$z + 1)/(Y$surface$z + 1)
+    
+    if (binary) {
+        bn <- L$surface$z > 1
+        L$surface$z[bn] <- 1
+    }
+    class(L) <- "surf"
+    return(L)
 
+}
 
 
 

@@ -19,27 +19,6 @@ plot_image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can
 
 }
 
-# plot.best <- function(pc.scores, weights, mean, length, mfrow = c(1, 1), palette = matlab.like, Fn, xmar = xmar, ymar = ymar, pt.col) {
-#
-#     par(mfrow = mfrow)
-#
-#     for (i in 1:length) {
-#         wn = weights[i, ]
-#
-#         surf <- adap.surf(Fn, wn, xmar = xmar, ymar = ymar, n = 50)
-#         MAIN <- paste(paste(names(wn), wn, sep = "=", collapse = " "), sep = "")
-#
-#         nlevels = 40
-#         levels = pretty(zlim, nlevels)
-#
-#         plot.surf(surf = surf$surface, pc.scores = pc.scores, nlevels = 40, pt.col = pt.col, main = MAIN, palette = viridis, xmar = xmar, ymar = ymar)
-#
-#         points(x = mean[1], y = mean[2], bg = "grey", pch = 21, cex = 3)
-#
-#
-#     }
-# }
-
 # palette can be either a color palette function as in virirdis(), or a color ramp of vectors
 
 #' General plotting function to plot surfaces. Can be used to plot fnc.surfaces,
@@ -152,8 +131,17 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
     }
 }
 
-plot_adpt <- function(x, ...){
+plot_adpt <- function(X, ...){
     
 }
 
+
+plot_trans <- function(X, ...){
+    
+}
+
+plot_pareto <- function(X, ...){
+    
+    
+}
 
