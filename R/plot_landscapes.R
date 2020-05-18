@@ -79,8 +79,6 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
     }
 
 
-
-
     if (method == "kriging"){
 
         Kr <- kriging(x = surf$x, y = surf$y, response = surf$z, pixels = 200)
@@ -91,7 +89,7 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
               axes = axes,
               ...)
         points(x = x, y = y, cex = (Csize/max(Csize))+1 ,
-               pch = pch, bg = pt.col)
+               pch = pch, ...)
 
     }
     if (method == "poly"){

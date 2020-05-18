@@ -392,7 +392,7 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
 #' @export
 #'
 #' @examples X
-pareto <- function(surf.1,surf.2,plot=F,a=NULL, smooth = c("spline","kernel"), ...){
+pareto <- function(surf.1,surf.2,plot=F,a=NULL, smooth = c("kernel"), ...){
 
     if (is.null(a)){
         a <- seq(1,0, by= -0.025)
@@ -433,10 +433,7 @@ pareto <- function(surf.1,surf.2,plot=F,a=NULL, smooth = c("spline","kernel"), .
     surf.2.max <- data.frame(surf.2$max)
     pareto<-data.frame(x,y,z)
     
-    if (smooth == "spline"){
-        pareto.line <- smooth.spline(pareto[,1:2], spar = 0.6)
-    }
-    if (smooth == "Kernel"){
+    if (smooth == "kernel"){
         pareto.line <- smoothr::smooth_ksmooth(as.matrix(pareto[,1:2]),
                                                smoothness=10)
     }
