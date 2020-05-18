@@ -1,0 +1,28 @@
+---
+title: "notes on simulation"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# testing performance of adaptive landscapes methods
+- set up "truth" simulated data
+  - take a set of traits and make two adaptive landscapes.
+  - generate populations that fit each adaptive peak with a degree of variation that fits the topology
+
+- set up "sample" data
+  - create sample data by perturbing both traits and points by adding noise.
+    - can adjust how much each are perturbed to test to robustness of methods
+
+- fit new adaptive landscapes
+  - using group mean
+  - using group sums
+  - using sums weighted by distance to the mean
+  - using sums weighted 95% conf elipse
+  - using sums only within XX% conf elipse
+  
+- compare differnces in peaks
+- compare differnces in topologies
+
