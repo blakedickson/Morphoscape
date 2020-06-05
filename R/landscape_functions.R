@@ -81,7 +81,7 @@ fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
 #'     grid points. Defaults to the number of observations in X
 #' @param fnc.name Optional string to label the functional surface
 #' @param plot Logical. Plot surfaces. Defaults to true
-#' @param pad Add padding to range data. Defaults to adding 20% on all range margins
+#' @param pad Add padding to range data. Defaults to adding 0.2 on all range margins
 #' @param ... optional paramaters to pass onto plot    
 #' @return Returns a list of polynomial surface objects:
 #'     poly: the polynomial model applied to X
@@ -101,7 +101,7 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
 
 
     if (is.null(range)){
-        range <- rbind(range(x),
+        range <- rbind(range(x)*pad,
                        range(y)*pad)
 
     }
@@ -121,12 +121,13 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
         poly.surf<-trmat(poly, range[1,1], range[1,2],
                          range[2,1], range[2,2], npoints) # evaluate grid points over surface
         poly.surf$z <- scale.z(poly.surf$z)
-        attr(poly.surf, "Class") <- "surf"
+        attr(poly.surf, "class") <- "surf"
         fn.surf <- list(poly = poly, surface = poly.surf)
-        # attr(fn.surf,"Class") <- "fn.surf"
+        attr(fn.surf,"class") <- "Fnc.surf"
         
         return(fn.surf)
     }
+    
 
     ### ADD CLASS AND S3 METHOPDS FOR PLOTTING
     if (method == "kriging"){
@@ -150,7 +151,7 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
 #' @export
 #'
 #' @examples X
-multi.fnc.surface <- function(X, ...){
+multi.fnc.surface <- function(X, par = par(), ...){
 
     if( class (X) != "fnc.df"){
         X <- fnc.dataframe(X)
@@ -162,7 +163,7 @@ multi.fnc.surface <- function(X, ...){
                                        fnc.name = names(X)[l], ...)
     }
     names(multi.surf) = names(X)
-    # attr(multi.surf,"Class") <- "multi.Fnc.surf"
+    attr(multi.surf,"class") <- "multi.Fnc.surf"
     return(multi.surf)
 }
 
@@ -211,11 +212,11 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
     z <- z / max(z)
 
     surface <- list(x = x, y = y, z = z)
-    attr(surface, "Class") <- "surf"
+    attr(surface, "class") <- "surf"
     
     adap.surface <- list(surface = surface,
                          zraw = zraw,model=list(Fn=Fn,wn=wn))
-    attr(adap.surface, "Class") <- "adap.lscp"
+    attr(adap.surface, "class") <- "adap.lscp"
 
     return(adap.surface)
 }
