@@ -1,6 +1,6 @@
 Package: Morphoscape
 Type: Package
-Title: Morphoscape: An R package for the computation and visualization of adaptive landscapes.
+Title: Morphoscape: An R package for the computation and visualization of adaptive landscapes
 Version: 0.3.3
 Author: Blake V. Dickson
 Maintainer: Blake V. Dickson <blakedickson@gmail.com>
@@ -9,10 +9,12 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Depends: 
+Imports: 
+  grDevices,
   spatial,
   viridis,
   kriging,
   smoothr,
-  plotrix
+  plotrix,
+  parallel
 RoxygenNote: 7.1.0
