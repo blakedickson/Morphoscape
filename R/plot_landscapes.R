@@ -45,22 +45,36 @@ plot_image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can
 #' @export
 #' 
 #' @examples X
-plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nlevels=40,points=NULL,tree = NULL, axes=T,
-                      node.points = NULL, max.point=T, palette=viridis, box=F,
+plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nlevels=40, points=NULL,tree = NULL, axes=T,
+                      node.points = NULL, max.point=T, palette=viridis, box=T, xlab = "", ylab = "",
                       pch = 21, pt.col= NULL, ...){
 
+    if(class(surf) == "Fnc.surf"){
+      
+      surf <- surf$surface
+    }
+  
+    if(class(surf) == "adap.lscp"){
+    
+      surf <- surf$surface
+    }
+  
+  
     levels = pretty(range(surf$z), nlevels)
+    # if(palette==NULL){
+    #   palette <- viridis::viridis  
+    # } 
+    # 
     if(is.function(palette)){
         palette.col <- palette(length(levels))
 
-    }else{
+    } else{
         palette.col <- palette
     }
-
-
+    
     if (method == "kriging"){
 
-        Kr <- kriging(x = surf$x, y = surf$y, response = surf$z, pixels = 200)
+        Kr <- kriging::kriging(x = surf$x, y = surf$y, response = surf$z, pixels = 200)
         image(Kr,
               col = palette.col,
               xlim = extendrange( surf$x),
@@ -73,7 +87,9 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
     }
     if (method == "poly"){
 
-        plot(surf$x,surf$y, asp=1,type="n",axes= F,...)
+      
+      
+        plot(surf$x,surf$y, asp=1,type="n", xlab = "", ylab = "", axes= F, ...)
 
         if(contour){
             .filled.contour(x=surf$x, y=surf$y, z=surf$z,
@@ -91,8 +107,8 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
         }
 
         if (axes){
-            axis(side=1, at = pretty(trunc(range(surf$x)*10,digits = 1)/10), pos = min(surf$y))
-            axis(side=2, at = pretty(trunc(range(surf$y)*10,digits = 1)/10), pos = min(surf$x))
+            axis(side=1, at = pretty(trunc(range(surf$x)*20,digits = 1)/20), pos = min(surf$y))
+            axis(side=2, at = pretty(trunc(range(surf$y)*20,digits = 1)/20), pos = min(surf$x))
 
 
         }
@@ -131,17 +147,47 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
     }
 }
 
-plot_adpt <- function(X, ...){
+#' Plot multiple surfaces
+#'
+#' @param multi.surf A multi-surface pobject from multi.fnc.surface, or a list of adaptive surfaces 
+#' @param ... optional parameters to pass onti plot_surf and par
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_multisurf <- function(multi.surf, main = NULL, ...){
+  
+  args <- list(multi.surf, main = NULL, ...)
+  
+  if(is.null(main)){
+    main = names(multi.surf)
+  }
+  
+  if(class(multi.surf) == "multi.Fnc.surf"){
     
+    # lapply(multi.surf, FUN = function(X,...) plot_surf(surf = X$surface, ...), ...)
+    for(i in 1:length(multi.surf)){
+      
+      plot_surf(multi.surf[[i]]$surf, main = main[i], ...)
+      
+    }
+    
+  }
+  
 }
 
-
-plot_trans <- function(X, ...){
-    
-}
-
-plot_pareto <- function(X, ...){
-    
-    
-}
+# plot_adpt <- function(X, ...){
+#     
+# }
+# 
+# 
+# plot_trans <- function(X, ...){
+#     
+# }
+# 
+# plot_pareto <- function(X, ...){
+#     
+#     
+# }
 
