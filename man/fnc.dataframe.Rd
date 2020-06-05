@@ -5,14 +5,10 @@
 \title{Coerces XY coordinate data and covariate data into a list, or optionally into
    a 3D array}
 \usage{
-fnc.dataframe(x, y, z, row.names, func.names = NULL, array = F, scale = T)
+fnc.dataframe(X, row.names, func.names = NULL, array = F, scale = T)
 }
 \arguments{
-\item{x, y}{A numeric vectors with x,y coordinates of observations in
-morphospace}
-
-\item{z}{A Numeric vector or matrix containing covariate observations corresponding to
-x,y coordinates. Can contain more than one covariate}
+\item{X}{A matrix with the first two columns containing the XY coordinates, and subsequent columns contianing trait data}
 
 \item{row.names}{row names}
 

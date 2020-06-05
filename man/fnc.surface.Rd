@@ -9,6 +9,8 @@ fnc.surface(
   X,
   method = "poly",
   npoints = NULL,
+  plot = F,
+  pad = 1.2,
   fnc.name = NULL,
   range = NULL,
   ...
@@ -20,7 +22,13 @@ fnc.surface(
 \item{npoints}{Numeric. Optional argument to up or downsample the number x,y
 grid points. Defaults to the number of observations in X}
 
+\item{plot}{Logical. Plot surfaces. Defaults to true}
+
+\item{pad}{Add padding to range data. Defaults to adding 20% on all range margins}
+
 \item{fnc.name}{Optional string to label the functional surface}
+
+\item{...}{optional paramaters to pass onto plot}
 
 \item{npoly}{Numeric. Determines the degree of polynomial to apply to the
 surface. Usually 3rd order polynomials produce the best fit}
