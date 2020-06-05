@@ -49,8 +49,7 @@ surfaceAlongTree <- function(tree, tip.scores, node.scores = NULL, landscape,
     ind <- which(levels > range(tip.pred)[1] & levels < range(tip.pred)[2])
 
     if (is.null(palette)){
-        require("viridis")
-        palette <- viridis
+        palette <- viridis::viridis
     }
 
     if (is.null(palette.cols)){
