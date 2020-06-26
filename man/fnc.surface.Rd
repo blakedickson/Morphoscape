@@ -24,7 +24,7 @@ grid points. Defaults to the number of observations in X}
 
 \item{plot}{Logical. Plot surfaces. Defaults to true}
 
-\item{pad}{Add padding to range data. Defaults to adding 20% on all range margins}
+\item{pad}{Add padding to range data. Defaults to adding 0.2 on all range margins}
 
 \item{fnc.name}{Optional string to label the functional surface}
 

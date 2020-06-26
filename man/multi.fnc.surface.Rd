@@ -5,7 +5,7 @@
 \title{Produces a list of polynomial surface fits from multiple functional
     dataframes. Is essentailly an apply wrapper for fnc.surface}
 \usage{
-multi.fnc.surface(X, ...)
+multi.fnc.surface(X, par = par(), ...)
 }
 \arguments{
 \item{X}{A data table of XY coordinates and Z trait values, or a list of x,y,z functonal dataframes from 'fnc.dataframe'}

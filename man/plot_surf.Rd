@@ -16,8 +16,10 @@ plot_surf(
   axes = T,
   node.points = NULL,
   max.point = T,
-  palette = NULL,
-  box = F,
+  palette = viridis,
+  box = T,
+  xlab = "",
+  ylab = "",
   pch = 21,
   pt.col = NULL,
   ...

@@ -115,7 +115,7 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
     }
 
     if (method == "poly"){
-        npoly = 3
+        npoly = npoly
         poly <- spatial::surf.ls(np = npoly, x = x, y = y, z = z) #fit polynomial least squares trend surface
         summary(poly)
         poly.surf<-spatial::trmat(poly, range[1,1], range[1,2],
