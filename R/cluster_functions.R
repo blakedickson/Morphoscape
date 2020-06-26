@@ -42,7 +42,21 @@ split_jobs <- function(weights, njobs, dir = NULL){
 }
 
 
-init.QTM.cluster <- function(Fn.surfaces, morphospace, dir, perms = NULL, step = NULL, njobs){
+#' Initialize a distributed analysis of trait weights
+#'
+#' @param Fn.surfaces A dataframe containing trait performance surfaces
+#'   generated from multi.fnc.surface
+#' @param morphospace A pca object defining the morphospace
+#' @param dir Directory to store cluster analysis objects
+#' @param weights Optional. A dataframe containing weights from generate.weights
+#' @param step Optional. If weights is not provided, specify step size
+#' @param njobs Number of jobs to split into
+#'
+#' @return A directory of split jobs
+#' @export 
+#'
+#' @examples X
+init.QTM.cluster <- function(Fn.surfaces, morphospace, dir, weights = NULL, step = NULL, njobs){
 
   if(!dir.exists(dir)){
     dir.create(dir)
@@ -51,21 +65,21 @@ init.QTM.cluster <- function(Fn.surfaces, morphospace, dir, perms = NULL, step =
 
   nvar = length(Fn.surfaces)
 
-  if(is.null(perms)){
+  if(is.null(weights)){
     if(is.null(step))
     {stop (cat("step size is not defined"))
     }  else{
 
-      perms <- num.permutations(step = step, verbose = T, nvar= length(Fn.surfaces))
+      weights <- generate.weights(step = step, verbose = T, nvar= length(Fn.surfaces))
     }
   }
 
-  num.perm <- nrow(perms)
+  num.perm <- nrow(weights)
 
   xmar<-range(Fn.surfaces[[1]][[1]]$x)
   ymar<-range(Fn.surfaces[[1]][[1]]$y)
 
-  split.jobs(perms, njobs, dir)
+  split.jobs(weights, njobs, dir)
 
   save(Fn.surfaces, morphospace, xmar, ymar, num.perm, step, njobs,
        file = paste(dir,"/QTMdata.Rdata",sep=""))

@@ -34,16 +34,7 @@ fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
         
     }    
     if (scale){
-        if (ncol(z)<1){
-            z  <- apply(z, MARGIN = 2, FUN = function(z){
-                z <- (z - min(z))
-                z <- z / max(z)
-            }
-            )
-
-        } else{
-            z <- (z - min(z))
-            z <- z / max(z)}
+        z  <- apply(z, MARGIN = 2, FUN = scale.z)
     }
 
     if(array){
@@ -82,6 +73,7 @@ fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
 #' @param fnc.name Optional string to label the functional surface
 #' @param plot Logical. Plot surfaces. Defaults to true
 #' @param pad Add padding to range data. Defaults to adding 0.2 on all range margins
+#' @param npoly Number of polynomials
 #' @param ... optional paramaters to pass onto plot    
 #' @return Returns a list of polynomial surface objects:
 #'     poly: the polynomial model applied to X
@@ -90,7 +82,7 @@ fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
 #' @export
 #'
 #' @examples X
-fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2, fnc.name = NULL, range = NULL, ...){
+fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2, fnc.name = NULL, range = NULL, npoly = 3,...){
     X <- as.matrix(X)
 
     X <- na.omit(X)
