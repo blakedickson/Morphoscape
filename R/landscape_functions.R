@@ -116,9 +116,9 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
 
     if (method == "poly"){
         npoly = 3
-        poly <- surf.ls(np = npoly, x = x, y = y, z = z) #fit polynomial least squares trend surface
+        poly <- spatial::surf.ls(np = npoly, x = x, y = y, z = z) #fit polynomial least squares trend surface
         summary(poly)
-        poly.surf<-trmat(poly, range[1,1], range[1,2],
+        poly.surf<-spatial::trmat(poly, range[1,1], range[1,2],
                          range[2,1], range[2,2], npoints) # evaluate grid points over surface
         poly.surf$z <- scale.z(poly.surf$z)
         attr(poly.surf, "class") <- "surf"
