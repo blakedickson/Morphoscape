@@ -13,6 +13,7 @@ fnc.surface(
   pad = 1.2,
   fnc.name = NULL,
   range = NULL,
+  npoly = 3,
   ...
 )
 }
@@ -28,10 +29,9 @@ grid points. Defaults to the number of observations in X}
 
 \item{fnc.name}{Optional string to label the functional surface}
 
-\item{...}{optional paramaters to pass onto plot}
+\item{npoly}{Number of polynomials}
 
-\item{npoly}{Numeric. Determines the degree of polynomial to apply to the
-surface. Usually 3rd order polynomials produce the best fit}
+\item{...}{optional paramaters to pass onto plot}
 }
 \value{
 Returns a list of polynomial surface objects:

@@ -155,7 +155,7 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
 #' @return
 #' @export
 #'
-#' @examples
+#' @examples X
 plot_multisurf <- function(multi.surf, main = NULL, ...){
   
   args <- list(multi.surf, main = NULL, ...)

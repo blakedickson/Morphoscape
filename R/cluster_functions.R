@@ -79,7 +79,7 @@ init.QTM.cluster <- function(Fn.surfaces, morphospace, dir, weights = NULL, step
   xmar<-range(Fn.surfaces[[1]][[1]]$x)
   ymar<-range(Fn.surfaces[[1]][[1]]$y)
 
-  split.jobs(weights, njobs, dir)
+  split_jobs(weights, njobs, dir)
 
   save(Fn.surfaces, morphospace, xmar, ymar, num.perm, step, njobs,
        file = paste(dir,"/QTMdata.Rdata",sep=""))

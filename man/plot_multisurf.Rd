@@ -17,3 +17,6 @@ plot_multisurf(multi.surf, main = NULL, ...)
 \description{
 Plot multiple surfaces
 }
+\examples{
+X
+}
