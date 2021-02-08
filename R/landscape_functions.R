@@ -132,6 +132,90 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
 }
 
 
+surf_hull <- function(coords2D, alpha = 0.001, plot = F){
+  
+  datahull <- ahull(coords2D[,1], coords2D[,2], alpha = alpha)
+  
+  data_poly <- ahull2poly(datahull)
+  
+  hull_coords <- list(data_poly@polygons[[1]]@Polygons[[1]]@coords)
+  
+  ## define grid
+  
+  gridX <- seq(from = range(coords2D[,1])[1],
+               to = range(coords2D[,1])[2],
+               length = 100)
+  
+  gridY = seq(from = range(coords2D[,2])[1],
+              to = range(coords2D[,2])[2],
+              length = 100)
+  
+  grid2D <- expand.grid(x = gridX, y = gridY)
+  
+  
+  
+  hull.grid <- grid2D[inahull(datahull, p = as.matrix(grid2D)),]
+  
+  
+  hull.grid <- as.data.frame(hull.grid)
+  gridded(hull.grid) = ~x+y
+  
+  if(plot){
+    
+    par(mfrow = 2,2)
+    plot(data_poly, main = "alpha hull")
+    plot(hull_coords[[1]], main = "alpha hull points")
+    plot(grid2D, main = "resample grid")
+    plot(hull.grid, main = "resample grid hull")
+    
+    
+  }
+  
+  return(hull.grid)
+  
+}
+
+
+krige_surf <- function(X, hull = T, alpha = 0.001, hullPlot = F, ...){
+  
+  
+  coords2D <- X[,1:2]
+  
+  
+  if(hull){
+    grid2D <- surf_hull(coords2D, alpha = alpha, plot = hullPlot)
+    
+  } else{
+    gridX <- seq(from = range(coords2D[,1])[1],
+                 to = range(coords2D[,1])[2],
+                 length = 100)
+    
+    gridY = seq(from = range(coords2D[,2])[1],
+                to = range(coords2D[,2])[2],
+                length = 100)
+    
+    grid2D <- as.data.frame(expand.grid(x = gridX, y = gridY))
+    
+    gridded(grid2D) = ~x+y
+  }
+  
+  Z <- X[,3:ncol(X)]
+  
+  data_list <- list()
+  for (i in 1:ncol(Z)){
+    data_list[[i]] <- data.frame(x = X[,1],y = X[,2], z = Z[,i])
+    coordinates(data_list[[i]]) = c(1,2)
+    
+  }
+  
+  names(data_list)<- colnames(Z)
+  
+  krig_list <- lapply(data_list, FUN = autoKrige, grid2D)
+  
+  return(krig_list)
+  
+}
+
 #' Produces a list of polynomial surface fits from multiple functional
 #'     dataframes. Is essentailly an apply wrapper for fnc.surface
 #'
