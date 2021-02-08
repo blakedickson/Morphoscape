@@ -11,6 +11,8 @@
 #' @param palette a palette function
 #' @param binary Logical. plot transition as a binary or continuous trait.
 #'   Defaults to FALSE
+#' @param ... Optional parameters to pass to plot.contMap
+#'   
 #'
 #' @return Returns a list contianing tip and node scores, predicted heights on
 #'  the landscape and a cont.mapped tree object
@@ -18,7 +20,7 @@
 #'
 #' @examples X
 surfaceAlongTree <- function(tree, tip.scores, node.scores = NULL, landscape,
-                             palette.cols = NULL, plot = T, palette = NULL, binary=F){
+                             palette.cols = NULL, plot = T, palette = NULL, binary=F, ...){
     ### landscpe can either be a functio0nal landscape, adaptive landsape or a dataframe with XYZ coordinates
     ### NOTE NEED TO ADD FUNCTIONALITY FOR ANY SURFACE KIND MENTIONED ABOVE
 
@@ -66,8 +68,8 @@ surfaceAlongTree <- function(tree, tip.scores, node.scores = NULL, landscape,
 
 
     if (plot){
-        par(mfrow=c(1,1))
-        plot.contMap(cont,lwd=10)
+        # par(mfrow=c(1,1))
+        plot.contMap(cont, ...)
     }
 
 

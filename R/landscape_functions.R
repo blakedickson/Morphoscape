@@ -180,7 +180,6 @@ multi.fnc.surface <- function(X, par = par(), ...){
 #' @examples X
 adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
 
-    if(length(Fn[[1]]) == 3) {
         Fn.tmp <- list()
         for (i in 1:length(Fn)){
             Fn.tmp[[i]] <-Fn[[i]]$poly
@@ -188,8 +187,6 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
         }
         names(Fn.tmp) <- names(Fn)
         Fn <- Fn.tmp
-
-    }
 
 
     dx <- (xmar[2] - xmar[1]) / n

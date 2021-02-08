@@ -5,19 +5,30 @@
 #'   or the user can provide separate xyz vectors
 #' @param ... parameters to pass onto image()
 #'
+#' @export
 #' @examples X
-plot_image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can be an xyz dataframe (such as from fnc.df), or the user can provide separate xyz vectors
-    if (is.vector(x)){
-        X <- data.frame(x,y,z)
-    } else{
-        X <- x
-    }
-
-    image(x = sort(unique(X[,1])), y = sort(unique(X[,2])),
-          z = matrix(X[,3], nrow = length(unique(X[,1])),byrow=F),
-          ...)
-
+plotImage<- function(x, y=NULL, z=NULL, ...){
+  
+  if(isTRUE(ncol(x)==3)){
+    X <- x
+  }else{
+    X <- data.frame(x,y,z)
+  }
+  
+  X <- X[order(X[,1],X[,2]) ,]
+  
+  XY <- cbind(unique(X[,1]), unique(sort(X[,2])) )
+  Z <- matrix(X[,3], nrow = nrow(XY), byrow=T)
+  # Z <- Z[nrow(Z):1,]
+  
+  image(x = XY[,1], y = XY[,2], z = Z, ...)
 }
+
+
+
+
+
+
 
 # palette can be either a color palette function as in virirdis(), or a color ramp of vectors
 
@@ -45,8 +56,8 @@ plot_image <- function(x, y, z, ...){ #plots a heatmap of functional data. x can
 #' @export
 #' 
 #' @examples X
-plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nlevels=40, points=NULL,tree = NULL, axes=T,
-                      node.points = NULL, max.point=T, palette=viridis, box=T, xlab = "", ylab = "",
+plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nlevels=41, points=NULL,tree = NULL, axes=T,
+                      node.points = NULL, max.point=T, palette, box=T, xlab = "", ylab = "",
                       pch = 21, pt.col= NULL, ...){
 
     if(class(surf) == "Fnc.surf"){
@@ -61,12 +72,12 @@ plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nl
   
   
     levels = pretty(range(surf$z), nlevels)
-    # if(palette==NULL){
-    #   palette <- viridis::viridis  
-    # } 
-    # 
+    if(is.null(palette)){
+      palette <- viridis::viridis(nlevels)
+    }
+
     if(is.function(palette)){
-        palette.col <- palette(length(levels))
+        palette.col <- palette(nlevels)
 
     } else{
         palette.col <- palette

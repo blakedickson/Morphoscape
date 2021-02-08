@@ -4,7 +4,7 @@
 
 Fnc.surf <- function(perf.surface, Zprime) {
   Zprime <- matrix(Zprime, ncol = 2)
-  pred <- predict.trls(perf.surface, x = Zprime[, 1], y = Zprime[, 2])
+  pred <- predict(perf.surface, x = Zprime[, 1], y = Zprime[, 2])
   return(pred)
 }
 
