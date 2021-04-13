@@ -28,8 +28,6 @@ plotImage<- function(x, y=NULL, z=NULL, ...){
 
 
 
-
-
 # palette can be either a color palette function as in virirdis(), or a color ramp of vectors
 
 #' General plotting function to plot surfaces. Can be used to plot fnc.surfaces,
