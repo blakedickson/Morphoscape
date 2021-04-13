@@ -622,26 +622,6 @@ calc.best.wn <- function(X, sortby = "lik", percentile = 0.99, method=c("quantil
 
 
 
-#' Pairwise significance testing between group model fits
-#'
-#' @param X1,X2 Dataframe containing Wn model fits for two groups  
-#' @param p.val 
-#'
-#' @return List containing p.values and matching weights
-#' @author Katrina Jones
-#' @export
-#'
-#' @examples X
-lscp.pairwise<-function(X1, X2, p.val = 0.99){
-    #get top 1% based on likelihood
-    besta<-grpa[order(grpa$lik,decreasing = T),][1:round(nrow(grpa)*0.01),]
-    bestb<-grpb[order(grpb$lik,decreasing = T),][1:round(nrow(grpb)*0.01),]
-    #Check for matching models
-    m<-match(besta$X,bestb$X)
-    n.match<-length(m[!is.na(m)])
-    p.match<- n.match/length(m)
-    return(list(n.match= n.match, p.val=p.match, matching=besta[na.omit(m),]))
-}
 
 
 
