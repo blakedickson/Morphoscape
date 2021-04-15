@@ -13,8 +13,11 @@ Depends:
   grDevices,
   spatial,
   viridis,
-  kriging,
   smoothr,
   plotrix,
-  parallel
-RoxygenNote: 7.1.0
+  parallel,
+  sp,
+  alphahull,
+  hull2spatial,
+  automap,
+RoxygenNote: 7.1.1

@@ -552,8 +552,8 @@ sum_surface <- function(landscapes) {
 #' Calculate a transition landscape between two landscapes
 #'
 #' @param X,Y A $surface onject
-#' @param binary Logical. Calcuate as a binary transition
-#'   (STILL IN DEVELOPMENT). Defaults to FALSE
+#' @param binary Logical. Calcuate as a binary transition (STILL IN
+#'   DEVELOPMENT). Defaults to FALSE
 #'
 #' @return Returns a $surface object
 #' @export

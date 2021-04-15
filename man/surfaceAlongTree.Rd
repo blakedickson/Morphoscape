@@ -12,7 +12,8 @@ surfaceAlongTree(
   palette.cols = NULL,
   plot = T,
   palette = NULL,
-  binary = F
+  binary = F,
+  ...
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ surfaceAlongTree(
 
 \item{binary}{Logical. plot transition as a binary or continuous trait.
 Defaults to FALSE}
+
+\item{...}{Optional parameters to pass to plot.contMap}
 }
 \value{
 Returns a list contianing tip and node scores, predicted heights on

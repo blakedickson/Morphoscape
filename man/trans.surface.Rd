@@ -9,8 +9,8 @@ trans.surface(X, Y, binary = F)
 \arguments{
 \item{X, Y}{A $surface onject}
 
-\item{binary}{Logical. Calcuate as a binary transition
-(STILL IN DEVELOPMENT). Defaults to FALSE}
+\item{binary}{Logical. Calcuate as a binary transition (STILL IN
+DEVELOPMENT). Defaults to FALSE}
 }
 \value{
 Returns a $surface object
