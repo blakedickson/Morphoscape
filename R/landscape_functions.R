@@ -643,8 +643,15 @@ require("automap")
 #' @export
 #'
 #' @examples
-krige_surf <- function(X, hull = T, alpha = 0.001, hullPlot = F){
+krige_surf <- function(X, hull = F, alpha = 0.001, hullPlot = F){
   
+  X <- na.omit(X)
+  
+  if(!is.null(na.action(X))){
+    
+    warning("NAs detected, excluding rows ", paste(na.action(X), collapse = ","))
+    
+  }
   
   coords2D <- X[,1:2]
   
@@ -666,7 +673,7 @@ krige_surf <- function(X, hull = T, alpha = 0.001, hullPlot = F){
     gridded(grid2D) = ~x+y
   }
   
-  Z <- X[,3:ncol(X)]
+  Z <- cbind(X[,3:ncol(X)])
   
   data_list <- list()
   for (i in 1:ncol(Z)){
@@ -676,6 +683,8 @@ krige_surf <- function(X, hull = T, alpha = 0.001, hullPlot = F){
   }
   
   names(data_list)<- colnames(Z)
+  
+  
   
   krig_list <- lapply(data_list, FUN = autoKrige, grid2D)
   
