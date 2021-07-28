@@ -200,3 +200,44 @@ plot_multisurf <- function(multi.surf, main = NULL, ...){
 #     
 # }
 
+
+#' Plot Kriged Surface
+#'
+#' @param X a Kriged surface object from krige_surf. C
+#' @param col.pal 
+#' @param ... options to pass to spplot
+#' @description Function will attempt to plot one or more kriged surfaces from krige_surf() 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plotKrige <- function(X, points = NULL, pcol = NA, ...){
+  p <- list()
+  
+  for(i in 1:length(X)){
+    if(!is.null(points)){
+      
+      p[[i]] <- spplot(X[[i]]$krige_output,
+                       col.regions = viridis(100),
+                       zcol = "var1.pred",
+                       main = names(X)[i],
+                       sp.layout = list(pts = list("sp.points", 
+                                                   SpatialPoints(points),
+                                                   pch=16,
+                                                   col = cols
+                       )))  
+      
+    } else{
+      
+      p[[i]] <- spplot(X[[i]]$krige_output,
+                       col.regions = viridis(100),
+                       zcol = "var1.pred",
+                       main = names(X)[i])
+    }
+    
+  }
+  
+  do.call(grid.arrange, p)
+  
+}

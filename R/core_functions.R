@@ -4,8 +4,9 @@
 
 Fnc.surf <- function(perf.surface, Zprime) {
   Zprime <- matrix(Zprime, ncol = 2)
-  pred <- predict(perf.surface, x = Zprime[, 1], y = Zprime[, 2])
+  pred <- predict(perf.surface$poly, x = Zprime[,1], y = Zprime[,2])
   return(pred)
+  
 }
 
 
@@ -36,6 +37,7 @@ parti <- function(n, k) {
   if (n > 0)
     for (i in (1:n)) M <- rbind(M, cbind(parti(n - i, k - 1), i))
   M
+  
 }
 
 
@@ -50,6 +52,7 @@ max_Wprime <- function(seed, Fn, wn, xmar, ymar, ...) {
     }
     names(Fn.tmp) <- names(Fn)
     Fn <- Fn.tmp
+    
 
   }
 
@@ -99,7 +102,7 @@ predict_surf <- function(surface, Zprime) {
   z <- as.vector(surface$z)
   XZ <- data.frame(X, z)
   ls <- surf.ls(np = 3, XZ)
-  pred <- predict.trls(object = ls, x = as.vector(Zprime[, 1]), y = as.vector(Zprime[, 2]))
+  pred <- predict(object = ls, x = as.vector(Zprime[, 1]), y = as.vector(Zprime[, 2]))
   return(data.frame(Zprime, pred))
 }
 

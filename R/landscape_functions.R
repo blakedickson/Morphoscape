@@ -113,9 +113,9 @@ fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2,
         poly.surf<-spatial::trmat(poly, range[1,1], range[1,2],
                          range[2,1], range[2,2], npoints) # evaluate grid points over surface
         poly.surf$z <- scale.z(poly.surf$z)
-        attr(poly.surf, "class") <- "surf"
+        # attr(poly.surf, "class") <- "surf"
         fn.surf <- list(poly = poly, surface = poly.surf)
-        attr(fn.surf,"class") <- "Fnc.surf"
+        # attr(fn.surf,"class") <- "Fnc.surf"
         
         return(fn.surf)
     }
@@ -239,7 +239,7 @@ multi.fnc.surface <- function(X, par = par(), ...){
                                        fnc.name = names(X)[l], ...)
     }
     names(multi.surf) = names(X)
-    attr(multi.surf,"class") <- "multi.Fnc.surf"
+    # attr(multi.surf,"class") <- "multi.Fnc.surf"
     return(multi.surf)
 }
 
@@ -285,11 +285,11 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
     z <- z / max(z)
 
     surface <- list(x = x, y = y, z = z)
-    attr(surface, "class") <- "surf"
+    # attr(surface, "class") <- "surf"
     
     adap.surface <- list(surface = surface,
                          zraw = zraw,model=list(Fn=Fn,wn=wn))
-    attr(adap.surface, "class") <- "adap.lscp"
+    # attr(adap.surface, "class") <- "adap.lscp"
 
     return(adap.surface)
 }
@@ -312,7 +312,7 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
 #'
 #' @examples X
 generate.weights <- function(step, nvar, varnames = NULL, time.est = F,
-                             verbose = T, ...) {
+                             verbose = T, Fn = NULL, ...) {
     n = 1/step
     weights<- parti(n, nvar)/n
 
@@ -403,12 +403,10 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
                                 optimum = c("absolute"),
                                 xmar=xmar, ymar=ymar,weights.df = NULL){
 
-    if (is.vector(Zprime)){
-        Zprime <- Zprime[1:2]
-    }
-    if (length(dim(Zprime))==2){
-        Zprime <- Zprime[,1:2]
-    }
+
+        Zprime <- matrix(Zprime[1:2], ncol = 2)
+        colnames(Zprime) <- c("x","y")
+        
 
 
     if(length(Fn[[1]]) == 3) {
@@ -423,28 +421,28 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
     }
 
     if(is.null(weights.df)){
-        if(is.null(weights.df)){
-            stop("no step size provided. Please provide either a step size or weights dataframe")
-        }
+        # if(is.null(weights.df)){
+        #     stop("no step size provided. Please provide either a step size or weights dataframe")
+        # }
         weights.df <- generate.weights(step,nvar=length(Fn))
         colnames(weights.df) <- names(Fn)
 
     }
     # Cluster mode is not currently working | must troubleshoot
-    if (Cluster){
-        no_cores <- detectCores()
-        cl <- makeCluster(no_cores)
-        clusterExport(cl, varlist=c("max_Wprime","DEoptim",
-                                    "Zprime","Fnc.surf","W","lik_Zprime",
-                                    "Fn","xmar","ymar"),
-                      envir=environment() )
-
-        lik <- parApply(cl = cl, X = weights.df, MARGIN = 1, FUN=lik_Zprime,
-                        Zprime=Zprime, Fn = Fn,
-                        xmar=xmar, ymar=ymar)
-        stopCluster(cl)
-
-    } else{
+    # if (Cluster){
+    #     no_cores <- detectCores()
+    #     cl <- makeCluster(no_cores)
+    #     clusterExport(cl, varlist=c("max_Wprime","DEoptim",
+    #                                 "Zprime","Fnc.surf","W","lik_Zprime",
+    #                                 "Fn","xmar","ymar"),
+    #                   envir=environment() )
+    # 
+    #     lik <- parApply(cl = cl, X = weights.df, MARGIN = 1, FUN=lik_Zprime,
+    #                     Zprime=Zprime, Fn = Fn,
+    #                     xmar=xmar, ymar=ymar)
+    #     stopCluster(cl)
+    # 
+    # } else{
 
         lik <- apply(X = weights.df, MARGIN = 1, FUN=lik_Zprime,
                      Zprime=Zprime, Fn = Fn,
@@ -452,7 +450,7 @@ search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
                      method = method,
                      optimum = optimum)
 
-    }
+    # }
 
     colnames(weights.df)[1:length(Fn)] <- names(Fn)
     weights.df <- cbind(weights.df, t(lik))
@@ -638,12 +636,13 @@ require("automap")
 #' @param hull optional logical. If TRUE, function will only Krige area within the alpha hull as calculated by surf_hull
 #' @param alpha optional. Alpha value for surf_hull
 #' @param hullPlot Logical. Plot hull?
+#' @param ... additional parameters to pass onti autoKrige
 #'
 #' @return returns 
 #' @export
 #'
 #' @examples
-krige_surf <- function(X, hull = F, alpha = 0.001, hullPlot = F){
+krige_surf <- function(X, hull = F, alpha = 0.001, hullPlot = F,...){
   
   X <- na.omit(X)
   
@@ -656,22 +655,22 @@ krige_surf <- function(X, hull = F, alpha = 0.001, hullPlot = F){
   coords2D <- X[,1:2]
   
   
-  if(hull){
-    grid2D <- surf_hull(coords2D, alpha = alpha, plot = hullPlot)
-    
-  } else{
-    gridX <- seq(from = range(coords2D[,1])[1],
-                 to = range(coords2D[,1])[2],
-                 length = 100)
-    
-    gridY = seq(from = range(coords2D[,2])[1],
-                to = range(coords2D[,2])[2],
-                length = 100)
-    
-    grid2D <- as.data.frame(expand.grid(x = gridX, y = gridY))
-    
-    gridded(grid2D) = ~x+y
-  }
+  # if(hull){
+  #   grid2D <- surf_hull(coords2D, alpha = alpha, plot = hullPlot)
+  #   
+  # } else{
+  #   gridX <- seq(from = range(coords2D[,1])[1],
+  #                to = range(coords2D[,1])[2],
+  #                length = 100)
+  #   
+  #   gridY = seq(from = range(coords2D[,2])[1],
+  #               to = range(coords2D[,2])[2],
+  #               length = 100)
+  #   
+  #   grid2D <- as.data.frame(expand.grid(x = gridX, y = gridY))
+  #   
+  #   gridded(grid2D) = ~x+y
+  # }
   
   Z <- cbind(X[,3:ncol(X)])
   
@@ -686,7 +685,7 @@ krige_surf <- function(X, hull = F, alpha = 0.001, hullPlot = F){
   
   
   
-  krig_list <- lapply(data_list, FUN = autoKrige, grid2D)
+  krig_list <- lapply(data_list, FUN = autoKrige, ...)
   
   return(krig_list)
   

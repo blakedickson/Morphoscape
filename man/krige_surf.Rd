@@ -4,7 +4,7 @@
 \alias{krige_surf}
 \title{Surface Kriging}
 \usage{
-krige_surf(X, hull = T, alpha = 0.001, hullPlot = F)
+krige_surf(X, hull = F, alpha = 0.001, hullPlot = F)
 }
 \arguments{
 \item{X}{A Functional Dataframe. Columns 1,2 should contain XY morphospace coordinates, with subsequent columns containing functional data correspoinding to morphospace points.}
