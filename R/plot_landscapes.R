@@ -27,183 +27,9 @@ plotImage<- function(x, y=NULL, z=NULL, ...){
 
 
 
-
-# palette can be either a color palette function as in virirdis(), or a color ramp of vectors
-
-#' General plotting function to plot surfaces. Can be used to plot fnc.surfaces,
-#'    adapt.surfaces or just a morpohpscae
-#'
-#' @param surf A $surface object from fnc.surface or adap.surface.
-#' @param method "can be "poly" or "kriging" Plot surface as a least-squares polynomial fit, or as a kriging surface
-#' @param contour logical. Plot coloured contours onto morphospace.
-#'   Defaults to TRUE
-#' @param contour.lines Optional. Colour to set contour lines. Defaults to NULL.
-#' @param nlevels Number of colour levels to plot contours
-#' @param points Optional. Provide points to plot on top of surface
-#' @param tree Optional. Plot a tree on top of surface
-#' @param node.points points for plotting node. Required if tree is provided
-#' @param max.point Optional logical. Plot highest point on surface. Defaults to
-#'    TRUE
-#' @param palette Optional colour palette. Defaults to viridis colour palette.
-#' @param box Logical. Plot box around surface
-#' @param axes Logical. Plot axis ticks. Defaults to TRUE
-#' @param pch set point character. Defaults to 21
-#' @param pt.col set point colour.
-#' @param ... other parameters to pass onto plot()
-#'
-#' @export
-#' 
-#' @examples X
-plot_surf <- function(surf, method = "poly", contour = T, contour.lines=NULL, nlevels=41, points=NULL,tree = NULL, axes=T,
-                      node.points = NULL, max.point=T, palette, box=T, xlab = "", ylab = "",
-                      pch = 21, pt.col= NULL, ...){
-
-    if(class(surf) == "Fnc.surf"){
-      
-      surf <- surf$surface
-    }
-  
-    if(class(surf) == "adap.lscp"){
-    
-      surf <- surf$surface
-    }
-  
-  
-    levels = pretty(range(surf$z), nlevels)
-    if(is.null(palette)){
-      palette <- viridis::viridis(nlevels)
-    }
-
-    if(is.function(palette)){
-        palette.col <- palette(nlevels)
-
-    } else{
-        palette.col <- palette
-    }
-    
-    if (method == "kriging"){
-
-        Kr <- kriging::kriging(x = surf$x, y = surf$y, response = surf$z, pixels = 200)
-        image(Kr,
-              col = palette.col,
-              xlim = extendrange( surf$x),
-              ylim = extendrange( surf$y),
-              axes = axes,
-              ...)
-        points(x = x, y = y, cex = (Csize/max(Csize))+1 ,
-               pch = pch, ...)
-
-    }
-    if (method == "poly"){
-
-      
-      
-        plot(surf$x,surf$y, asp=1,type="n", xlab = "", ylab = "", axes= F, ...)
-
-        if(contour){
-            .filled.contour(x=surf$x, y=surf$y, z=surf$z,
-                            levels=levels,
-                            col=palette.col
-            )
-
-        }
-
-        if(!is.null(contour.lines)){
-            contour(x=surf$x, y=surf$y, z=surf$z,
-                    levels=levels, col = contour.lines,
-                    add = T, drawlabels = F )
-
-        }
-
-        if (axes){
-            axis(side=1, at = pretty(trunc(range(surf$x)*20,digits = 1)/20), pos = min(surf$y))
-            axis(side=2, at = pretty(trunc(range(surf$y)*20,digits = 1)/20), pos = min(surf$x))
-
-
-        }
-
-        if (box){
-            axis(side=1, at = range(surf$x), labels = F, lwd.ticks = 0, pos = min(surf$y))
-            axis(side=2, at = range(surf$y), labels = F, lwd.ticks = 0, pos = min(surf$x))
-            axis(side=3, at = range(surf$x), labels = F, lwd.ticks = 0, pos = max(surf$y))
-            axis(side=4, at = range(surf$y), labels = F, lwd.ticks = 0, pos = max(surf$x))
-        }
-
-
-        if(!is.null(tree)){
-            tree.points <- rbind(points[match(tree$tip.label,row.names(points)), ],
-                                 node.points)
-            for (i in 1:nrow(tree$edge)) {
-                lines(tree.points[(tree$edge[i, ]), 1],
-                      tree.points[(tree$edge[i, ]), 2], type = "l", pch = 21,
-                      col = "grey50", lwd = 2)
-            }
-            points(node.points,bg="grey",pch=21)
-
-        }
-
-        if(!is.null(points)){
-            points(points, pch = pch ,bg = pt.col,...)
-
-        }
-
-        if(max.point){
-            x <- surf$x[which(surf$z==max(surf$z),arr.ind = T)[1]]
-            y <- surf$y[which(surf$z==max(surf$z),arr.ind = T)[2]]
-            points(x,y, cex=2, bg="black",pch=21)
-
-        }
-    }
-}
-
-#' Plot multiple surfaces
-#'
-#' @param multi.surf A multi-surface pobject from multi.fnc.surface, or a list of adaptive surfaces 
-#' @param ... optional parameters to pass onti plot_surf and par
-#'
-#' @return
-#' @export
-#'
-#' @examples X
-plot_multisurf <- function(multi.surf, main = NULL, ...){
-  
-  args <- list(multi.surf, main = NULL, ...)
-  
-  if(is.null(main)){
-    main = names(multi.surf)
-  }
-  
-  if(class(multi.surf) == "multi.Fnc.surf"){
-    
-    # lapply(multi.surf, FUN = function(X,...) plot_surf(surf = X$surface, ...), ...)
-    for(i in 1:length(multi.surf)){
-      
-      plot_surf(multi.surf[[i]]$surf, main = main[i], ...)
-      
-    }
-    
-  }
-  
-}
-
-# plot_adpt <- function(X, ...){
-#     
-# }
-# 
-# 
-# plot_trans <- function(X, ...){
-#     
-# }
-# 
-# plot_pareto <- function(X, ...){
-#     
-#     
-# }
-
-
 #' Plot Kriged Surface
 #'
-#' @param X a Kriged surface object from krige_surf. C
+#' @param X a Kriged surface object from krige_surf. 
 #' @param col.pal 
 #' @param ... options to pass to spplot
 #' @description Function will attempt to plot one or more kriged surfaces from krige_surf() 
@@ -241,3 +67,33 @@ plotKrige <- function(X, points = NULL, pcol = NA, ...){
   do.call(grid.arrange, p)
   
 }
+
+
+
+
+
+plot_fn_kr <- function(fn_kr, 
+                       CEX = 0.5, ncols = 100, 
+                       alpha= 0.3,
+                       pch = 16,
+                       pt.col = "black",
+                       colorkey=T,
+                       cex.lab = 1){
+  
+  fn_grid <- fn_kr$dataframes$grid
+  fn_new_data <- fn_kr$dataframes$new_data
+  
+  
+  sp.grid <- SpatialPointsDataFrame(coords = fn_grid[,1:2], fn_grid[,-c(1,2)])
+  sp.new_data <- SpatialPointsDataFrame(coords = fn_new_data[,1:2], fn_new_data[,-c(1,2)])
+  
+  spplot(sp.grid,
+         scales = list(draw = F),
+         colorkey = colorkey,
+         col.regions = viridis(ncols),
+         sp.layout = list("sp.points", sp.new_data[,1:2], pch = pch, 
+                          cex = CEX, col = pt.col, alpha = alpha))
+  
+  
+}
+

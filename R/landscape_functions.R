@@ -1,9 +1,34 @@
 
+
+fill.grid <- function(X){
+  
+  full.grid <- expand.grid(unique(X[,1]),
+                           unique(X[,2]))
+  
+  colnames(full.grid)[1:2] <- c("X","Y")
+  colnames(X)[1:2] <- c("X","Y")
+  
+  X <- merge( X, full.grid, by = c("X", "Y"), all.x = T, all.y = T)
+  
+  X <- X[order(X$Y),]
+  return(X)
+}
+
+scale.z <- function(Z) {
+  
+  Z <- Z - min(Z,na.rm = T)
+  Z <- Z/max(Z,na.rm = T)
+  return(Z)
+}
+
+
+
+
 # this function cooerces many functional traits into a 3d array.
 # Data are coercced into the following structure:
 # dims: 1= observations (warps), 2 = x,y,z coordinates, 3= functional traits
 
-#' Coerces XY coordinate data and covariate data into a list, or optionally into
+#' Coerces XY coordinate data and covariate data into a scaled dataframe, or optionally into
 #'    a 3D array
 #'
 #' @param X A matrix with the first two columns containing the XY coordinates, and subsequent columns contianing trait data
@@ -23,151 +48,120 @@
 #'
 #' @examples X
 fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
+  
+  if( nrow(X) != nrow(expand.grid(unique(X[,1]), unique(X[,2]))) ){
+    X <- fill.grid(X)
+  }
+  
+  x <- X[,1] 
+  y <- X[,2]
+  z <- as.matrix(X[, -c(1:2)])
+  
+  
+  
+  if(is.null(func.names)){
     
-        x <- X[,1] 
-        y <- X[,2]
-        z <- as.matrix(X[, -c(1:2)])
-
-    if(is.null(func.names)){
-        
-        func.names <- colnames(X)[-c(1,2)]
-        
-    }    
-    if (scale){
-        z  <- apply(z, MARGIN = 2, FUN = scale.z)
-    }
-
-    if(array){
-        fnc.array <- array(dim=c(nrow(z), 3, ncol(z)),
-                           dimnames = list(row.names,c("x","y","z"),func.names))
-
-        for (i in 1:ncol(z)){
-            fnc.array[,,i] <- cbind(x,y,as.numeric(z[,i]))
-        }
-
-    } else{
-        fnc.array <- list()
-        for (i in 1:ncol(z)){
-
-            fnc.array[[i]] <- cbind(x,y,as.numeric(z[,i]))
-            colnames(fnc.array[[i]]) <- c("x","y","z")
-        }
-
-        names(fnc.array) <- func.names
-        attr(fnc.array, "class") <- "fnc.df"
-    }
-
+    func.names <- colnames(X)[-c(1,2)]
     
-    return(fnc.array)
+  }    
+  if (scale){
+    z  <- apply(z, MARGIN = 2, FUN = scale.z)
+  }
+  
+  if(array){
+    fnc.array <- array(dim=c(nrow(z), 3, ncol(z)),
+                       dimnames = list(row.names,c("x","y","z"),func.names))
+    
+    for (i in 1:ncol(z)){
+      fnc.array[,,i] <- cbind(x,y,as.numeric(z[,i]))
+    }
+    
+  } else{
+    fnc.array <- list()
+    for (i in 1:ncol(z)){
+      
+      fnc.array[[i]] <- cbind(x,y,as.numeric(z[,i]))
+      colnames(fnc.array[[i]]) <- c("x","y","z")
+    }
+    
+    names(fnc.array) <- func.names
+    attr(fnc.array, "class") <- "fnc.df"
+  }
+  
+  
+  return(fnc.array)
 }
 
 
-#' Produces a 3D polynomial surface of a single functional dataframe.
-#'     Useful for testing and checking data
+
+
+#' Finds the top percentile of a W dataframe
 #'
-#' @param X An x,y,z funtional dataframe produced by fnc_dataframe
-#' @param npoly Numeric. Determines the degree of polynomial to apply to the
-#'     surface. Usually 3rd order polynomials produce the best fit
-#' @param npoints Numeric. Optional argument to up or downsample the number x,y
-#'     grid points. Defaults to the number of observations in X
-#' @param fnc.name Optional string to label the functional surface
-#' @param plot Logical. Plot surfaces. Defaults to true
-#' @param pad Add padding to range data. Defaults to adding 0.2 on all range margins
-#' @param npoly Number of polynomials
-#' @param ... optional paramaters to pass onto plot    
-#' @return Returns a list of polynomial surface objects:
-#'     poly: the polynomial model applied to X
-#'     summary: the polynomial model summary
-#'     surface: the polynomial surface fit to X
+#' @param X A W dataframe
+#' @param percentile upper percentage from which to sample
+#' @param method "Quantile" or "Chi-squared"
+#' @param sortby an optional input to choose which vector to sort by. Defaults to "Z"
+#'
+#' @return
 #' @export
 #'
-#' @examples X
-fnc.surface <- function(X, method = "poly", npoints = NULL, plot = F, pad = 1.2, fnc.name = NULL, range = NULL, npoly = 3,...){
-    X <- as.matrix(X)
-
-    X <- na.omit(X)
-
-    x <- X[,1]
-    y <- X[,2]
-    z <- X[,3]
-
-
-    if (is.null(range)){
-        range <- rbind(range(x)*pad,
-                       range(y)*pad)
-
-    }
-
-    if (is.null(npoints)){
-        npoints = length(x)
-    }
-
-    if (!is.null(fnc.name)){
-        print(fnc.name)
-    }
-
-    if (method == "poly"){
-        npoly = npoly
-        poly <- spatial::surf.ls(np = npoly, x = x, y = y, z = z) #fit polynomial least squares trend surface
-        summary(poly)
-        poly.surf<-spatial::trmat(poly, range[1,1], range[1,2],
-                         range[2,1], range[2,2], npoints) # evaluate grid points over surface
-        poly.surf$z <- scale.z(poly.surf$z)
-        # attr(poly.surf, "class") <- "surf"
-        fn.surf <- list(poly = poly, surface = poly.surf)
-        # attr(fn.surf,"class") <- "Fnc.surf"
-        
-        return(fn.surf)
-    }
-    
-
-    ### ADD CLASS AND S3 METHOPDS FOR PLOTTING
-    if (method == "kriging"){
-        Kr <- kriging(x = x, y = y, response = z)
-        
-        return(Kr)
-
-    }
-    return(list(poly = poly, surface = poly.surf))
+#' @examples
+gettop <- function(X, percentile = 0.05, method, sortby = "Z"){
+  X <- X[ order( X[ , sortby], decreasing = T), ]
+  if(method=="quantile"){
+    X.top <- X[ X[ , sortby] > quantile( X[, sortby], probs = 1-percentile) , ]
+  }
+  if(method=="chi-squared"){
+    critval <- qchisq(percentile, 2)
+    x <- ( -2*( X[ , sortby] - X[ , sortby][1]) )
+    X.top <- X[ 1:length( which( x < critval) ), ]
+  }
+  
+  return(X.top)
 }
 
 
-surf_hull <- function(coords2D, alpha = 0.001, plot = F){
+
+#' Create a hull around input data. Allows for subsampling the total morphospace
+#'
+#' @param coords2D A matrix of coordinates from the input dataset
+#' @param alpha 0-1 alpha value for hull formation.
+#' @param plot Option to plot output hulled grid
+#' @param resample resampling density. Defaults to 100
+#'
+#' @return returns a grid of coordinates
+#' @export
+#'
+#' @examples
+surf_hull <- function(coords2D, alpha = 1, plot = F, resample = 100){
   
-  datahull <- ahull(coords2D[,1], coords2D[,2], alpha = alpha)
+  datahull <- ahull(coords2D[,1], coords2D[,2], alpha = 1)
   
-  data_poly <- ahull2poly(datahull)
-  
-  hull_coords <- list(data_poly@polygons[[1]]@Polygons[[1]]@coords)
-  
-  ## define grid
   
   gridX <- seq(from = range(coords2D[,1])[1],
                to = range(coords2D[,1])[2],
-               length = 100)
+               length = resample)
   
   gridY = seq(from = range(coords2D[,2])[1],
               to = range(coords2D[,2])[2],
-              length = 100)
+              length = resample)
   
   grid2D <- expand.grid(x = gridX, y = gridY)
-  
-  
   
   hull.grid <- grid2D[inahull(datahull, p = as.matrix(grid2D)),]
   
   
   hull.grid <- as.data.frame(hull.grid)
+  
   gridded(hull.grid) = ~x+y
   
   if(plot){
     
-    par(mfrow = 2,2)
-    plot(data_poly, main = "alpha hull")
-    plot(hull_coords[[1]], main = "alpha hull points")
+    par(mfrow = c(2,2))
+    # plot(data_poly, main = "alpha hull")
+    # plot(hull_coords[[1]], main = "alpha hull points")
     plot(grid2D, main = "resample grid")
     plot(hull.grid, main = "resample grid hull")
-    
     
   }
   
@@ -176,30 +170,53 @@ surf_hull <- function(coords2D, alpha = 0.001, plot = F){
 }
 
 
-krige_surf <- function(X, hull = T, alpha = 0.001, hullPlot = F, ...){
+
+#' Generate a surface by Kriging. 
+#'
+#' @param X A functional dataframe containing XY coordinates and scaled performance data.
+#' @param hull Logical. Subset morphospace by creating a hull around input data
+#' @param new_data XY coordinate data for points to calculate on the surface. This should contain all specimen coordinates or group means you wish to calculate in subsequent analyses
+#' @param alpha 0-1 Alpha value to pass onto surf_hull
+#' @param hullPlot Logical. Plot hull grid
+#' @param resample resampling density of Kriged surfaces. Defaults to 100
+#'
+#' @return
+#' @export
+#'
+#' @examples
+krige_surf <- function(fnc_df, hull = T, new_data = NULL, alpha = 1, resample = 100){
   
-  
+  X <- na.omit(fnc_df)
   coords2D <- X[,1:2]
-  
+  new_NULL <- new_data
   
   if(hull){
-    grid2D <- surf_hull(coords2D, alpha = alpha, plot = hullPlot)
-    
+    grid2D <- surf_hull(coords2D, alpha = alpha, resample = resample)
   } else{
     gridX <- seq(from = range(coords2D[,1])[1],
                  to = range(coords2D[,1])[2],
-                 length = 100)
+                 length = resample)
     
     gridY = seq(from = range(coords2D[,2])[1],
                 to = range(coords2D[,2])[2],
-                length = 100)
+                length = resample)
     
-    grid2D <- as.data.frame(expand.grid(x = gridX, y = gridY))
-    
-    gridded(grid2D) = ~x+y
+    grid2D <- expand.grid(x = gridX, y = gridY)
   }
   
-  Z <- X[,3:ncol(X)]
+  grid2D <- as.data.frame(grid2D)
+  ngrid <- nrow(grid2D)
+  
+  if(!is.null(new_data)){
+    if(!is.matrix(new_data)){
+      new_data <- matrix(new_data, ncol = 2)
+    }
+    
+    # new_data <- rbind(as.matrix(grid2D), new_data)
+    new_data <- SpatialPoints(new_data)
+  } 
+  
+  Z <- data.frame(X[,3:ncol(X)])
   
   data_list <- list()
   for (i in 1:ncol(Z)){
@@ -210,91 +227,182 @@ krige_surf <- function(X, hull = T, alpha = 0.001, hullPlot = F, ...){
   
   names(data_list)<- colnames(Z)
   
-  krig_list <- lapply(data_list, FUN = autoKrige, grid2D)
+  krig_grid <- suppressWarnings(lapply(data_list, FUN = autoKrige, new_data = SpatialPoints(grid2D)))
+  krig_new_data <- suppressWarnings(lapply(data_list, FUN = autoKrige, new_data = new_data))
   
-  return(krig_list)
+  
+  
+  # X<- krig_list$EXP_SE
+  
+  kriged_fn_df_grid <- cbind(as.data.frame(grid2D),
+                             sapply(krig_grid, FUN = function(X){
+                               as.data.frame(X$krige_output)[,3]
+                             }
+                             ))
+  
+  kriged_fn_df_newdata <- cbind(as.data.frame(new_data),
+                                sapply(krig_new_data, FUN = function(X){
+                                  as.data.frame(X$krige_output)[,3]
+                                }
+                                ))
+  
+  
+  
+  kriged_fn_df_grid[,-c(1,2)]  <- apply(kriged_fn_df_grid[,-c(1,2)], MARGIN = 2, FUN = scale.z)
+  kriged_fn_df_newdata[,-c(1,2)]  <- apply(kriged_fn_df_newdata[,-c(1,2)], MARGIN = 2, FUN = scale.z)
+  
+  
+  # krigedgrid = kriged_fn_df[1:ngrid,]
+  
+  # krigednew_data = kriged_fn_df[(ngrid+1):nrow(kriged_fn_df),]
+  
+  # surfaces <- list(autoKrige = krig_list,
+  #                  dataframes = list(grid = krigedgrid,
+  #                                    new_data = krigednew_data) )
+  
+  surfaces <- list(autoKrige = krig_grid,
+                   dataframes = list(grid = kriged_fn_df_grid,
+                                     new_data = kriged_fn_df_newdata) )
+  
+  # plot_fn_kr(surfaces)
+  
+  
+  class(surfaces) <- "kriged_surfaces"
+  
+  return(surfaces)
   
 }
 
-#' Produces a list of polynomial surface fits from multiple functional
-#'     dataframes. Is essentailly an apply wrapper for fnc.surface
+
+
+
+#' Calculate a Zprime surface for a given vector of W
 #'
-#' @param X A data table of XY coordinates and Z trait values, or a list of x,y,z functonal dataframes from 'fnc.dataframe'
-#' @param ... Paramaters to pass onto fnc.surface and plot         
+#' @param W 
+#' @param fnc_data A dataframe containing performance traits and coordinate data
+#' @param rekrige Optional. Rekrige output Zprime
 #'
-#' @return Returns a multi.fnc.surface object. A list containing N number of
-#'     functional surfaces. See fnc.surface for details
+#' @return
 #' @export
 #'
-#' @examples X
-multi.fnc.surface <- function(X, par = par(), ...){
-
-    if( class (X) != "fnc.df"){
-        X <- fnc.dataframe(X)
-    }
+#' @examples
+calc.W.kr <- function(W, fnc_data, rekrige = F){
+  
+  names(W) <- names(fnc_data$grid[,3:ncol(fnc_data$grid)])
+  
+  Wprime <- lapply(fnc_data, FUN = function(data,W){
+    XY <- data[,1:2]
+    FN <- data[,3:ncol(fnc_data$grid)]
+    FNw <- sweep(FN, 2, W, FUN= "*")
+    Z <- rowSums(FNw)
+    Wprime <- cbind(FNw, Z)
     
-    multi.surf <- list()
-    for(l in 1:length(X)){
-        multi.surf[[l]] <- fnc.surface(X[[l]],
-                                       fnc.name = names(X)[l], ...)
-    }
-    names(multi.surf) = names(X)
-    # attr(multi.surf,"class") <- "multi.Fnc.surf"
-    return(multi.surf)
+    
+    Wprime <- cbind(XY, Wprime)
+    
+  },W)
+  
+  return(list(W = W, Wprime = Wprime))
+
 }
 
 
-
-
-
-#' Calculate combined surface calculate W on the adaptive landscape
-#'  W = w1*F1 + w2*F2 (Polly et al, 2016)
+#' Calculate all weighted landscapes
 #'
-#' @param Fn A multi.surf object from multi.fnc.surface
-#' @param wn A set of performance weights. Can be user derived or generated
-#'   using search.w.exhaustive
-#' @param xmar,ymar A vector of length 2 defining the X and Y limits
-#' @param n The number of grid points to subset along each axis
-#' @param ... Parameters to pass onto nested functions
+#' @param weights a dataframe of weight combinations generated by generate.weights()
+#' @param fnc_data a dataframe of functional traits. The first two columns should represent the XY coordinates, with subsequent columns representing scaled trait data.
+#' @param new_data an optional matrix of coordinate data to interpolate on landscapes. If calculation of group landscapes is desired, all datapoints must be provided here
+#' @param plot currently not functional. Logical. An option to plot kriged performance surfaces from fnc_data
+#' @param save.all Logical. Save results to file. Recommended for large weights dataframes.
+#' @param verbose currently not functional. Option to export all data
+#' @param file.out Optional. Output name for saved results
+#' @param ... Optional parameters to pass onto krige_surf
 #'
-#' @return A polynomial function and surface defining the summed adaptive
-#'   landscape
+#' @return Returns a list containing $kriged_fnc a list of autoKrige surfaces for each performacne trait; 
+#' $fn_dataframe a dataframe of resampled grid points and new_data points on performacne surfaces;
+#' $all_Wprime_surfs a list containing resampled grid and new_data points for all weighted landscapes
 #' @export
 #'
-#' @examples X
-adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
-
-        Fn.tmp <- list()
-        for (i in 1:length(Fn)){
-            Fn.tmp[[i]] <-Fn[[i]]$poly
-
-        }
-        names(Fn.tmp) <- names(Fn)
-        Fn <- Fn.tmp
-
-
-    dx <- (xmar[2] - xmar[1]) / n
-    dy <- (ymar[2] - ymar[1]) / n
-    x  <- seq(xmar[1], xmar[2], dx)
-    y  <- seq(ymar[1], ymar[2], dy)
-    Zprime.grid <- expand.grid(x, y)
-    zraw <- matrix(apply(Zprime.grid, 1, FUN=W, wn, Fn),
-                   nrow=length(x), ncol=length(y), byrow= F)
-
-    z <- (zraw - min(zraw))
-    z <- z / max(z)
-
-    surface <- list(x = x, y = y, z = z)
-    # attr(surface, "class") <- "surf"
+#' @examples
+calc.all.lscps <- function(weights, fnc_data, new_data = NULL,
+                           save.all = T,  verbose = T,
+                           file.out = "allLandscapes", ...){
+  
+  colnames(new_data) <- c("x", "y")
+  
+  if(is.data.frame(fnc_data)){
+    # fnc_data <- krige_surf(X = fnc_data, new_data = new_data)
+    kr_data <- krige_surf(fnc_data, new_data = new_data)
+  }
+  
+  if(class(kr_data)== "kriged_surfaces"){
     
-    adap.surface <- list(surface = surface,
-                         zraw = zraw,model=list(Fn=Fn,wn=wn))
-    # attr(adap.surface, "class") <- "adap.lscp"
-
-    return(adap.surface)
+    fn_dataframe <- kr_data$dataframes
+    
+  } else(stop("data is not a dataframe or kriged_surfaces object"))
+  
+  # rownames(rawdata$EXP_SE)
+  
+  
+  
+  
+  # all_Wprime_surfs <-  apply(weights, MARGIN = 1, FUN = calc.W.kr,
+  #                            fnc_data = fn_dataframe)
+  
+  all_Wprime_surfs <-  apply(weights, MARGIN = 1, FUN = calc.W.kr,
+                             fnc_data = fn_dataframe, ...)
+  
+  
+  
+  all_Lscape_data <- list(fnc_data = fnc_data,
+                          kriged_fnc_surfs = kr_data, 
+                          fn_dataframe = fn_dataframe, 
+                          all_Wprime_surfs = all_Wprime_surfs)
+  
+  
+  
+  
+  if(save.all){
+    if(!dir.exists("./landscapeResults")){
+      dir.create("./landscapeResults")
+    }
+    
+    fp = paste("./landscapeResults", "/",
+               file.out, ".Rdata", sep = "")
+    
+    if(file.exists(fp)){
+      file.remove(fp)
+    }
+    save(all_Lscape_data, file = fp)
+  }
+  
+  return(all_Lscape_data)
+  
 }
 
 
+#' Workhorse function for generate.weights. Used to flexibly generate combinations of weights.
+#'
+#' @param n 
+#' @param k 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+parti <- function(n, k) {
+  if (n < 0) {
+    message("error: n<0")
+    return(NA)
+  }
+  if (k == 1)
+    return(matrix(n, 1, 1))
+  M <- cbind(parti(n, k - 1), 0)
+  if (n > 0)
+    for (i in (1:n)) M <- rbind(M, cbind(parti(n - i, k - 1), i))
+  M
+  
+}
 
 #' Generate a generic dataframe containing weight combinations. Can be used in
 #'   search.w.exhaustive, or to split jobs for distributed computing
@@ -302,8 +410,6 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
 #' @param step Numeric. Degree by which to vary weights by.
 #' @param nvar Numeric. Number of variables (columns) to generate
 #' @param varnames Optional. Names for variables
-#' @param time.est Optional. Estimate length of time to perform
-#'   search.w.exhaustive
 #' @param verbose Logical. Return dataframe. Used for silencing in time.est
 #' @param ...
 #'
@@ -311,7 +417,7 @@ adap.surf <- function(Fn, wn, xmar, ymar, n, ...) {
 #' @export
 #'
 #' @examples X
-generate.weights <- function(step, nvar, varnames = NULL, time.est = F,
+generate.weights <- function(step, nvar, varnames = NULL, 
                              verbose = T, Fn = NULL, ...) {
     n = 1/step
     weights<- parti(n, nvar)/n
@@ -321,13 +427,6 @@ generate.weights <- function(step, nvar, varnames = NULL, time.est = F,
     }  else colnames(weights) <- 1:nvar
 
     print(paste(nrow(weights),"rows generated"))
-
-    if (time.est) {
-        xmar<-range(Fn[[1]][[1]]$x)
-        ymar<-range(Fn[[1]][[1]]$y)
-        time_est(num.perm = nrow(weights), nvar = nvar, Fn = Fn,
-                 xmar = xmar, ymar = ymar)
-    }
 
     if (verbose) return(weights)
 }
@@ -366,228 +465,100 @@ time_est <- function(num.perm, nvar, Fn, xmar, ymar) {
 }
 
 
-# method can be either 'sum' or 'mean'. Sum will caculate w for all points given and sum them, mean with calculate only the mean of the points given.
-# default is 'mean' which is faster optimum can be either 'absolute' or 'relative'.  absolute calculates the absolute height on the landscape, where
-# relative compares it to the wmax, the heightest point on the landscape.  'Relative' can sometimes give odd results and should be used with caution
-
-#' Calculate the optimum weights for each trait given a position, or group in
-#' morphospace
-#'
-#' @param Zprime Numeric vector of length=2, or Nx2 matrix containing x,y
-#'     coordiates to optimize for
-#' @param Fn A multi.fnc.surface list containing traits to model for
-#' @param weights.df An optional matrix containing all possible combinations of
-#'      wn given n number of traits.
-#' @param step Optional numeric. The degree by which to vary wn by. Required if
-#'     weights.df is not provided. Smaller step sizes require exponentially more
-#'      computation time.
-#' @param xmar,ymar Numeric vector containing min/max margins for morphospace
-#' @param Cluster logical. Split computation across multiple machines.
-#'     Currently not working
-#' @param method Method by which to summarize optimization results when multiple
-#'      Zprime coordintes are provided. Both produce similar results, but have
-#'       not been stress tested.
-#' @param optimum Criteria to optimize for and sort results by. Currently only
-#'     "absolute" height on the landscape is supported, though all optimization
-#'     metrics are returned. See details.
-#'
-#' @return A matrix containing three optimization metrics for all combinations
-#'     of weights as provided by weights.df, or generated by 'step'.
-#'     Automatically sorted by 'absolute'.
-#' @export
-#' @details
-#'
-#' @examples X
-search.w.exhaustive <- function(step =NULL, Zprime, Fn, Cluster = F,
-                                method = c("mean","sum"),
-                                optimum = c("absolute"),
-                                xmar=xmar, ymar=ymar,weights.df = NULL){
-
-
-        Zprime <- matrix(Zprime[1:2], ncol = 2)
-        colnames(Zprime) <- c("x","y")
-        
-
-
-    if(length(Fn[[1]]) == 3) {
-        Fn.tmp <- list()
-        for (i in 1:length(Fn)){
-            Fn.tmp[[i]] <-Fn[[i]]$poly
-
-        }
-        names(Fn.tmp) <- names(Fn)
-        Fn <- Fn.tmp
-
-    }
-
-    if(is.null(weights.df)){
-        # if(is.null(weights.df)){
-        #     stop("no step size provided. Please provide either a step size or weights dataframe")
-        # }
-        weights.df <- generate.weights(step,nvar=length(Fn))
-        colnames(weights.df) <- names(Fn)
-
-    }
-    # Cluster mode is not currently working | must troubleshoot
-    # if (Cluster){
-    #     no_cores <- detectCores()
-    #     cl <- makeCluster(no_cores)
-    #     clusterExport(cl, varlist=c("max_Wprime","DEoptim",
-    #                                 "Zprime","Fnc.surf","W","lik_Zprime",
-    #                                 "Fn","xmar","ymar"),
-    #                   envir=environment() )
-    # 
-    #     lik <- parApply(cl = cl, X = weights.df, MARGIN = 1, FUN=lik_Zprime,
-    #                     Zprime=Zprime, Fn = Fn,
-    #                     xmar=xmar, ymar=ymar)
-    #     stopCluster(cl)
-    # 
-    # } else{
-
-        lik <- apply(X = weights.df, MARGIN = 1, FUN=lik_Zprime,
-                     Zprime=Zprime, Fn = Fn,
-                     xmar=xmar, ymar=ymar,
-                     method = method,
-                     optimum = optimum)
-
-    # }
-
-    colnames(weights.df)[1:length(Fn)] <- names(Fn)
-    weights.df <- cbind(weights.df, t(lik))
-
-    print("Done!")
-    return(weights.df)
+getwn <- function(X, index){
+  Zprime <- data.frame(t(as.matrix(X[[1]])),as.matrix(X$Wprime$new_data[index,c("x","y","Z")]))
 }
 
-
-#' Calculate pareto front between two landscapes
+#' Extract new_data points from a wn list
 #'
-#' @param surf.1,surf.2 surface objects
-#' @param plot logical, plot pareto front
-#' @param a sequence from 1-0 to calculate the pareto transtion
-#' @param ... additional parameters for plot.surf
-#' @param smooth optional c("spline", "kernel"), determines which smoothing
-#'   method to use. The "spline" method will fail if mulitple values of Y exist
-#'   for a given X, in which case use "kernel"
+#' @param X a Wprime list from calc.all.lscps
+#' @param index an index of new_data points to extract
 #'
-#' @return a list containing the pareto transition
+#' @return Returns a dataframe if index = 1, else a list of points for each wn
 #' @export
 #'
-#' @examples X
-pareto <- function(surf.1,surf.2,plot=F,a=NULL, smooth = c("kernel"), ...){
-
-    if (is.null(a)){
-        a <- seq(1,0, by= -0.025)
-    }
-    b <- 1-a
-    comb <- surf.1
-
-    z <- vector()
-    x <- vector()
-    y <- vector()
-
-    i=1
-    for(i in 1:length(a)){
-        comb$z <- rep(NA,length(surf.1$z))
-        comb$z <- surf.1$z*a[i] + surf.2$z*b[i]
-        if (plot){
-          dev.off()
-          plot_surf(comb,main="Combined",...)
-
-        }
-
-
-        z[i] <- max(comb$z)
-        x[i] <- comb$x[which(comb$z==max(comb$z),arr.ind = T)[1]]
-        y[i] <- comb$y[which(comb$z==max(comb$z),arr.ind = T)[2]]
-
-    }
-
-
-    surf.1$max$x <- surf.1$x[which(surf.1$z==max(surf.1$z),arr.ind = T)[1]]
-    surf.1$max$y <- surf.1$y[which(surf.1$z==max(surf.1$z),arr.ind = T)[2]]
-    surf.1$max$z <- max(surf.1$z)
-    surf.1.max <- data.frame(surf.1$max)
-
-    surf.2$max$x <- surf.2$x[which(surf.2$z==max(surf.2$z),arr.ind = T)[1]]
-    surf.2$max$y <- surf.2$y[which(surf.2$z==max(surf.2$z),arr.ind = T)[2]]
-    surf.2$max$z <- max(surf.2$z)
-    surf.2.max <- data.frame(surf.2$max)
-    pareto<-data.frame(x,y,z)
-    
-    if (smooth == "kernel"){
-        pareto.line <- smoothr::smooth_ksmooth(as.matrix(pareto[,1:2]),
-                                               smoothness=10)
-    }
-    
-    
-    
-    return(list(pareto=pareto, pareto.line = pareto.line, 
-                surf.1.max=surf.1.max,surf.2.max=surf.2.max))
+#' @examples
+getNew_dataW <- function(X, index){
+  newDat <- lapply(X, getwn, index)
+  return(newDat)
+  
 }
 
 
 
-#' Sum any number of adaptive landscapes
+#' Calculate Wprime for a given index of new_data
 #'
-#' @param landscapes a list of adaptive lanscapes
+#' @param index a vector containing an index of new_data points
+#' @param X a Wprime list from calc.all.lscps
+#' @param method c("chi-squared", "max") method to calculate Wprime. Defaults to "chi-squared"
+#' @param percentile upper percentile which to calculate Wprime if using method = "chi-squared"
+#' @param verbose logical. If TRUE, Also returns a full list of Z values for index
 #'
-#' @return Returns a combined adpative landscape
+#' @return Returns a list containing Wprime, and W, a dataframe of all calculated landscape heights.
+#' @description Calculate the best landscape (Zprime) for a given index of new_data. If index is greater than 1 then Z is calculated for all points and averaged. Returns Zprime and a dataframe containing weights, group mean coordinates and Z heights, If index is a single point, returns Zprime and a dataframe of heights for the single point.   
 #' @export
 #'
-#' @examples X
-sum_surface <- function(landscapes) {
-    L <- list()
-    for (l in 1:length(landscapes)) {
-        L[[l]] <- landscapes[[l]]$surface$z
-    }
-    lscp.sum <- Reduce("+", L)
-    L <- list(x = landscapes[[1]]$surface$x, y = landscapes[[1]]$surface$y, z = lscp.sum)
-    class(L) <- "surf"
-    return(L)
-}
-
-#' Calculate a transition landscape between two landscapes
-#'
-#' @param X,Y A $surface onject
-#' @param binary Logical. Calcuate as a binary transition (STILL IN
-#'   DEVELOPMENT). Defaults to FALSE
-#'
-#' @return Returns a $surface object
-#' @export
-#'
-#' @examples X
-trans.surface <- function(X, Y, binary = F) {
-    L <- X
-    L$surface$z <- (X$surface$z + 1)/(Y$surface$z + 1)
-
-    if (binary) {
-        bn <- L$surface$z > 1
-        L$surface$z[bn] <- 1
-    }
-    class(L) <- "surf"
-    return(L)
-}
-
-sub_surface <- function(surf.1, surf.2 ){
-    L <- X
-    L$surface$z <- (X$surface$z + 1)/(Y$surface$z + 1)
+#' @examples
+calcGrpWprime <- function(index, X, method = "chi-squared", percentile = 0.05, verbose = T){
+  
+  
+  surfs <- X$all_Wprime_surfs
+  fn_dataframe <- X$fn_dataframe
+  
+  
+  Wlist <- getNew_dataW(surfs, index)
+  tmp <- do.call(rbind,lapply(Wlist, function(X) colMeans(X)))
+  tmp <- tmp[ order( tmp[ , "Z"], decreasing = T), ]
+  
+  if(method =="max"){
+    max <- tmp[which.max(tmp[,"Z"]),]
     
-    if (binary) {
-        bn <- L$surface$z > 1
-        L$surface$z[bn] <- 1
+  } 
+  
+  if(method == "chi-squared"){
+    
+    X.top <- gettop(tmp, percentile = percentile, method = method,
+                    sortby = "Z")
+    if(is.matrix(X.top)){
+      max <- colMeans(X.top)
+    } else{
+      max <- X.top
+      
     }
-    class(L) <- "surf"
-    return(L)
-
+    
+  }
+  # 
+  
+  
+  
+  
+  
+  Zprime <- colMeans( X.top[,-match(c("x","y"), colnames(X.top))] )
+  wn.se <- apply(X.top[,-match(c("x","y"), colnames(X.top))],2, plotrix::std.error)
+  wn.sd <- apply(X.top[,-match(c("x","y"), colnames(X.top))],2, sd)
+  wn.range <- apply(X.top[,-match(c("x","y"), colnames(X.top))],2, range)
+  
+  
+  Wprime <- calc.W.kr(W = Zprime[-match(c("Z"), names(Zprime))], fnc_data = fn_dataframe)
+  
+  
+  
+  if(verbose){
+    return(list(list(Zprime=Zprime, wn.se=wn.se, wn.sd=wn.sd, wn.range=wn.range), W = tmp, Wlist = Wlist))
+    # return(list(list(Zprime=Zprime, wn.se=wn.se, wn.sd=wn.sd, wn.range=wn.range), W = tmp, Wlist = Wlist))
+    
+  }else{
+    return(list(Zprime = list(wn=Zprime, wn.se=wn.se, wn.sd=wn.sd, wn.range=wn.range), Wprime = Wprime,  W = tmp))  }
+  
 }
 
 
+# THIS FUNCTION IS CURRENTLY NON-FUNCTIONAL
 
 #' Calculate the best model fits
 #'
 #' @param X A weights matrix generated from search.w.exhaustive()
-#' @param sortby c("z", "lik", "dis"). Which optimization vector to sort by.
+#' @param sortby c("z"). Which optimization vector to sort by.
 #'   Defaults to "lik"
 #' @param percentile percentile (alpha) cuttoff. Defaults to 0.99 (0.01)
 #' @param method method by which to calculate top fits. Method = "quantile"
@@ -601,7 +572,7 @@ sub_surface <- function(surf.1, surf.2 ){
 #' @export
 #'
 #' @examples X
-calc.best.wn <- function(X, sortby = "lik", percentile = 0.99, method=c("quantile")){
+calc.best.wn <- function(X, sortby = "Z", percentile = 0.99, method=c("quantile")){
     X <- X[ order( X[ , sortby], decreasing = T), ]
     if(method=="quantile"){
         X.top <- X[ X[ , sortby] > quantile( X[, sortby], probs = percentile) , ]
@@ -611,10 +582,14 @@ calc.best.wn <- function(X, sortby = "lik", percentile = 0.99, method=c("quantil
         x <- ( -2*( X$lik - X$lik[1]) )
         X.top <- X[ 1:length( which( x < critval) ), ]
     }
-    wn <- colMeans( X.top[, -match(c("z", "lik", "dis"), colnames(X))] )
-    wn.se <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, plotrix::std.error)
-    wn.sd <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, sd)
-    wn.range <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, range)
+    wn <- colMeans( X.top[, -match(c("z", "lik"), colnames(X))] )
+    wn.se <- apply(X.top[,-match(c("z", "lik"), colnames(X))],2, plotrix::std.error)
+    wn.sd <- apply(X.top[,-match(c("z", "lik"), colnames(X))],2, sd)
+    wn.range <- apply(X.top[,-match(c("z", "lik"), colnames(X))],2, range)
+    # wn <- colMeans( X.top[, -match(c("z", "lik", "dis"), colnames(X))] )
+    # wn.se <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, plotrix::std.error)
+    # wn.sd <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, sd)
+    # wn.range <- apply(X.top[,-match(c("z", "lik", "dis"), colnames(X))],2, range)
     return(list(wn=wn, wn.se=wn.se, wn.sd=wn.sd, wn.range=wn.range))
 }
 
@@ -623,74 +598,74 @@ calc.best.wn <- function(X, sortby = "lik", percentile = 0.99, method=c("quantil
 
 
 
-
-
-require("alphahull")
-require("hull2spatial")
-require("sp")
-require("automap")
-
-#' Surface Kriging
-#'
-#' @param X A Functional Dataframe. Columns 1,2 should contain XY morphospace coordinates, with subsequent columns containing functional data correspoinding to morphospace points.
-#' @param hull optional logical. If TRUE, function will only Krige area within the alpha hull as calculated by surf_hull
-#' @param alpha optional. Alpha value for surf_hull
-#' @param hullPlot Logical. Plot hull?
-#' @param ... additional parameters to pass onti autoKrige
-#'
-#' @return returns 
-#' @export
-#'
-#' @examples
-krige_surf <- function(X, hull = F, alpha = 0.001, hullPlot = F,...){
-  
-  X <- na.omit(X)
-  
-  if(!is.null(na.action(X))){
-    
-    warning("NAs detected, excluding rows ", paste(na.action(X), collapse = ","))
-    
-  }
-  
-  coords2D <- X[,1:2]
-  
-  
-  # if(hull){
-  #   grid2D <- surf_hull(coords2D, alpha = alpha, plot = hullPlot)
-  #   
-  # } else{
-  #   gridX <- seq(from = range(coords2D[,1])[1],
-  #                to = range(coords2D[,1])[2],
-  #                length = 100)
-  #   
-  #   gridY = seq(from = range(coords2D[,2])[1],
-  #               to = range(coords2D[,2])[2],
-  #               length = 100)
-  #   
-  #   grid2D <- as.data.frame(expand.grid(x = gridX, y = gridY))
-  #   
-  #   gridded(grid2D) = ~x+y
-  # }
-  
-  Z <- cbind(X[,3:ncol(X)])
-  
-  data_list <- list()
-  for (i in 1:ncol(Z)){
-    data_list[[i]] <- data.frame(x = X[,1],y = X[,2], z = Z[,i])
-    coordinates(data_list[[i]]) = c(1,2)
-    
-  }
-  
-  names(data_list)<- colnames(Z)
-  
-  
-  
-  krig_list <- lapply(data_list, FUN = autoKrige, ...)
-  
-  return(krig_list)
-  
-}
-
+#' 
+#' 
+#' require("alphahull")
+#' require("hull2spatial")
+#' require("sp")
+#' require("automap")
+#' 
+#' #' Surface Kriging
+#' #'
+#' #' @param X A Functional Dataframe. Columns 1,2 should contain XY morphospace coordinates, with subsequent columns containing functional data correspoinding to morphospace points.
+#' #' @param hull optional logical. If TRUE, function will only Krige area within the alpha hull as calculated by surf_hull
+#' #' @param alpha optional. Alpha value for surf_hull
+#' #' @param hullPlot Logical. Plot hull?
+#' #' @param ... additional parameters to pass onto autoKrige
+#' #'
+#' #' @return returns 
+#' #' @export
+#' #'
+#' #' @examples
+#' function(X, hull = F, alpha = 0.001, hullPlot = F,...){
+#'   
+#'   X <- na.omit(X)
+#'   
+#'   if(!is.null(na.action(X))){
+#'     
+#'     warning("NAs detected, excluding rows ", paste(na.action(X), collapse = ","))
+#'     
+#'   }
+#'   
+#'   coords2D <- X[,1:2]
+#'   
+#'   
+#'   # if(hull){
+#'   #   grid2D <- surf_hull(coords2D, alpha = alpha, plot = hullPlot)
+#'   #   
+#'   # } else{
+#'   #   gridX <- seq(from = range(coords2D[,1])[1],
+#'   #                to = range(coords2D[,1])[2],
+#'   #                length = 100)
+#'   #   
+#'   #   gridY = seq(from = range(coords2D[,2])[1],
+#'   #               to = range(coords2D[,2])[2],
+#'   #               length = 100)
+#'   #   
+#'   #   grid2D <- as.data.frame(expand.grid(x = gridX, y = gridY))
+#'   #   
+#'   #   gridded(grid2D) = ~x+y
+#'   # }
+#'   
+#'   Z <- cbind(X[,3:ncol(X)])
+#'   
+#'   data_list <- list()
+#'   for (i in 1:ncol(Z)){
+#'     data_list[[i]] <- data.frame(x = X[,1],y = X[,2], z = Z[,i])
+#'     coordinates(data_list[[i]]) = c(1,2)
+#'     
+#'   }
+#'   
+#'   names(data_list)<- colnames(Z)
+#'   
+#'   
+#'   
+#'   krig_list <- lapply(data_list, FUN = autoKrige, ...)
+#'   
+#'   return(krig_list)
+#'   
+#' }
+#' 
 
 
 #' Create alpha hull around data
@@ -703,23 +678,23 @@ krige_surf <- function(X, hull = F, alpha = 0.001, hullPlot = F,...){
 #' @export
 #'
 #' @examples
-surf_hull <- function(coords2D, alpha = 0.001, plot = F){
+surf_hull <- function(coords2D, alpha = 1, plot = F, resample = 1000){
   
-  datahull <- ahull(coords2D[,1], coords2D[,2], alpha = alpha)
+  datahull <- ahull(coords2D[,1], coords2D[,2], alpha = 1)
   
-  data_poly <- ahull2poly(datahull)
+  # data_poly <- ahull2poly(datahull)
   
-  hull_coords <- list(data_poly@polygons[[1]]@Polygons[[1]]@coords)
+  # hull_coords <- list(data_poly@polygons[[1]]@Polygons[[1]]@coords)
   
   ## define grid
   
   gridX <- seq(from = range(coords2D[,1])[1],
                to = range(coords2D[,1])[2],
-               length = 100)
+               length = resample)
   
   gridY = seq(from = range(coords2D[,2])[1],
               to = range(coords2D[,2])[2],
-              length = 100)
+              length = resample)
   
   grid2D <- expand.grid(x = gridX, y = gridY)
   
@@ -729,6 +704,7 @@ surf_hull <- function(coords2D, alpha = 0.001, plot = F){
   
   
   hull.grid <- as.data.frame(hull.grid)
+  
   gridded(hull.grid) = ~x+y
   
   if(plot){
@@ -741,7 +717,10 @@ surf_hull <- function(coords2D, alpha = 0.001, plot = F){
     
   }
   
-  return(hull.grid, plot )
+  return(hull.grid)
   
 }
+
+
+
 
