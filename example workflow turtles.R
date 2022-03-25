@@ -17,23 +17,30 @@ source("./R/plot_landscapes.R")
 
 # load and coerce data ----------------------------------------------------
 
+species.df <- read.csv("./data/turtle humeri/sp.fnc.df.csv", row.names = 1)
+
+grid.df <- read.csv("./data/turtle humeri/warp.fnc.df.csv", row.names = 1)
+
+grid.df$hydro <- 1-grid.df$hydro
+grid.df$fea <- 1-grid.df$fea
 
 
-points <- read.csv("./data/jaws/points_pred.csv")[,-1]
-coords <- as.matrix(points[,2:3])
-colnames(coords) <- c("x", "y")
 
-load("./data/jaws/exp_df.Rdata")
+species.eco <- read.csv("./data/turtle humeri/eco.csv", row.names = 1)
 
-
-eco <- points$Factor
+coords <- species.df[,1:2]
 
 
+
+# scale dataframes --------------------------------------------------------
+
+
+grid_df <- fnc.dataframe(grid.df)
 
 
 # calculate functional surfaces -------------------------------------------
 
-kr_surf <- krige_surf(exp_df, new_data = coords, hull = T, resample = 100)
+kr_surf <- krige_surf(grid_df, new_data = coords ,hull = T, resample = 100)
 
 plot_fn_kr(kr_surf)
 
@@ -47,7 +54,7 @@ weights <- generate.weights(step = 0.05, nvar = 4)
 
 
 #this function will automatically save to file at "./landscapeResults/allLandscapes.Rdata"
-all_Lscape_data <- calc.all.lscps(weights, new_data = coords, fnc_data = exp_df)
+all_Lscape_data <- calc.all.lscps(weights, new_data = coords, fnc_data = grid_df)
 
 
 
@@ -58,8 +65,8 @@ all_Lscape_data <- calc.all.lscps(weights, new_data = coords, fnc_data = exp_df)
 load("./landscapeResults/allLandscapes.Rdata")
 all_Lscape_data$all_Wprime_surfs[[1]]$Wprime$new_data
 
-GrpWprimeA <- calcGrpWprime(index = c(1,2,3), X = all_Lscape_data, verbose = F)
-GrpWprimeB <- calcGrpWprime(index = c(61,62,63), X = all_Lscape_data, verbose = F)
+GrpWprimeA <- calcGrpWprime(index = which(species.eco$Ecology=="S"), X = all_Lscape_data, verbose = F)
+GrpWprimeB <- calcGrpWprime(index = which(species.eco$Ecology=="T"), X = all_Lscape_data, verbose = F)
 
 GrpWprimeA$Wprime
 

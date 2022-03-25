@@ -68,25 +68,19 @@ fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
     z  <- apply(z, MARGIN = 2, FUN = scale.z)
   }
   
-  if(array){
-    fnc.array <- array(dim=c(nrow(z), 3, ncol(z)),
-                       dimnames = list(row.names,c("x","y","z"),func.names))
-    
-    for (i in 1:ncol(z)){
-      fnc.array[,,i] <- cbind(x,y,as.numeric(z[,i]))
-    }
-    
-  } else{
-    fnc.array <- list()
-    for (i in 1:ncol(z)){
-      
-      fnc.array[[i]] <- cbind(x,y,as.numeric(z[,i]))
-      colnames(fnc.array[[i]]) <- c("x","y","z")
-    }
-    
-    names(fnc.array) <- func.names
-    attr(fnc.array, "class") <- "fnc.df"
-  }
+  # if(array){
+  #   fnc.array <- array(dim=c(nrow(z), 3, ncol(z)),
+  #                      dimnames = list(row.names,c("x","y","z"),func.names))
+  #   
+  #   for (i in 1:ncol(z)){
+  #     fnc.array[,,i] <- cbind(x,y,as.numeric(z[,i]))
+  #   }
+  #   
+  # } else{
+    fnc.array <- data.frame(x,y,z)
+    # names(fnc.array) <- func.names
+    # attr(fnc.array, "class") <- "fnc.df"
+
   
   
   return(fnc.array)
@@ -206,15 +200,7 @@ krige_surf <- function(fnc_df, hull = T, new_data = NULL, alpha = 1, resample = 
   
   grid2D <- as.data.frame(grid2D)
   ngrid <- nrow(grid2D)
-  
-  if(!is.null(new_data)){
-    if(!is.matrix(new_data)){
-      new_data <- matrix(new_data, ncol = 2)
-    }
-    
-    # new_data <- rbind(as.matrix(grid2D), new_data)
-    new_data <- SpatialPoints(new_data)
-  } 
+
   
   Z <- data.frame(X[,3:ncol(X)])
   
@@ -228,30 +214,49 @@ krige_surf <- function(fnc_df, hull = T, new_data = NULL, alpha = 1, resample = 
   names(data_list)<- colnames(Z)
   
   krig_grid <- suppressWarnings(lapply(data_list, FUN = autoKrige, new_data = SpatialPoints(grid2D)))
-  krig_new_data <- suppressWarnings(lapply(data_list, FUN = autoKrige, new_data = new_data))
-  
-  
-  
-  # X<- krig_list$EXP_SE
-  
   kriged_fn_df_grid <- cbind(as.data.frame(grid2D),
                              sapply(krig_grid, FUN = function(X){
                                as.data.frame(X$krige_output)[,3]
                              }
                              ))
   
-  kriged_fn_df_newdata <- cbind(as.data.frame(new_data),
-                                sapply(krig_new_data, FUN = function(X){
-                                  as.data.frame(X$krige_output)[,3]
-                                }
-                                ))
   
   
   
   kriged_fn_df_grid[,-c(1,2)]  <- apply(kriged_fn_df_grid[,-c(1,2)], MARGIN = 2, FUN = scale.z)
-  kriged_fn_df_newdata[,-c(1,2)]  <- apply(kriged_fn_df_newdata[,-c(1,2)], MARGIN = 2, FUN = scale.z)
   
   
+  
+  if(!is.null(new_data)){
+      new_data <- as.matrix(new_data)
+  
+    # new_data <- rbind(as.matrix(grid2D), new_data)
+    new_data <- SpatialPoints(new_data)
+    krig_new_data <- suppressWarnings(lapply(data_list, FUN = autoKrige, new_data = new_data))
+    
+    kriged_fn_df_newdata <- cbind(as.data.frame(new_data),
+                                  sapply(krig_new_data, FUN = function(X){
+                                    as.data.frame(X$krige_output)[,3]
+                                  }
+                                  ))
+    kriged_fn_df_newdata[,-c(1,2)]  <- apply(kriged_fn_df_newdata[,-c(1,2)], MARGIN = 2, FUN = scale.z)
+    
+    surfaces <- list(autoKrige = krig_grid,
+                     dataframes = list(grid = kriged_fn_df_grid,
+                                       new_data = kriged_fn_df_newdata) )
+    
+  }else{
+    
+    surfaces <- list(autoKrige = krig_grid,
+                     dataframes = list(grid = kriged_fn_df_grid))
+  }
+  
+  
+  
+  
+  # X<- krig_list$EXP_SE
+  
+
   # krigedgrid = kriged_fn_df[1:ngrid,]
   
   # krigednew_data = kriged_fn_df[(ngrid+1):nrow(kriged_fn_df),]
@@ -260,9 +265,6 @@ krige_surf <- function(fnc_df, hull = T, new_data = NULL, alpha = 1, resample = 
   #                  dataframes = list(grid = krigedgrid,
   #                                    new_data = krigednew_data) )
   
-  surfaces <- list(autoKrige = krig_grid,
-                   dataframes = list(grid = kriged_fn_df_grid,
-                                     new_data = kriged_fn_df_newdata) )
   
   # plot_fn_kr(surfaces)
   
