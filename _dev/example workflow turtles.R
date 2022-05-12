@@ -42,7 +42,7 @@ grid_df <- fnc.dataframe(grid.df)
 
 kr_surf <- krige_surf(grid_df, new_data = coords ,hull = T, resample = 100)
 
-plot_fn_kr(kr_surf)
+plot(kr_surf)
 
 
 # calculate all landscapes ------------------------------------------------
@@ -50,25 +50,29 @@ plot_fn_kr(kr_surf)
 
 
 
-weights <- generate.weights(step = 0.05, nvar = 4)
+weights <- generate_weights(step = 0.05, data = kr_surf)
 
 
 #this function will automatically save to file at "./landscapeResults/allLandscapes.Rdata"
-all_Lscape_data <- calc.all.lscps(weights, new_data = coords, fnc_data = grid_df)
-
+# all_Lscape_data <- calc_all_lscps(weights, new_data = coords, fnc_data = grid_df)
+all_Lscape_data <- calc_all_lscps(kr_surf, weights, save.all = F)
 
 
 # calculate best landscape for a given index of new_data ------------------
 
 
 
-load("./landscapeResults/allLandscapes.Rdata")
+load("./_dev/landscapeResults/allLandscapes.Rdata")
 all_Lscape_data$all_Wprime_surfs[[1]]$Wprime$new_data
 
-GrpWprimeA <- calcGrpWprime(index = which(species.eco$Ecology=="S"), X = all_Lscape_data, verbose = F)
-GrpWprimeB <- calcGrpWprime(index = which(species.eco$Ecology=="T"), X = all_Lscape_data, verbose = F)
+GrpWprimeA <- calcGrpWprime(index = which(species.eco$Ecology=="S"), X = all_Lscape_data)
+GrpWprimeB <- calcGrpWprime(index = which(species.eco$Ecology=="T"), X = all_Lscape_data)
 
 GrpWprimeA$Wprime
+plot(GrpWprimeA)
+
+GrpWprimes <- calcWprimeBy(all_Lscape_data, by = ~Ecology)
+plot(GrpWprimes)
 
 
 # compare groups ----------------------------------------------------------

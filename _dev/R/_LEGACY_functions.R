@@ -301,7 +301,7 @@
 #' 
 #' 
 #' 
-#' # THIS FUNCTION IS DEPRICATED BY calc.all.lscps()
+#' # THIS FUNCTION IS DEPRICATED BY calc_all_lscps()
 #' 
 #' # method can be either 'sum' or 'mean'. Sum will caculate w for all points given and sum them, mean with calculate only the mean of the points given.
 #' # default is 'mean' which is faster optimum can be either 'absolute' or 'relative'.  absolute calculates the absolute height on the landscape, where
@@ -361,7 +361,7 @@
 #' #         # if(is.null(weights.df)){
 #' #         #     stop("no step size provided. Please provide either a step size or weights dataframe")
 #' #         # }
-#' #         weights.df <- generate.weights(step,nvar=length(Fn))
+#' #         weights.df <- generate_weights(step,nvar=length(Fn))
 #' #         colnames(weights.df) <- names(Fn)
 #' # 
 #' #     }
@@ -583,7 +583,7 @@
 #' #'   generated from multi.fnc.surface
 #' #' @param morphospace A pca object defining the morphospace
 #' #' @param dir Directory to store cluster analysis objects
-#' #' @param weights Optional. A dataframe containing weights from generate.weights
+#' #' @param weights Optional. A dataframe containing weights from generate_weights
 #' #' @param step Optional. If weights is not provided, specify step size
 #' #' @param njobs Number of jobs to split into
 #' #'
@@ -605,7 +605,7 @@
 #'     {stop (cat("step size is not defined"))
 #'     }  else{
 #'       
-#'       weights <- generate.weights(step = step, verbose = T, nvar= length(Fn.surfaces))
+#'       weights <- generate_weights(step = step, verbose = T, nvar= length(Fn.surfaces))
 #'     }
 #'   }
 #'   

@@ -8,16 +8,16 @@ fill.grid <- function(X){
   colnames(full.grid)[1:2] <- c("X","Y")
   colnames(X)[1:2] <- c("X","Y")
   
-  X <- merge( X, full.grid, by = c("X", "Y"), all.x = T, all.y = T)
+  X <- merge(X, full.grid, by = c("X", "Y"), all = TRUE)
   
-  X <- X[order(X$Y),]
+  X <- X[order(X$Y),, drop = FALSE]
   return(X)
 }
 
 scale.z <- function(Z) {
   
-  Z <- Z - min(Z,na.rm = T)
-  Z <- Z/max(Z,na.rm = T)
+  Z <- Z - min(Z, na.rm = TRUE)
+  Z <- Z/max(Z, na.rm = TRUE)
   return(Z)
 }
 
@@ -47,43 +47,47 @@ scale.z <- function(Z) {
 #' @export
 #'
 #' @examples X
-fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
+#Coded
+fnc.dataframe <- function(X, row.names, func.names = NULL, array = FALSE, scale = TRUE){
   
-  if( nrow(X) != nrow(expand.grid(unique(X[,1]), unique(X[,2]))) ){
-    X <- fill.grid(X)
+  if (length(dim(X)) != 2) {
+    stop("'X' must be a matrix or data frame.", call. = FALSE)
   }
   
-  x <- X[,1] 
-  y <- X[,2]
-  z <- as.matrix(X[, -c(1:2)])
-  
-  
-  
-  if(is.null(func.names)){
-    
-    func.names <- colnames(X)[-c(1,2)]
-    
-  }    
-  if (scale){
-    z  <- apply(z, MARGIN = 2, FUN = scale.z)
+  if (!is.data.frame(X)) {
+    X <- as.data.frame(X)
   }
   
-  # if(array){
-  #   fnc.array <- array(dim=c(nrow(z), 3, ncol(z)),
-  #                      dimnames = list(row.names,c("x","y","z"),func.names))
-  #   
-  #   for (i in 1:ncol(z)){
-  #     fnc.array[,,i] <- cbind(x,y,as.numeric(z[,i]))
-  #   }
-  #   
-  # } else{
-    fnc.array <- data.frame(x,y,z)
-    # names(fnc.array) <- func.names
-    # attr(fnc.array, "class") <- "fnc.df"
+  if (is.null(func.names)) {
+    func.names <- names(X)[-(1:2)]
+  }
+  else if (!is.character(func.names)) {
+    stop("'func.names' must be a character vector of functional traits in 'X'.", call. = FALSE)
+  }
+  else if (!all(func.names) %in% names(X)[-(1:2)]) {
+    stop("All entries in 'func.names' must be names of non-coordinate columns in 'X'", call. = FALSE)
+  }
+  X <- X[c(names(X)[1:2], func.names)]
+  
+  if (!all(vapply(X, is.numeric, logical(1L)))) {
+    stop("All columns in 'X' containing coordinates and functional traits must be numeric.", call. = FALSE)
+  }
+  
+  # #Decide what to do with this
+  # if (nrow(X) != length(unique(X[,1]) * length(unique(X[,2])))) {
+  #   X <- fill.grid(X)
+  # }
+  
 
+  if (scale){
+    for (i in func.names) {
+      X[[i]] <- scale.z(X[[i]])
+    }
+  }
+  names(X)[1:2] <- c("x", "y")
   
-  
-  return(fnc.array)
+  class(X) <- c("fnc_df", class(X))
+  return(X)
 }
 
 
@@ -93,19 +97,26 @@ fnc.dataframe <- function(X, row.names, func.names=NULL, array = F, scale = T){
 #'
 #' @param X A W dataframe
 #' @param percentile upper percentage from which to sample
-#' @param method "Quantile" or "Chi-squared"
+#' @param method "quantile" or "chi-squared"
 #' @param sortby an optional input to choose which vector to sort by. Defaults to "Z"
 #'
 #' @return
 #' @export
 #'
 #' @examples
-gettop <- function(X, percentile = 0.05, method, sortby = "Z"){
-  X <- X[ order( X[ , sortby], decreasing = T), ]
-  if(method=="quantile"){
-    X.top <- X[ X[ , sortby] > quantile( X[, sortby], probs = 1-percentile) , ]
+gettop <- function(X, percentile = 0.05, method = "quantile", sortby = "Z"){
+  
+  if (length(method) != 1 || !is.character(method)) {
+    stop("'method' must be one of \"quantile\" or \"chi-squared\".", call. = FALSE)
   }
-  if(method=="chi-squared"){
+  method <- match.arg(method, c("quantile", "chi-squared"))
+  
+  X <- X[order(X[, sortby], decreasing = TRUE),, drop = FALSE]
+  
+  if (method == "quantile"){
+    X.top <- X[ X[ , sortby] > quantile( X[, sortby], probs = 1-percentile),, drop = FALSE]
+  }
+  else if (method == "chi-squared"){
     critval <- qchisq(percentile, 2)
     x <- ( -2*( X[ , sortby] - X[ , sortby][1]) )
     X.top <- X[ 1:length( which( x < critval) ), ]
@@ -127,47 +138,48 @@ gettop <- function(X, percentile = 0.05, method, sortby = "Z"){
 #' @export
 #'
 #' @examples
-surf_hull <- function(coords2D, alpha = 1, plot = F, resample = 100){
+surf_hull <- function(coords2D, alpha = 1, plot = FALSE, resample = 100){
   
-  datahull <- ahull(coords2D[,1], coords2D[,2], alpha = 1)
+  datahull <- alphahull::ahull(coords2D[[1]], coords2D[[2]], alpha = alpha)
   
   
-  gridX <- seq(from = range(coords2D[,1])[1],
-               to = range(coords2D[,1])[2],
+  gridX <- seq(from = min(coords2D[[1]]),
+               to = max(coords2D[[1]]),
                length = resample)
   
-  gridY = seq(from = range(coords2D[,2])[1],
-              to = range(coords2D[,2])[2],
-              length = resample)
+  gridY <- seq(from = min(coords2D[[2]]),
+               to = max(coords2D[[2]]),
+               length = resample)
   
-  grid2D <- expand.grid(x = gridX, y = gridY)
+  grid2D <- expand.grid(x = gridX, y = gridY, KEEP.OUT.ATTRS = FALSE)
   
-  hull.grid <- grid2D[inahull(datahull, p = as.matrix(grid2D)),]
-  
+  hull.grid <- grid2D[alphahull::inahull(datahull, p = as.matrix(grid2D)),]
   
   hull.grid <- as.data.frame(hull.grid)
   
-  gridded(hull.grid) = ~x+y
+  #Check if this is okay; should be logical, no?
+  sp::gridded(hull.grid) <- ~x+y
   
-  if(plot){
-    
+  if (plot) {
+    #Consider ggplot2 recode
     par(mfrow = c(2,2))
     # plot(data_poly, main = "alpha hull")
     # plot(hull_coords[[1]], main = "alpha hull points")
     plot(grid2D, main = "resample grid")
     plot(hull.grid, main = "resample grid hull")
     
+    return(invisible(hull.grid))
   }
-  
-  return(hull.grid)
-  
+  else {
+    return(hull.grid)
+  }
 }
 
 
 
 #' Generate a surface by Kriging. 
 #'
-#' @param X A functional dataframe containing XY coordinates and scaled performance data.
+#' @param fnc_df A functional dataframe containing XY coordinates and scaled performance data.
 #' @param hull Logical. Subset morphospace by creating a hull around input data
 #' @param new_data XY coordinate data for points to calculate on the surface. This should contain all specimen coordinates or group means you wish to calculate in subsequent analyses
 #' @param alpha 0-1 Alpha value to pass onto surf_hull
@@ -178,101 +190,79 @@ surf_hull <- function(coords2D, alpha = 1, plot = F, resample = 100){
 #' @export
 #'
 #' @examples
-krige_surf <- function(fnc_df, hull = T, new_data = NULL, alpha = 1, resample = 100){
+#Coded
+krige_surf <- function(fnc_df, hull = TRUE, new_data = NULL, alpha = 1, resample = 100){
   
-  X <- na.omit(fnc_df)
-  coords2D <- X[,1:2]
-  new_NULL <- new_data
-  
-  if(hull){
-    grid2D <- surf_hull(coords2D, alpha = alpha, resample = resample)
-  } else{
-    gridX <- seq(from = range(coords2D[,1])[1],
-                 to = range(coords2D[,1])[2],
+  fnc_df <- na.omit(fnc_df)
+
+  if (hull){
+    #Check; make sure df is returned
+    grid2D <- surf_hull(fnc_df[1:2], alpha = alpha, resample = resample)
+  }
+  else {
+    gridX <- seq(from = min(fnc_df[[1]]),
+                 to = max(fnc_df[[1]]),
                  length = resample)
     
-    gridY = seq(from = range(coords2D[,2])[1],
-                to = range(coords2D[,2])[2],
-                length = resample)
+    gridY <- seq(from = min(fnc_df[[2]]),
+                 to = max(fnc_df[[2]]),
+                 length = resample)
     
-    grid2D <- expand.grid(x = gridX, y = gridY)
+    grid2D <- expand.grid(x = gridX, y = gridY, KEEP.OUT.ATTRS = FALSE)
   }
+  grid2D <- sp::SpatialPoints(grid2D)
   
-  grid2D <- as.data.frame(grid2D)
-  ngrid <- nrow(grid2D)
+  data_list <- lapply(seq_along(fnc_df)[-(1:2)], function(i) {
+    d <- as.data.frame(fnc_df[c(1,2,i)])
+    sp::coordinates(d) <- 1:2
+    d
+  })
+  names(data_list) <- names(fnc_df)[-(1:2)]
+  
+  
+  krig_grid <- lapply(data_list, function(d) {
+    suppressWarnings(automap::autoKrige(d, new_data = grid2D))
+  })
+  
+  kriged_fn_df_grid <- do.call("cbind", c(list(as.data.frame(grid2D)),
+                                          lapply(krig_grid, function(kg) {
+                                            kg$krige_output@data$var1.pred
+                                          })))
 
-  
-  Z <- data.frame(X[,3:ncol(X)])
-  
-  data_list <- list()
-  for (i in 1:ncol(Z)){
-    data_list[[i]] <- data.frame(x = X[,1],y = X[,2], z = Z[,i])
-    coordinates(data_list[[i]]) = c(1,2)
-    
+  for (i in seq_along(kriged_fn_df_grid)[-(1:2)]) {
+    kriged_fn_df_grid[[i]] <- scale.z(kriged_fn_df_grid[[i]])
   }
-  
-  names(data_list)<- colnames(Z)
-  
-  krig_grid <- suppressWarnings(lapply(data_list, FUN = autoKrige, new_data = SpatialPoints(grid2D)))
-  kriged_fn_df_grid <- cbind(as.data.frame(grid2D),
-                             sapply(krig_grid, FUN = function(X){
-                               as.data.frame(X$krige_output)[,3]
-                             }
-                             ))
-  
-  
-  
-  
-  kriged_fn_df_grid[,-c(1,2)]  <- apply(kriged_fn_df_grid[,-c(1,2)], MARGIN = 2, FUN = scale.z)
-  
-  
-  
-  if(!is.null(new_data)){
-      new_data <- as.matrix(new_data)
-  
-    # new_data <- rbind(as.matrix(grid2D), new_data)
-    new_data <- SpatialPoints(new_data)
-    krig_new_data <- suppressWarnings(lapply(data_list, FUN = autoKrige, new_data = new_data))
+  names(kriged_fn_df_grid)[-(1:2)] <- names(fnc_df)[-(1:2)]
+
+  if (!is.null(new_data)){
+    new_data <- as.matrix(new_data)
     
-    kriged_fn_df_newdata <- cbind(as.data.frame(new_data),
-                                  sapply(krig_new_data, FUN = function(X){
-                                    as.data.frame(X$krige_output)[,3]
-                                  }
-                                  ))
-    kriged_fn_df_newdata[,-c(1,2)]  <- apply(kriged_fn_df_newdata[,-c(1,2)], MARGIN = 2, FUN = scale.z)
+    new_data <- sp::SpatialPoints(new_data)
+    krig_new_data <- lapply(data_list, function(d) {
+      suppressWarnings(automap::autoKrige(d, new_data = new_data))
+    })
+    
+    kriged_fn_df_newdata <- do.call("cbind", c(list(as.data.frame(new_data)),
+                                            lapply(krig_new_data, function(kg) {
+                                              kg$krige_output@data$var1.pred
+                                            })))
+    for (i in seq_along(kriged_fn_df_newdata)[-(1:2)]) {
+      kriged_fn_df_newdata[[i]] <- scale.z(kriged_fn_df_newdata[[i]])
+    }
     
     surfaces <- list(autoKrige = krig_grid,
                      dataframes = list(grid = kriged_fn_df_grid,
-                                       new_data = kriged_fn_df_newdata) )
+                                       new_data = kriged_fn_df_newdata))
     
-  }else{
-    
+  }
+  else{
     surfaces <- list(autoKrige = krig_grid,
                      dataframes = list(grid = kriged_fn_df_grid))
   }
   
-  
-  
-  
-  # X<- krig_list$EXP_SE
-  
-
-  # krigedgrid = kriged_fn_df[1:ngrid,]
-  
-  # krigednew_data = kriged_fn_df[(ngrid+1):nrow(kriged_fn_df),]
-  
-  # surfaces <- list(autoKrige = krig_list,
-  #                  dataframes = list(grid = krigedgrid,
-  #                                    new_data = krigednew_data) )
-  
-  
-  # plot_fn_kr(surfaces)
-  
-  
   class(surfaces) <- "kriged_surfaces"
   
   return(surfaces)
-  
 }
 
 
@@ -282,36 +272,30 @@ krige_surf <- function(fnc_df, hull = T, new_data = NULL, alpha = 1, resample = 
 #'
 #' @param W 
 #' @param fnc_data A dataframe containing performance traits and coordinate data
-#' @param rekrige Optional. Rekrige output Zprime
 #'
 #' @return
 #' @export
 #'
 #' @examples
-calc.W.kr <- function(W, fnc_data, rekrige = F){
+#Looks good
+calc.W.kr <- function(W, fnc_data) {
   
-  names(W) <- names(fnc_data$grid[,3:ncol(fnc_data$grid)])
-  
-  Wprime <- lapply(fnc_data, FUN = function(data,W){
-    XY <- data[,1:2]
-    FN <- data[,3:ncol(fnc_data$grid)]
-    FNw <- sweep(FN, 2, W, FUN= "*")
+  Wprime <- lapply(fnc_data, function(data) {
+    XY <- data[1:2]
+    FN <- data[-(1:2)]
+    FNw <- sweep(FN, 2, W, FUN = "*")
     Z <- rowSums(FNw)
-    Wprime <- cbind(FNw, Z)
     
-    
-    Wprime <- cbind(XY, Wprime)
-    
-  },W)
+    cbind(XY, FNw, Z)
+  })
   
   return(list(W = W, Wprime = Wprime))
-
 }
 
 
 #' Calculate all weighted landscapes
 #'
-#' @param weights a dataframe of weight combinations generated by generate.weights()
+#' @param weights a dataframe of weight combinations generated by generate_weights()
 #' @param fnc_data a dataframe of functional traits. The first two columns should represent the XY coordinates, with subsequent columns representing scaled trait data.
 #' @param new_data an optional matrix of coordinate data to interpolate on landscapes. If calculation of group landscapes is desired, all datapoints must be provided here
 #' @param plot currently not functional. Logical. An option to plot kriged performance surfaces from fnc_data
@@ -326,53 +310,43 @@ calc.W.kr <- function(W, fnc_data, rekrige = F){
 #' @export
 #'
 #' @examples
-calc.all.lscps <- function(weights, fnc_data, new_data = NULL,
-                           save.all = T,  verbose = T,
+calc_all_lscps <- function(kr_data, weights, new_data = NULL,
+                           save.all = TRUE,  verbose = TRUE,
                            file.out = "allLandscapes", ...){
+  #Is new_data even used?
+  
+  # if (is.data.frame(fnc_data)){
+  #   # fnc_data <- krige_surf(X = fnc_data, new_data = new_data)
+  #   kr_data <- krige_surf(fnc_data, new_data = new_data)
+  # }
+  
+  if (!inherits(kr_data, "kriged_surfaces")){
+    stop("'kr_data' must be a kriged_surfaces object, the output of a call to krige_surf().", call. = FALSE)
+  }
+  
+  #Write function to check and process new_data (should be a 2-columns dataframe/matrix of coordinates)
   
   colnames(new_data) <- c("x", "y")
   
-  if(is.data.frame(fnc_data)){
-    # fnc_data <- krige_surf(X = fnc_data, new_data = new_data)
-    kr_data <- krige_surf(fnc_data, new_data = new_data)
-  }
   
-  if(class(kr_data)== "kriged_surfaces"){
-    
-    fn_dataframe <- kr_data$dataframes
-    
-  } else(stop("data is not a dataframe or kriged_surfaces object"))
+  fn_dataframe <- kr_data$dataframes
   
-  # rownames(rawdata$EXP_SE)
+  all_Wprime_surfs <- apply(weights, 1, calc.W.kr,
+                            fnc_data = fn_dataframe, ...,
+                            simplify = FALSE)
   
-  
-  
-  
-  # all_Wprime_surfs <-  apply(weights, MARGIN = 1, FUN = calc.W.kr,
-  #                            fnc_data = fn_dataframe)
-  
-  all_Wprime_surfs <-  apply(weights, MARGIN = 1, FUN = calc.W.kr,
-                             fnc_data = fn_dataframe, ...)
-  
-  
-  
-  all_Lscape_data <- list(fnc_data = fnc_data,
-                          kriged_fnc_surfs = kr_data, 
-                          fn_dataframe = fn_dataframe, 
+  all_Lscape_data <- list(kriged_fnc_surfs = kr_data, 
                           all_Wprime_surfs = all_Wprime_surfs)
   
-  
-  
-  
-  if(save.all){
-    if(!dir.exists("./landscapeResults")){
+  if (save.all){
+    if (!dir.exists("./landscapeResults")){
       dir.create("./landscapeResults")
     }
     
     fp = paste("./landscapeResults", "/",
                file.out, ".Rdata", sep = "")
     
-    if(file.exists(fp)){
+    if (file.exists(fp)){
       file.remove(fp)
     }
     save(all_Lscape_data, file = fp)
@@ -383,7 +357,7 @@ calc.all.lscps <- function(weights, fnc_data, new_data = NULL,
 }
 
 
-#' Workhorse function for generate.weights. Used to flexibly generate combinations of weights.
+#' Workhorse function for generate_weights. Used to flexibly generate combinations of weights.
 #'
 #' @param n 
 #' @param k 
@@ -410,6 +384,7 @@ parti <- function(n, k) {
 #'   search.w.exhaustive, or to split jobs for distributed computing
 #'
 #' @param step Numeric. Degree by which to vary weights by.
+#' @param n Numeric. Number of increments to vary the weights by.
 #' @param nvar Numeric. Number of variables (columns) to generate
 #' @param varnames Optional. Names for variables
 #' @param verbose Logical. Return dataframe. Used for silencing in time.est
@@ -419,18 +394,55 @@ parti <- function(n, k) {
 #' @export
 #'
 #' @examples X
-generate.weights <- function(step, nvar, varnames = NULL, 
-                             verbose = T, Fn = NULL, ...) {
-    n = 1/step
-    weights<- parti(n, nvar)/n
-
-    if (!is.null(varnames)){
-        colnames(weights) <- varnames
-    }  else colnames(weights) <- 1:nvar
-
-    print(paste(nrow(weights),"rows generated"))
-
-    if (verbose) return(weights)
+generate_weights <- function(step, n, nvar, varnames = NULL, 
+                             verbose = TRUE) {
+  
+  if (!missing(step) && !is.null(step) && !missing(n) && !is.null(n)) {
+    stop("Only one of 'step' or 'n' can be supplied.", call. = FALSE)
+  }
+  if (!missing(step)) {
+    if (!is.numeric(step) || length(step) != 1 || step < 0 || step > 1) {
+      stop("'step' must be a single numeric value between 0 and 1.", call. = FALSE)
+    }
+    n <- round(1/step)
+  }
+  else if (!missing(n)) {
+    if (!is.numeric(n) || length(n) != 1) {
+      stop("'n' must be a single numeric value.", call. = FALSE)
+    }
+    n <- round(n)
+  }
+  
+  if (!is.null(varnames)) {
+    if (!is.atomic(varnames)) {
+      stop("'varnames' must be a vector of names.", call. = FALSE)
+    }
+    varnames <- as.character(varnames)
+    
+    if (missing(nvar) || is.null(nvar)) {
+      nvar <- length(varnames)
+    }
+    else if (!is.numeric(nvar) || length(nvar) != 1 || nvar != length(varnames)) {
+      stop("'varnames' and 'nvar' must agree.", call. = FALSE)
+    }
+  }
+  else {
+    if (missing(nvar) || is.null(nvar)) {
+      stop("'nvar' or 'varnames' must be specified.", call. = FALSE)
+    }
+    if (!is.numeric(nvar) || length(nvar) != 1) {
+      stop("'nvar' must be a number corresponding to the number of desired columns.", call. = FALSE)
+    }
+    varnames <- seq_len(nvar)
+  }
+  
+  weights <- parti(n, nvar)/n
+  
+  colnames(weights) <- varnames
+  
+  if (verbose) message(sprintf("%s rows generated", nrow(weights)))
+  
+  return(weights)
 }
 
 #' Estimate length of time to perform exhaustive search
@@ -447,14 +459,12 @@ generate.weights <- function(step, nvar, varnames = NULL,
 time_est <- function(num.perm, nvar, Fn, xmar, ymar) {
 
     if (length(Fn[[1]]) == 3) {
-        Fn.tmp <- list()
-        for (i in 1:length(Fn)) {
-            Fn.tmp[[i]] <- Fn[[i]]$poly
-
-        }
+        Fn.tmp <- lapply(Fn, `[[`, "poly")
+        # for (i in seq_along(Fn)) {
+        #     Fn.tmp[[i]] <- Fn[[i]]$poly
+        # }
         names(Fn.tmp) <- names(Fn)
         Fn <- Fn.tmp
-
     }
 
     apply(X = matrix(nrow = 10, ncol = nvar, 1), MARGIN = 1, FUN = lik_Zprime, Zprime = c(0, 0), Fn = Fn, xmar = xmar, ymar = ymar)
@@ -465,6 +475,7 @@ time_est <- function(num.perm, nvar, Fn, xmar, ymar) {
     print(paste(t1.sec, "seconds for one calculation. Estimated time for full dataset: ", t.est, "seconds"))
     return(t.est)
 }
+# NOTE: lik_Zprime is in LEGACY_functions.R
 
 
 getwn <- function(X, index){
@@ -473,7 +484,7 @@ getwn <- function(X, index){
 
 #' Extract new_data points from a wn list
 #'
-#' @param X a Wprime list from calc.all.lscps
+#' @param X a Wprime list from calc_all_lscps
 #' @param index an index of new_data points to extract
 #'
 #' @return Returns a dataframe if index = 1, else a list of points for each wn
@@ -491,7 +502,7 @@ getNew_dataW <- function(X, index){
 #' Calculate Wprime for a given index of new_data
 #'
 #' @param index a vector containing an index of new_data points
-#' @param X a Wprime list from calc.all.lscps
+#' @param X a Wprime list from calc_all_lscps
 #' @param method c("chi-squared", "max") method to calculate Wprime. Defaults to "chi-squared"
 #' @param percentile upper percentile which to calculate Wprime if using method = "chi-squared"
 #' @param verbose logical. If TRUE, Also returns a full list of Z values for index
@@ -501,51 +512,46 @@ getNew_dataW <- function(X, index){
 #' @export
 #'
 #' @examples
-calcGrpWprime <- function(index, X, method = "chi-squared", percentile = 0.05, verbose = T){
+calcGrpWprime <- function(index, X, method = "chi-squared", percentile = 0.05, verbose = TRUE){
   
+  if (length(method) != 1 || !is.character(method)) {
+    stop("'method' must be one of \"chi-squared\" or \"max\".", call. = FALSE)
+  }
+  method <- match.arg(method, c("chi-squared", "max"))
   
   surfs <- X$all_Wprime_surfs
   fn_dataframe <- X$fn_dataframe
   
   
   Wlist <- getNew_dataW(surfs, index)
-  tmp <- do.call(rbind,lapply(Wlist, function(X) colMeans(X)))
-  tmp <- tmp[ order( tmp[ , "Z"], decreasing = T), ]
+  tmp <- do.call("rbind", lapply(Wlist, colMeans))
+  tmp <- tmp[ order( tmp[ , "Z"], decreasing = TRUE), ]
   
-  if(method =="max"){
+  if (method =="max"){
     max <- tmp[which.max(tmp[,"Z"]),]
-    
   } 
-  
-  if(method == "chi-squared"){
-    
+  else if (method == "chi-squared"){
     X.top <- gettop(tmp, percentile = percentile, method = method,
                     sortby = "Z")
-    if(is.matrix(X.top)){
+    if (is.matrix(X.top)){
       max <- colMeans(X.top)
     } else{
       max <- X.top
-      
     }
     
   }
   # 
-  
-  
-  
-  
-  
+
   Zprime <- colMeans( X.top[,-match(c("x","y"), colnames(X.top))] )
-  wn.se <- apply(X.top[,-match(c("x","y"), colnames(X.top))],2, plotrix::std.error)
-  wn.sd <- apply(X.top[,-match(c("x","y"), colnames(X.top))],2, sd)
-  wn.range <- apply(X.top[,-match(c("x","y"), colnames(X.top))],2, range)
-  
+  wn.se <- apply(X.top[,-match(c("x","y"), colnames(X.top))], 2, plotrix::std.error)
+  wn.sd <- apply(X.top[,-match(c("x","y"), colnames(X.top))], 2, sd)
+  wn.range <- apply(X.top[,-match(c("x","y"), colnames(X.top))], 2, range)
   
   Wprime <- calc.W.kr(W = Zprime[-match(c("Z"), names(Zprime))], fnc_data = fn_dataframe)
   
   
   
-  if(verbose){
+  if (verbose) {
     return(list(list(Zprime=Zprime, wn.se=wn.se, wn.sd=wn.sd, wn.range=wn.range), W = tmp, Wlist = Wlist))
     # return(list(list(Zprime=Zprime, wn.se=wn.se, wn.sd=wn.sd, wn.range=wn.range), W = tmp, Wlist = Wlist))
     
@@ -682,7 +688,7 @@ calc.best.wn <- function(X, sortby = "Z", percentile = 0.99, method=c("quantile"
 #' @examples
 surf_hull <- function(coords2D, alpha = 1, plot = F, resample = 1000){
   
-  datahull <- ahull(coords2D[,1], coords2D[,2], alpha = 1)
+  datahull <- alphahull::ahull(coords2D[,1], coords2D[,2], alpha = 1)
   
   # data_poly <- ahull2poly(datahull)
   
@@ -702,12 +708,12 @@ surf_hull <- function(coords2D, alpha = 1, plot = F, resample = 1000){
   
   
   
-  hull.grid <- grid2D[inahull(datahull, p = as.matrix(grid2D)),]
+  hull.grid <- grid2D[alphahull::inahull(datahull, p = as.matrix(grid2D)),]
   
   
   hull.grid <- as.data.frame(hull.grid)
   
-  gridded(hull.grid) = ~x+y
+  sp::gridded(hull.grid) = ~x+y
   
   if(plot){
     

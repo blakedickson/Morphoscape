@@ -1,0 +1,40 @@
+---
+title: "Notes"
+author: "Noah Greifer"
+date: '2022-04-11'
+output: html_document
+---
+
+* User to use: example workflow file
+
+* grid.df - coordinates and qualities of specimens; comes from shape analysis of morphospace; e.g., geomorph package; either a creature or a hypothetical coordinate
+
+* fnc.dataframe - scales dataset into a unified unit for performance metrics
+
+* krige_surf - takes in grid data frame or specimen data frame; also takes in new set of corordinates; performs kriging; hull - whether to limit to hull; resample- density to resample
+
+* Plot_kr_fn - plots kriged surface for each performance metric; consider making ggplot
+
+* Generate.weights - produces weights matrix; number of columns equal to number of performance traits; weights between 0 and 1, how much to multiply each surface
+
+* calc.all.lnscps - calculates all possible landscapes given weights
+
+* calgrpwprime - calculating optimal combination of landscapes for new data using species.eco; produces the set of weights that produces optimal landscapes by maximizing total sum; output is one value for each quality (maximizing weight) plus optimal value; main output is Prime
+
+* species.eco - dataset of species, same individuals as species.df
+
+* Land.grup.test - comparing two groups to see if statistically different
+
+* Multi` produces matrix of pairwise comparisons
+
+* Nature paper 2021 supplemental Dickson et al lays out main outputs that a user would produce
+
+Classes that need methods:
+
+`fnc_df` - output of `fnc.dataframe()`
+`kriged_surfaces` - output of `krige_surf()`
+`grid_weights` - output of `generate_weights()`
+`weighted_landscape` - output of `calc.W.kr()`
+`all_Lscape_data` - output of `calc_all_lscps()`
+`grp_Wprime` - output of `calcGrpWprime()` 
+`by_Wprime` - output of `calcWprimeBy()` 

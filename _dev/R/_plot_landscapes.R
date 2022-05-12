@@ -38,6 +38,8 @@ plotImage<- function(x, y=NULL, z=NULL, ...){
 #' @export
 #'
 #' @examples
+
+#Use both to write a new plot.kriged_surfaces function, maybe using ggspatial
 plotKrige <- function(X, points = NULL, pcol = NA, ...){
   p <- list()
   
@@ -68,10 +70,6 @@ plotKrige <- function(X, points = NULL, pcol = NA, ...){
   
 }
 
-
-
-
-
 plot_fn_kr <- function(fn_kr, 
                        CEX = 0.5, ncols = 100, 
                        alpha= 0.3,
@@ -90,7 +88,7 @@ plot_fn_kr <- function(fn_kr,
   spplot(sp.grid,
          scales = list(draw = F),
          colorkey = colorkey,
-         col.regions = viridis(ncols),
+         col.regions = viridis::viridis(ncols),
          sp.layout = list("sp.points", sp.new_data[,1:2], pch = pch, 
                           cex = CEX, col = pt.col, alpha = alpha))
   

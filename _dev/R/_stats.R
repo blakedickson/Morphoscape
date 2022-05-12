@@ -10,9 +10,6 @@
 lands.grp.test <- function(grpa, grpb, percentile = 0.05){
   #get top 1% based on likelihood
   
-  
-  
-  
   besta <- gettop(grpa$W, percentile, method="quantile")
   bestb <- gettop(grpb$W, percentile, method="quantile")
   
