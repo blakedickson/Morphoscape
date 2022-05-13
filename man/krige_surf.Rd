@@ -11,7 +11,8 @@ Interpolate functional characteristics over a grid
 }
 \usage{
 krige_surf(fnc_df, grid = NULL, resample = 100,
-           hull = TRUE, alpha = 1, new_data = NULL)
+           padding = 1.2, hull = TRUE, alpha = 1,
+           new_data = NULL)
            
 krige_new_data(x, new_data)
 }
@@ -20,10 +21,13 @@ krige_new_data(x, new_data)
 an \code{fnc_df} object; the output of a call to \code{\link{as_fnc_df}}, which contains coordinates in morphological space and values of functional characteristics for the warps used to create the kriged surface.
 }
   \item{grid}{
-a matrix or data frame contain the grid over which the surface is to be interpolated. Should be the output of a call to \code{\link{resample_grid}}. If \code{NULL}, the grid will be formed by calling \code{resample_grid()} on the inputs. In most cases \code{grid} should be left \code{NULL}.
+a matrix or data frame contain the grid over which the surface is to be interpolated. Should be the output of a call to \code{\link{resample_grid}}. If \code{NULL}, the grid will be formed by calling \code{resample_grid()} on the inputs.
 }
   \item{resample}{
 the number of points (or pixels) in the x and y dimensions over which to create the grid. Default is 100 for a kriged surface of 100x100=10,000 pixels. Passed to \code{\link{resample_grid}}. Ignored when \code{grid} is not \code{NULL}.
+}
+  \item{padding}{
+a number representing how much to expand the grid beyond the ranges of the x- and y-coordinates. For example, \code{padding = 1.2} (the default) expands the grid by 20\% of the coordinates' ranges in each direction. Must be a number greater than or equal to 1. Large numbers imply greater extrapolation, and whatever padding is added will be negated if \code{hull = TRUE}. Passed to \code{\link{resample_grid}}. Ignored when \code{grid} is not \code{NULL}.
 }
   \item{hull}{
 whether to restrict kriging to an alpha hull to prevent extrapolation beyond the coordinates present in \code{fnc_df}. Passed to \code{\link{resample_grid}}, which uses \code{\link[alphahull:ahull]{alphahull::ahull}}. Default is \code{TRUE}. If \code{FALSE}, kriging will take place over a rectangular grid that spans the boundaries of the coordinates in \code{fnc_df}. Ignored when \code{grid} is not \code{NULL}.

@@ -1,4 +1,4 @@
-krige_surf <- function(fnc_df, grid = NULL, resample = 100, hull = TRUE, alpha = 1, new_data = NULL){
+krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = TRUE, alpha = 1, new_data = NULL){
   
   if (!inherits(fnc_df, "fnc_df")) {
     stop("'fnc_df' must be a fnc_df object, the output of a call to fnc.dataframe().", call. = FALSE)
@@ -6,8 +6,8 @@ krige_surf <- function(fnc_df, grid = NULL, resample = 100, hull = TRUE, alpha =
   func.names <- attr(fnc_df, "func.names")
 
   if (is.null(grid)) {
-    grid2D <- resample_grid(fnc_df[1:2], resample = resample, hull = hull, alpha = alpha,
-                            plot = FALSE)
+    grid2D <- resample_grid(fnc_df[1:2], resample = resample, padding = padding,
+                            hull = hull, alpha = alpha, plot = FALSE)
     
     grid2D <- sp::SpatialPoints(grid2D)
     sp::gridded(grid2D) <- TRUE
@@ -97,16 +97,24 @@ krige_new_data <- function(x, new_data) {
 }
 
 #Create a hull around input data. Allows for subsampling the total morphospace
-resample_grid <- function(coords2D, resample = 100, hull = TRUE, alpha = 1, plot = FALSE){
+resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, alpha = 1, plot = FALSE){
   coords2D <- check_coords(coords2D)
   
+  if (!is.numeric(padding) || length(padding) != 1 || padding < 1) {
+    stop("'padding' must be a single numeric value greater than or equal to 1.", call. = FALSE)
+  }
+  
   #Create full coordinates grid
-  gridX <- seq(from = min(coords2D[[1]]),
-               to = max(coords2D[[1]]),
+  x_range <- range(coords2D[[1]])
+  x_min <- x_range[1] - (padding - 1) * diff(x_range)
+  x_max <- x_range[2] + (padding - 1) * diff(x_range)
+  gridX <- seq(from = x_min, to = x_max,
                length = resample)
   
-  gridY <- seq(from = min(coords2D[[2]]),
-               to = max(coords2D[[2]]),
+  y_range <- range(coords2D[[2]])
+  y_min <- y_range[1] - (padding - 1) * diff(y_range)
+  y_max <- y_range[2] + (padding - 1) * diff(y_range)
+  gridY <- seq(from = y_min, to = y_max,
                length = resample)
   
   grid2D <- expand.grid(x = gridX, y = gridY, KEEP.OUT.ATTRS = FALSE)
