@@ -10,13 +10,13 @@ generate_weights(step, n, data = NULL, nvar = NULL,
 }
 \arguments{
 \item{step}{
-  \code{numeric}. The size of each weight partition. Only one of \code{step} and \code{n} can be specified.
+  \code{numeric}. The step size between weight partitions. Only one of \code{step} and \code{n} can be specified.
 }
 \item{n}{
-  \code{numeric}. The number of weight partitions. Only one of \code{step} and \code{n} can be specified.
+  \code{numeric}. The number of weight partitions between 0-1. Only one of \code{step} and \code{n} can be specified.
 }
 \item{data}{
-  an \code{fnc_df} object (the output of \code{\link{as_fnc_df}}) or a \code{kriged_surfaces} object (the output \code{\link{krige_surf}}). The number of variabes and their names will be extracted from the data as the functional characteristics present in them.
+  an optional \code{fnc_df} (the output of \code{\link{as_fnc_df}}) or \code{kriged_surfaces} (the output \code{\link{krige_surf}}) object. The number of variabes and their names will be extracted from the data as the functional characteristics present in them.
 }
 \item{nvar}{
   the number of variables across which to allocate the weights. Ignored if \code{data} is not \code{NULL}. If \code{nvar = NULL} and \code{varnames} is supplied, the length of \code{varnames} will be used for \code{nvar}.
@@ -29,7 +29,7 @@ generate_weights(step, n, data = NULL, nvar = NULL,
 }
 }
 \details{
-\code{generate_weights()} works by fining all possible allocations of \code{n} objects into \code{nvar} bins. When \code{step} is supplied, \code{n} is computed as \code{round(1/step)}, so the resulting weight partitions may not be exactly equal to \code{step} when its inverse is not an integer. The larger \code{n} is (or the smaller \code{step}) is, the more possible allocations will be produced (i.e., and the resulting object will have more rows).
+\code{generate_weights()} works by fining all possible allocations of \code{n} objects into \code{nvar} bins. When \code{step} is supplied, \code{n} is computed as \code{round(1/step)}, so the resulting weight partitions may not be exactly equal to \code{step} when its inverse is not an integer. The larger \code{n} is (or the smaller \code{step}) is, the more possible allocations will be produced (i.e., and the resulting object will have more rows). The output of \code{generate_weights()} can quickly become very large with increasing number of variables, and will make subsequent analyses slow. It is recommended to start with a large \code{step} size, or small \code{n}, and increment up.
 }
 
 \value{

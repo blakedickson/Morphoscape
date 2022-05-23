@@ -7,7 +7,7 @@
 Interpolate functional characteristics over a grid
 }
 \description{
-\code{krige_surf()} performs kriging (i.e., interpolation) of functional characteristics over a grid of morphological coordinates to create a kriged surface. Kriged values can also be produced for a new dataset given their coordinates in morphological space.
+\code{krige_surf()} performs kriging (i.e., interpolation) of one or more functional characteristics that are spatially distributed over a morphospace to create a smoothly kriged surface. Interpolated values can also be produced for a new dataset given their coordinates in morphological space.
 }
 \usage{
 krige_surf(fnc_df, grid = NULL, resample = 100,
@@ -18,10 +18,10 @@ krige_new_data(x, new_data)
 }
 \arguments{
   \item{fnc_df}{
-an \code{fnc_df} object; the output of a call to \code{\link{as_fnc_df}}, which contains coordinates in morphological space and values of functional characteristics for the warps used to create the kriged surface.
+a \code{fnc_df} object; the output of a call to \code{\link{as_fnc_df}}, which contains coordinates in morphological space and values of functional characteristics for the warps used to create the kriged surface.
 }
   \item{grid}{
-a matrix or data frame contain the grid over which the surface is to be interpolated. Should be the output of a call to \code{\link{resample_grid}}. If \code{NULL}, the grid will be formed by calling \code{resample_grid()} on the inputs.
+a matrix or data frame containing the grid of points over which the surface is to be interpolated. Should be the output of a call to \code{\link{resample_grid}}. If \code{NULL}, the grid will be formed by calling \code{resample_grid()} on the inputs.
 }
   \item{resample}{
 the number of points (or pixels) in the x and y dimensions over which to create the grid. Default is 100 for a kriged surface of 100x100=10,000 pixels. Passed to \code{\link{resample_grid}}. Ignored when \code{grid} is not \code{NULL}.
@@ -43,9 +43,14 @@ a \code{"kriged_surfaces"} object; the output of a call to \code{krige_surf()}.
 }
 }
 \details{
-\code{krige_surf()} does stuff. EDIT
+\code{krige_surf()} implements the \code{\link[automap:autoKrige]{automap::autoKrige}} function on one or more spatially distributed traits to produce an interpolated (or extrapolated) surface of evenly spaced gridpoints. This is done by automatiically finding the best variogram fit for each of the non-corrdinate variables in \code{fnc_df}. For details on automatic variogram fitting, see \code{\link[automap:autoKrige]{automap::autoKrige}}.
 
-\code{krige_new_data()} adds a new data set to the supplied \code{kriged_surfaces} object and interpolates the values of the functional characteristics on the suppllied sample. This should only be used to add a new dataset to a \code{kriged_surfaces} object produced without \code{new_data} supplied or to replace the exist \code{new_data} component.
+Input data in \code{fnc_df} can be unevenly distributed (direct from speciments), or gridded (determined from evenly distributed hypothetical shapes) in morphospace. Trait data inputted directly from specimen measurements will be subject to error based on the how unevenly points are distributed, with high resoultion gridded datapoints producing the least potential reconstruction error (see Smith et al 2021).
+
+By default \code{krige_surf} will create a \code{hull} to strictly prevent any extrapolation beyond the provided data. This will produce the most conservative landscapes. If \code{hull} is set to \code{FALSE}, then the function will reconstruct a rectangle determined by the XY coordinate ranges supplied in \code{fnc_df}. Padding will be applied by default (an extra 20\%) as defined by \code{padding}, to expand the rectangle beyond the supplied points. Reconstructions without a \code{hull} would be most appropriate for trait data determined from evenely spaced hypothetical gridpoints. If \code{grid} is provided the function will strictly interpolate at these gridded points.  
+
+
+\code{krige_new_data()} adds a new data set to the supplied \code{kriged_surfaces} object and interpolates the values of the functional characteristics on the suppllied sample. This should only be used to add a new dataset to a \code{kriged_surfaces} object produced without \code{new_data} supplied or to replace an existing \code{new_data} component.
 }
 \value{
 An object of class \code{kriged_surfaces} containing the following components:
@@ -55,6 +60,10 @@ An object of class \code{kriged_surfaces} containing the following components:
 
 For \code{krige_new_data()}, the original \code{kriged_surfaces} object, with the \code{$dataframes$new_data} component containing the sample coordinates supplied to \code{new_data} as well as the interpolated values of the functional characteristics for each sample.
 }
+
+\References{
+Smith, S. M., Stayton, C. T., & Angielczyk, K. D. (2021). How many trees to see the forest? Assessing the effects of morphospace coverage and sample size in performance surface analysis. Methods in Ecology and Evolution, 12(8), 1411-1424.
+} 
 
 \seealso{
 \code{\link{plot.kriged_surfaces}} for plotting the kriged surfaces.

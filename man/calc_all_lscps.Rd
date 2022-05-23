@@ -26,7 +26,7 @@ whether to display a text progress bar of the landscape calculation process.
 }
 }
 \details{
-\code{calc_all_lscps()} essentially calls \code{\link{calc_lscp}} on the kriged surfaces with each set of weights, storing the output in a single, large list. This output contains an adaptive landscape for each of the supplied sets of weights. The individual landscapes can be plotted, or the optimal landscape overall or for certain subsets of the sample data can be found using \code{\link{calcGrpWprime}} or \code{\link{calcWprimeBy}}.
+\code{calc_all_lscps()} essentially calls \code{\link{calc_lscp}} on the kriged performance surfaces with each set of weights, storing the output in a single, large list. This output contains a combined adaptive landscape for each of the supplied sets of weights. The individual landscapes can be plotted, or the optimal landscape overall or for certain subsets of the sample data can be found using \code{\link{calcGrpWprime}} or \code{\link{calcWprimeBy}}.
 
 Because the resulting objects are so large and can take a long time to compute, it can be a good idea to save them after creation, which can be done automatically using the \code{file} argument. If the supplied file extension is \code{.rds}, \code{\link{saveRDS}} will be used to save the object to the supplied file path, and the file can be loaded using \code{\link{readRDS}}. If the supplied file extension is \code{.RData}, \code{\link{save}} will be used to save the object to the supplied file path, and the file can be loaded using \code{\link{load}}.
 }

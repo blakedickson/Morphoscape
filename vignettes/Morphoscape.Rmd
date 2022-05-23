@@ -1,6 +1,6 @@
 ---
 title: "Morphoscape"
-output: html_document
+output: html_vignette
 vignette: >
   %\VignetteIndexEntry{Morphoscape}
   %\VignetteEngine{knitr::rmarkdown}

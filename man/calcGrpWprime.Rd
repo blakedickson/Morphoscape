@@ -6,8 +6,8 @@
 Compute optimally weighted adaptive landscapes
 }
 \description{
-\code{calcGrpWprime()} computes the optimally weighted adaptive landscape by searching through the adaptive landscapes formed from sets of weights and performance surfaces and finding the set of weights that yields the greatest overall (average) fitness value (Z) across a sample of data or a subset thereof.
-}
+\code{calcGrpWprime()} computes the optimally weighted adaptive landscape by searching through the adaptive landscapes formed from sets of weights and performance surfaces, and finding the set of weights that yields the greatest overall (average) fitness value (Z) across a sample of data or a subset thereof.
+} 
 \usage{
 calcGrpWprime(x, index, method = "chi-squared",
               quantile = 0.05)
@@ -21,7 +21,7 @@ for \code{calcGrpWprime()}, an \code{all_lscps} object; the output of a call to 
 for \code{print()}, a \code{grp_Wprime} object; the output of a call to \code{calcGrpWprime()}
 }
   \item{index}{
-an optional vector of indices indicating which subset of the \code{new_data} dataset originally supplied to \code{\link{krige_surf}} the optimal set of weights should be calculated using. Can be specified as a vector of numerical indicies, logical indices, or row names. If unspecified, the optimal weights will be computed using the full sample. Supplied to \code{\link{subset}}, so the name of the dataset containing the subsetting variable does not need to be included if the subsetting variable is in \code{new_data}. See Examples.
+an optional vector of indices indicating which subset of the \code{new_data} dataset originally supplied to \code{\link{krige_surf}} should be calculated. Can be specified as a vector of numerical indicies, logical indices, or row names. If unspecified, the optimal weights will be computed using the full sample. Supplied to \code{\link{subset}}, so the name of the dataset containing the subsetting variable does not need to be included if the subsetting variable is in \code{new_data}. See Examples.
 }
   \item{method}{
 the method used to compute the optimal weights. Allowable options include \code{"chi-square"} (the default), \code{"quantile"}, or \code{"max"}. \code{"chi-square"} and \code{"quantile"} involve averaging across the best several sets of weights, whereas \code{"max"} uses the singular best set of weights. Abbreviations allowed. See Details.
@@ -37,8 +37,8 @@ passed to \code{\link{print.default}}.
 }
 }
 \details{
-\code{calcGrpWprime()} calculates an overall fitness score for each set of weights based on the average of the weighted fitness values for each unit in the indexed subgroup. The set of weights that optimizes this score is then produced as the weights defining the optimal adaptive landscape for that subgroup. The way the final set of weights is computed depends on the argument to \code{method}. When \code{method = "max"}, the single best set of weights is used. When \code{method = "quantile"}, the top \eqn{X\%} of weights are averaged to compute the optimal weights, where \eqn{X} corresponds to the value supplied to \code{quantile}. When \code{method = "chi-square"},  the chi-square value \eqn{\chi^2_i} is computed for each set of weights \eqn{i} as \deqn{\chi^2_i = -2 \log \frac{Z_{max}}{Z_i}}
-where \eqn{Z_{max}} is the largest \eqn{Z} among the weights, and a p-value is computed for each \eqn{\chi^2_i} value is computed using a \eqn{\chi^2} distribution with 2 d.f.; any set of weights with a p-value less than \code{quantile} is included to be averaged to compute the optimal set of weights.
+\code{calcGrpWprime()} calculates an overall fitness score for each set of weights based on the average weighted fitness values of the indexed subgroup. The set of weights that optimizes this score is then produced as the weights defining the optimal adaptive landscape for that subgroup. The way the final set of weights is computed depends on the argument to \code{method}. When \code{method = "max"}, the single best set of weights is used. However, often many of the upper sets of weights perform equally or nearly equally as well as the best set. It is instead recommended to use \code{"quantile"} or \code{"chi-squared"} methods. When \code{method = "quantile"}, the top \eqn{X\%} of weights are averaged to compute the optimal weights, where \eqn{X} corresponds to the value supplied to \code{quantile}. When \code{method = "chi-square"},  the chi-squared value \eqn{\chi^2_i} is computed for each set of weights \eqn{i} as \deqn{\chi^2_i = -2 \log \frac{Z_{max}}{Z_i}}
+where \eqn{Z_{max}} is the largest \eqn{Z} among the weights, and a p-value is computed for each \eqn{\chi^2_i} value using a \eqn{\chi^2} distribution with 2 d.f.; any set of weights with a p-value less than \code{quantile} is included to be averaged to compute the optimal set of weights.
 }
 \value{
 A \code{grp_Wprime} object, which contains the following components:
@@ -52,6 +52,13 @@ a matrix containing all sets of weights (i.e., those supplied to the \code{grid_
 \item{Wprime}{
 a \code{\link{wtd_lscp}} object containing the optimal weights (\code{W}) and the landscape grid and sample functional characteristcs weighted by the optimal weights.
 }
+}
+
+\references{
+
+Dickson, B. V., Clack, J. A., Smithson, T. R., & Pierce, S. E. (2021). Functional adaptive landscapes predict terrestrial capacity at the origin of limbs. Nature, 589(7841), 242-245.
+
+Jones, K. E., Dickson, B. V., Angielczyk, K. D., & Pierce, S. E. (2021). Adaptive landscapes challenge the "lateral-to-sagittal"" paradigm for mammalian vertebral evolution. Current Biology, 31(9), 1883-1892.
 }
 
 \seealso{

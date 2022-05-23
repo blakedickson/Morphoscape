@@ -3,10 +3,10 @@
 \alias{fnc_df}
 
 \title{
-Convert a data frame to an \code{fnc_df}
+Convert a data frame to a \code{fnc_df}
 }
 \description{
-\code{as_fnc_df()} converts a data frame containing coordinates of simulated warps in morphological space and functional charactertics to an \code{fnc_df} object for use in later funcitons, most importantly \code{\link{krige_surf}}.
+\code{as_fnc_df()} converts a data frame containing coordinates and functional charactertics in a morphological space  to a \code{fnc_df} object for use in later funcitons, most importantly \code{\link{krige_surf}}.
 }
 \usage{
 as_fnc_df(x, func.names = NULL, scale = TRUE)
@@ -23,8 +23,12 @@ whether to scale the functional characteristics to have a minimum of 0 and a max
 }
 }
 
+\details{
+Input data can be from a sampled grid of locations in morphospace, measured specimen data, species or group means, or a mix. 
+}
+
 \value{
-An \code{fnc_df} object, which is a \code{data.frame} with the x and y coordinates in the first two columns and the functional characteristics in the other columns. The \code{"func.names"}\link[=attributes]{attribute} contains the names of the functional characteristics.
+A \code{fnc_df} object, which is a \code{data.frame} with the x and y coordinates in the first two columns and the functional characteristics in the other columns. The \code{"func.names"} \link[=attributes]{attribute} contains the names of the functional characteristics.
 }
 
 \seealso{

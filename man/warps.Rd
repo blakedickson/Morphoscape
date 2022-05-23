@@ -5,7 +5,7 @@
 Simulated Shape Warps
 }
 \description{
-Simulated warps of turtle humerus shape used to study the morphological evolution of turtles in Dickson and Pierce (2019). For each shape warp, four functional traits were measured, corresponding to a locomotory performance trait: stress under simulated load (strength), bone curvature (stride length), muscular mechanical advantage (mechanical advantage), and frontal area (hydrodynamics).
+Trait data for simulated shape warps of turtle humeri used to study the morphological evolution of turtles in Dickson and Pierce (2019). The morphospace was defined by a geometric morphometric analyises of 1028 psuedolandmarks on 40 turtle humeri. Hypothetical shape warps were then produced on a 4x6 grid accross morphospace. For each shape warp, four functional traits were measured, corresponding to a locomotory performance trait: stress under simulated load (strength), bone curvature (stride length), muscular mechanical advantage (mechanical advantage), and frontal area (hydrodynamics).
 }
 \usage{data("warps")}
 \format{

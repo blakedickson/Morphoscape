@@ -20,7 +20,7 @@ a vector of weights, one for each functional characteristic. These weights shoul
 }
 }
 \details{
-\code{calc_lncp()} operates on the kriged surfaces stored in \code{kr_data} by multiplying the functional characteristic values of each point on the surface grid by the weights and computing the sum of those values to arrive at a fitness value that is represented by the height of the adaptive landscape. When a \code{new_data} component is present in \code{kr_data} (e.g., because a \code{new_data} argument was supplied to \code{krige_surf()} or \code{kr_data} is the output of a call to \code{krige_new_data()}), the weighted fitness values will be computed for the coordinates in \code{new_data} as well.
+\code{calc_lncp()} operates on the kriged surfaces stored in \code{kr_data} by multiplying the functional characteristic values of each point on the surface grid by the weights and computing the sum of those values to arrive at a "fitness" value that is represented by the maximum height of the combined adaptive landscape. When a \code{new_data} component is present in \code{kr_data} (e.g., because a \code{new_data} argument was supplied to \code{krige_surf()} or \code{kr_data} is the output of a call to \code{krige_new_data()}), the weighted fitness values will be computed for the coordinates in \code{new_data} as well.
 }
 \value{
 A \code{wtd_lscp} object, which contains the following components:

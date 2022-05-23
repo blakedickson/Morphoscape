@@ -8,7 +8,7 @@
 Compute optimally weighted adaptive landscapes by subgroup
 }
 \description{
-\code{calcWprimeBy()} computes the optimally weighted adaptive landscape by searching through the adaptive landscapes formed from sets of weights and performance surfaces and finding the set of weights that yields the greatest overall (average) fitness value (Z) across subsets of a sample dataset.
+\code{calcWprimeBy()} computes the optimally weighted adaptive landscape by searching through the adaptive landscapes formed from sets of weights and performance surfaces, and finding the set of weights that yields the greatest overall (average) fitness value (Z) across subsets of a sample dataset.
 }
 \usage{
 calcWprimeBy(x, by, method = "chi-squared", quantile = 0.05)
@@ -52,7 +52,7 @@ a \code{by_Wprime} object; the output of a call to \code{calcWprimeBy()}.
 \code{calcWprimeBy()} splits the sample data based on the \code{by} variable and then calls \code{\link{calcGrpWprime}} on each subset. The main benefit of using \code{calcWprimeBy()} is that the subgrouping variable is part of the output object and therefore can be used in plotting using \code{\link{plot.by_Wprime}}.
 }
 \value{
-A \code{by_Wprime} object containg the following compoenents:
+A \code{by_Wprime} object contaning the following components:
 \item{by}{the subgrouping variable supplied to \code{by}, stored as a factor and with a \code{"by_name"} attribute containing the name of the variable.}
 \item{grp_Wprimes}{a list of \code{grp_Wprime} objects, one for each level of the subgrouping variable.}
 }
@@ -60,7 +60,7 @@ A \code{by_Wprime} object containg the following compoenents:
 \seealso{
 \code{\link{calc_all_lscps}} for computing the landscapes which are to be optimized.
 
-\code{\link{calcGrpWprime}} for finding optimal sets of weights for a single subgroups.
+\code{\link{calcGrpWprime}} for finding optimal sets of weights for a single subgroup.
 
 \code{\link{plot.by_Wprime}} for plotting the resulting adaptive landscapes.
 }
