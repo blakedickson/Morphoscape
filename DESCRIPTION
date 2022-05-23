@@ -1,23 +1,32 @@
 Package: Morphoscape
 Type: Package
-Title: Morphoscape: An R package for the computation and visualization of adaptive landscapes
-Version: 0.3.3
-Author: Blake V. Dickson
-Maintainer: Blake V. Dickson <blakedickson@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Computation and Visualization of Adaptive Landscapes
+Version: 0.3.3.9000
+Authors@R: c(
+  person("Blake", "Dickson", email = "blake.dickson@duke.edu",
+         role = c("aut", "cre"),
+         comment = c(ORCID="0000-0001-6299-5224")),
+  person("Stephanie", "Pierce", email = "spierce@oeb.harvard.edu",
+         role = c("aut"),
+         comment = c(ORCID="0000-0003-0717-1841")),
+  person("Noah", "Greifer", email = "ngreifer@iq.harvard.edu",
+         role = c("aut"),
+	       comment = c(ORCID="0000-0003-3067-7154"))
+  )
+Description: This package implements adaptive landscape methods first described 
+    by Polly et al. (2016) <doi:10.1080/02724634.2016.1111225> for the integration, analysis and visualzation of 
+    biological trait data on a phenotypic morphospace - typically defined by 
+    shape metrics.
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
-Depends: 
-  grDevices,
-  spatial,
-  viridis,
-  smoothr,
-  plotrix,
-  parallel,
-  sp,
-  alphahull,
-  hull2spatial,
-  automap,
-RoxygenNote: 7.1.1
+Depends: R (>= 4.0.0)
+Imports: 
+    ggplot2,
+    sp,
+    alphahull,
+    automap
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
