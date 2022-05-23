@@ -46,7 +46,7 @@ ignored.
 }
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+These plotting functions are wrappers for \code{ggplot2} raster plotting functions. For more precise control of raster plotting see \code{\link[ggplot2:geom_raster]{ggplot2::geom_raster}}.
 }
 \value{
 A \code{ggplot} object that can be further adjusted using functions from \pkg{ggplot2}.

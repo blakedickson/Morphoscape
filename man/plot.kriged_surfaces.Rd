@@ -29,7 +29,7 @@ when a \code{new_data} component is present in \code{x}, the transparency (\code
 }
 }
 \details{
-\code{plot.kriged_surfaces()} is a wrapper for \code{\link[ggplot2}} raster plotting functions. For more precise control of raster plotting see \code{\link[ggplot2:geom_raster]{ggplot2::geom_raster}}.
+\code{plot.kriged_surfaces()} is a wrapper for \pkg{ggplot2} raster plotting functions. For more precise control of raster plotting see \code{\link[ggplot2:geom_raster]{ggplot2::geom_raster}}.
 
 }
 \value{
@@ -37,7 +37,7 @@ A \code{ggplot} object, which can be further manipulated using \pkg{ggplot2} fun
 }
 
 \seealso{
-\code{\link[ggplot2:ggplot]{ggplot2::ggplot}}, \code{\link[ggplot2:geom_raster]{ggplot2::geom_raster}}, and \code{\link[ggplot2:geom_contour]{ggplot2::geom_contour}} for the underlying plotting functions. See also \code{\link[sp::spplot]}{sp::spplot} for alternative plotting functions.
+\code{\link[ggplot2:ggplot]{ggplot2::ggplot}}, \code{\link[ggplot2:geom_raster]{ggplot2::geom_raster}}, and \code{\link[ggplot2:geom_contour]{ggplot2::geom_contour}} for the underlying plotting functions. See also \code{\link[sp:spplot]{sp::spplot}} for alternative plotting functions.
 
 \code{\link{krige_surf}} for generating the kriged surfaces. \code{\link{krige_new_data}} for adding a \code{new_data} component to an existing kriged surface before plotting.
 }

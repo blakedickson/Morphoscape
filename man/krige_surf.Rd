@@ -61,9 +61,9 @@ An object of class \code{kriged_surfaces} containing the following components:
 For \code{krige_new_data()}, the original \code{kriged_surfaces} object, with the \code{$dataframes$new_data} component containing the sample coordinates supplied to \code{new_data} as well as the interpolated values of the functional characteristics for each sample.
 }
 
-\References{
+\references{
 Smith, S. M., Stayton, C. T., & Angielczyk, K. D. (2021). How many trees to see the forest? Assessing the effects of morphospace coverage and sample size in performance surface analysis. Methods in Ecology and Evolution, 12(8), 1411-1424.
-} 
+}
 
 \seealso{
 \code{\link{plot.kriged_surfaces}} for plotting the kriged surfaces.
