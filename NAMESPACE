@@ -19,6 +19,9 @@ S3method("print", "kriged_surfaces")
 
 S3method("print", "all_lscps")
 
+S3method("calc_lscp", "kriged_surfaces")
+S3method("calc_lscp", "all_lscps")
+
 S3method("print", "wtd_lscp")
 
 S3method("print", "grp_Wprime")
