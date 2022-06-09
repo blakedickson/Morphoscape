@@ -19,10 +19,65 @@ knitr::opts_chunk$set(
 # Morphoscape: An R package for the contruction and analysis of adaptive landscapes
 <!-- <img src="man/figures/logo.png" align="right" width="150"/> -->
 ------
-To install `morphoscape` from GitHub you will need to install the `devtools` package and run `install_github("blakedickson/Morphoscape")`:
+
+`Morphoscape` is a package designed for the constructions, analysis and visualization of spatially organized trait data into adaptive landscapes. `Morphoscape` provides a pipeline for combining spatial coordinate data derived from an ordinated morphospace, such as a PCA, with performance trait data; and finding 'optimum' adaptive landscapes from the combination of those trait data.
+
+`Morphoscape` does not provide tools for the generation of morphospaces. For shape analyses and tools to ordinate multivariate phenotypic data, see the `Geomorph` or `Morpho` packages. 
+
+For an in-depth guide on using `Morphoscape`, and some discussion on morphospace design, see the vignette.  
+
+To install `Morphoscape` from GitHub you will need to install the
+`devtools` package and run `install_github("blakedickson/Morphoscape")`:
 
 ```{r, eval=FALSE}
 install.packages("devtools")
-devtools::install_github("blakedickson/Morphoscape")
+devtools::install_github("ngreifer/Morphoscape")
 ```
+
+The point of entry into `Morphoscape` is a dataframe containing two columns of XY coordinate data followed by columns containing performance variables. See the `warps` data object for an example. An additional dataframe `turtles` with specimen coordinates and grouping variables is also provided.
+
+``` {r} 
+library(Morphoscape)
+data('warps')
+str(warps)
+
+data('turtles')
+str(warps)
+```
+
+This dataframe is input into the `as_fnc_df()` which will coerce coordinate data into the correct format, and rescale performance variables to unit range.
+
+```{r}
+warps_fnc <- as_fnc_df(warps, func.names = c("hydro", "curve", "mech", "fea"))
+```
+
+Performance surfaces are calculated using `krige_surf()`, and can be used to just calculate surfaces, or also predict performance of `new_data` points.
+
+```{r}
+kr_surf <- krige_surf(warps_fnc, hull = FALSE, new_data = turtles)
+plot(kr_surf)
+
+```
+
+To calculate adaptive landscapes based on groupings, first a population of landscapes is generated using `generate_weights()` and `calc_all_lscps()`:
+
+```{r}
+weights <- generate_weights(n = 10, data = kr_surf)
+all_landscapes <- calc_all_lscps(kr_surf, grid_weights = weights)
+all_landscapes
+```
+
+Optimal landscapes for groups are then calculated using `calcWprimeBy()` and can be statistically compared using `multi.lands.grp.test()`:
+
+```{r}
+wprime_by_Group <- calcWprimeBy(all_landscapes, by = ~Ecology)
+
+wprime_by_Group
+summary(wprime_by_Group)
+plot(wprime_by_Group, ncol = 2)
+
+tests <- multi.lands.grp.test(wprime_by_Group)
+tests
+```
+
 
