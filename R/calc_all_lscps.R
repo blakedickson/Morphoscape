@@ -10,6 +10,16 @@ calc_all_lscps <- function(kr_data, grid_weights, file = NULL){
   
   func.names <- names(kr_data$autoKrige)
   
+  if (ncol(grid_weights) != length(func.names)) {
+    stop("'grid_weights' must have weights for each functional characteristic in 'kr_data'.", call. = FALSE)
+  }
+  
+  if (!identical(colnames(grid_weights), func.names)) {
+    colnames(grid_weights) <- func.names
+  }
+  
+  grid_weights <- grid_weights[,func.names, drop = FALSE]
+  
   wtd_lscps <- lapply(kr_data$dataframes, function(x) {
     as.matrix(x[func.names]) %*% t(grid_weights)
   })
