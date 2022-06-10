@@ -1,7 +1,7 @@
 Package: Morphoscape
 Type: Package
 Title: Computation and Visualization of Adaptive Landscapes
-Version: 0.3.3.9000
+Version: 1.0.0
 Authors@R: c(
   person("Blake", "Dickson", email = "blake.dickson@duke.edu",
          role = c("aut", "cre"),

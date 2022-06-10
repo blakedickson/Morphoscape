@@ -54,14 +54,8 @@ calcGrpWprime <- function(x, index, method = "chi-squared", quantile = 0.05){
     }
   }
   
-  W <- matrix(0, ncol = length(func.names) + 1,
-                nrow = length(x$all_Wprime_surfs),
-                dimnames = list(NULL, c(func.names, "Z")))
+  W <- cbind(x[["grid_weights"]], Z = colMeans(x[["wtd_lscps"]][["new_data"]][index,, drop = FALSE]))
   
-  for (i in seq_len(nrow(W))) {
-    W[i, func.names] <- x$all_Wprime_surfs[[i]][["W"]]
-    W[i, "Z"] <- mean(x$all_Wprime_surfs[[i]][["Wprime"]][["new_data"]][["Z"]][index])
-  }
   W <- W[order(W[, "Z"], decreasing = TRUE),, drop = FALSE]
 
   if (method == "max") {
