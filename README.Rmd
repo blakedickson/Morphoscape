@@ -31,7 +31,7 @@ To install `Morphoscape` from GitHub you will need to install the
 
 ```{r, eval=FALSE}
 install.packages("devtools")
-devtools::install_github("ngreifer/Morphoscape")
+devtools::install_github("blakedickson/Morphoscape")
 ```
 
 The point of entry into `Morphoscape` is a dataframe containing two columns of XY coordinate data followed by columns containing performance variables. See the `warps` data object for an example. An additional dataframe `turtles` with specimen coordinates and grouping variables is also provided.
