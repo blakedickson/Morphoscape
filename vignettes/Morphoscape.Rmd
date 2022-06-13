@@ -87,7 +87,7 @@ By default the `krige_surf()` function will interpolate within an alpha hull wra
 
 ```{r}
 # Create alpha-hulled grid for kriging
-grid <- resample_grid(warps, hull = TRUE, alpha = 1, plot = TRUE)
+grid <- resample_grid(warps, hull = TRUE, alpha = 3, plot = TRUE)
 kr_surf <- krige_surf(warps_fnc, grid = grid)
 kr_surf
 plot(kr_surf)

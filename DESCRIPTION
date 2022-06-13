@@ -13,7 +13,7 @@ Authors@R: c(
          role = c("aut"),
 	       comment = c(ORCID="0000-0003-3067-7154"))
   )
-Description: This package implements adaptive landscape methods first described 
+Description: Implements adaptive landscape methods first described 
     by Polly et al. (2016) <doi:10.1080/02724634.2016.1111225> for the integration, analysis and visualzation of 
     biological trait data on a phenotypic morphospace - typically defined by 
     shape metrics.
@@ -22,12 +22,14 @@ Encoding: UTF-8
 LazyData: true
 Depends: R (>= 4.0.0)
 Imports: 
+    concaveman,
     ggplot2,
     sp,
-    alphahull,
     automap
 Suggests: 
+    alphahull,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 URL: https://blakedickson.github.io/Morphoscape/
+RoxygenNote: 7.1.2
