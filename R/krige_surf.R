@@ -121,10 +121,15 @@ resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, 
   
   if (hull) {
     #Compute hull from original data
-    datahull <- suppressWarnings(alphahull::ahull(coords2D[[1]], coords2D[[2]], alpha = alpha))
     
-    #Restrict full coordinates grid to points in hull
-    in_hull <- alphahull::inahull(datahull, p = as.matrix(grid2D))
+    datahull <- concaveman::concaveman(as.matrix(coords2D), concavity = alpha)
+    # Restrict full coordinates grid to points in hull
+    in_hull <- as.logical(sp::point.in.polygon(grid2D[,1], grid2D[,2], datahull[,1], datahull[,2]))
+    
+    
+    # datahull <- suppressWarnings(alphahull::ahull(coords2D[[1]], coords2D[[2]], alpha = alpha))
+    # # Restrict full coordinates grid to points in hull
+    # in_hull <- alphahull::inahull(datahull, p = as.matrix(grid2D))
     
     if (plot) {
       in_hull_f <- factor(in_hull, levels = c(TRUE, FALSE),
@@ -151,7 +156,7 @@ resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, 
   else {
     attr(grid2D, "hull") <- FALSE
   }
-
+  
   if (hull && plot) {
     return(invisible(grid2D))
   }

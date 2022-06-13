@@ -63,7 +63,7 @@ str(warps)
 
 # Using Morphoscape
 
-Once a morphospace is defined and performance data re collected, the workflow of using Morphoscape is fairly straightforward. Using the `warp` and `turtles` datasets the first step is to make a functional dataframe using `as_fnc_df()`. The input to this function is a dataframe containing both coordinate data and performance data (and also grouping factors if desired). The first two columns must be coordinates, while the other columns can be defined as performance data, or as grouping factors. It is best to have your performance data named at this point to keep track.
+Once a morphospace is defined and performance data collected, the workflow of using Morphoscape is fairly straightforward. Using the `warp` and `turtles` datasets the first step is to make a functional dataframe using `as_fnc_df()`. The input to this function is a dataframe containing both coordinate data and performance data (and also grouping factors if desired). The first two columns must be coordinates, while the other columns can be defined as performance data, or as grouping factors. It is best to have your performance data named at this point to keep track.
 
 ```{r}
 library(Morphoscape)
@@ -87,7 +87,7 @@ By default the `krige_surf()` function will interpolate within an alpha hull wra
 
 ```{r}
 # Create alpha-hulled grid for kriging
-grid <- resample_grid(warps, hull = TRUE, alpha = 1, plot = TRUE)
+grid <- resample_grid(warps, hull = TRUE, alpha = 3, plot = TRUE)
 kr_surf <- krige_surf(warps_fnc, grid = grid)
 kr_surf
 plot(kr_surf)

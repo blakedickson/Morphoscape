@@ -5,7 +5,7 @@
 Create a full grid from a set of coordinates
 }
 \description{
-\code{resample_grid()} creates a rectangular grid around supplied coordinates by resampling evenly spaced points between the minimum and maximum values of each coordinate dimension. The grid can optionally be reduced to an alpha hull around the supplied coordinates.
+\code{resample_grid()} creates a rectangular grid around supplied coordinates by resampling evenly spaced points between the minimum and maximum values of each coordinate dimension. The grid can optionally be reduced to a convex or concave hull around the supplied coordinates.
 }
 \usage{
 resample_grid(coords2D, resample = 100, padding = 1.2,
