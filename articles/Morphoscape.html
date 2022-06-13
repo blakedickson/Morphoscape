@@ -160,7 +160,7 @@
 <p>By default the <code><a href="../reference/krige_surf.html">krige_surf()</a></code> function will interpolate within an alpha hull wrapped around the inputted datapoints. This is to avoid extrapolation beyond measured datapoints. This can be defined using the <code><a href="../reference/resample_grid.html">resample_grid()</a></code> function, which will supply a grid object defining the points to interpolate, and optionally plot the area to be reconstructed. The strength of wrapping can be controlled using the <code>alpha</code> argument, with smaller values producing a stronger wrapping.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create alpha-hulled grid for kriging</span>
-<span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resample_grid.html">resample_grid</a></span><span class="op">(</span><span class="va">warps</span>, hull <span class="op">=</span> <span class="cn">TRUE</span>, alpha <span class="op">=</span> <span class="fl">1</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resample_grid.html">resample_grid</a></span><span class="op">(</span><span class="va">warps</span>, hull <span class="op">=</span> <span class="cn">TRUE</span>, alpha <span class="op">=</span> <span class="fl">3</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="Morphoscape_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_surf</a></span><span class="op">(</span><span class="va">warps_fnc</span>, grid <span class="op">=</span> <span class="va">grid</span><span class="op">)</span>
@@ -173,8 +173,8 @@
 <span class="co">#&gt; - functional characteristics:</span>
 <span class="co">#&gt;  hydro, curve, mech, fea</span>
 <span class="co">#&gt; - surface size:</span>
-<span class="co">#&gt;  71 by 70</span>
-<span class="co">#&gt;  α-hull applied (α = 1)</span>
+<span class="co">#&gt;  70 by 70</span>
+<span class="co">#&gt;  α-hull applied (α = 3)</span>
 <span class="co">#&gt; - original data:</span>
 <span class="co">#&gt;  24 rows</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></code></pre></div>
