@@ -1,7 +1,7 @@
 Package: Morphoscape
 Type: Package
 Title: Computation and Visualization of Adaptive Landscapes
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
   person("Blake", "Dickson", email = "blake.dickson@duke.edu",
          role = c("aut", "cre"),
@@ -20,6 +20,7 @@ LazyData: true
 Depends: R (>= 4.0.0)
 Imports: 
     concaveman,
+    alphahull,
     ggplot2,
     sp,
     automap

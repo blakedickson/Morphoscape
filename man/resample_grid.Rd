@@ -8,8 +8,8 @@ Create a full grid from a set of coordinates
 \code{resample_grid()} creates a rectangular grid around supplied coordinates by resampling evenly spaced points between the minimum and maximum values of each coordinate dimension. The grid can optionally be reduced to a convex or concave hull around the supplied coordinates.
 }
 \usage{
-resample_grid(coords2D, resample = 100, padding = 1.2,
-              hull = TRUE, alpha = 1, plot = FALSE)
+resample_grid(coords2D, resample = 100, padding = 1.2, hull = TRUE,
+              hullmethod = c("alphahull", "concaveman"), alpha = 1, plot = FALSE)
 }
 \arguments{
   \item{coords2D}{
@@ -22,15 +22,23 @@ the number of points (or pixels) in the x and y dimensions over which to create 
 a number representing how much to expand the grid beyond the ranges of the x- and y-coordinates. For example, \code{padding = 1.2} (the default) expands the grid by 20\% of the coordinates' ranges in each direction. Must be a number greater than or equal to 1. Large numbers imply greater extrapolation, and whatever padding is added will be negated if \code{hull = TRUE}.
 }
   \item{hull}{
-whether to restrict the grid to an alpha hull using \code{\link[alphahull:ahull]{alphahull::ahull}}. Default is \code{TRUE}. 
+Whether to to restrict the grid to an alpha hull. Default is \code{TRUE}. If no hull is desired set \code{hull = FALSE}
 }
+
+
+  \item{hullmethod}{
+method to restrict the grid to an alpha hull using \code{alphahull} or \code{concaveman} packages. Default is \code{\link[alphahull:ahull]{alphahull::ahull}}. If no hull is desired set \code{hull = NULL}
+}
+
+
   \item{alpha}{
-when \code{hull = TRUE}, the alpha value used to create the hull. Passed to \code{\link[alphahull:ahull]{alphahull::ahull}}.
+when \code{hull != NULL}, the alpha value used to create the hull. Passed to \code{\link[alphahull:ahull]{alphahull::ahull}} or \code{\link[concaveman::concaveman]{concaveman::concaveman}}.
 }
   \item{plot}{
 when \code{hull = TRUE}, whether to plot the resulting hull overlayed over the original grid. Default is \code{TRUE}.
 }
 }
+
 
 \value{
 A data frame with two columns, \code{x} and \code{y}, containing the resampled coordinate grid. When \code{hull = TRUE}, any points not in the hull will be absent.
@@ -39,7 +47,7 @@ A data frame with two columns, \code{x} and \code{y}, containing the resampled c
 \seealso{
 \code{\link{krige_surf}}, which uses \code{resample_grid} for kriging.
 
-\code{\link[alphahull:ahull]{alphahull::ahull}} and \code{\link[alphahull:inahull]{alphahull::inahull}} for creating the hull.
+\code{\link[alphahull:ahull]{alphahull::ahull}} and \code{\link[alphahull:inahull]{alphahull::inahull}}, or \code{\link[concaveman::concaveman]{concaveman::concaveman}} for creating the hull.
 }
 \examples{
 data("warps")

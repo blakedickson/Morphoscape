@@ -1,4 +1,4 @@
-krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = TRUE, alpha = 1, new_data = NULL){
+krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = TRUE, hullmethod = c("alphahull", "concaveman"), alpha = 1, new_data = NULL){
   
   if (!inherits(fnc_df, "fnc_df")) {
     stop("'fnc_df' must be a fnc_df object, the output of a call to fnc.dataframe().", call. = FALSE)
@@ -97,7 +97,7 @@ krige_new_data <- function(x, new_data) {
 }
 
 #Create a hull around input data. Allows for subsampling the total morphospace
-resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, alpha = 1, plot = FALSE){
+resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, hullmethod = c("alphahull"), alpha = 1, plot = FALSE){
   coords2D <- check_coords(coords2D)
   
   if (!is.numeric(padding) || length(padding) != 1 || padding < 1) {
@@ -120,17 +120,21 @@ resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, 
   grid2D <- expand.grid(x = gridX, y = gridY, KEEP.OUT.ATTRS = FALSE)
   
   if (hull) {
+    
+    if(hullmethod == "concaveman"){
+      datahull <- concaveman::concaveman(as.matrix(coords2D), concavity = alpha)
+      # Restrict full coordinates grid to points in hull
+      in_hull <- as.logical(sp::point.in.polygon(grid2D[,1], grid2D[,2], datahull[,1], datahull[,2]))
+    }
+    
+    if(hullmethod == "alphahull"){
+      
+      datahull <- suppressWarnings(alphahull::ahull(coords2D[[1]], coords2D[[2]], alpha = alpha))
+      # Restrict full coordinates grid to points in hull
+      in_hull <- alphahull::inahull(datahull, p = as.matrix(grid2D))
+    }
     #Compute hull from original data
-    
-    datahull <- concaveman::concaveman(as.matrix(coords2D), concavity = alpha)
-    # Restrict full coordinates grid to points in hull
-    in_hull <- as.logical(sp::point.in.polygon(grid2D[,1], grid2D[,2], datahull[,1], datahull[,2]))
-    
-    
-    # datahull <- suppressWarnings(alphahull::ahull(coords2D[[1]], coords2D[[2]], alpha = alpha))
-    # # Restrict full coordinates grid to points in hull
-    # in_hull <- alphahull::inahull(datahull, p = as.matrix(grid2D))
-    
+
     if (plot) {
       in_hull_f <- factor(in_hull, levels = c(TRUE, FALSE),
                           labels = c("In hull", "Not in hull"))
