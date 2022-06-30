@@ -1,9 +1,18 @@
 import("stats")
 import("ggplot2")
-importFrom("utils", "hasName", "combn", "setTxtProgressBar", "txtProgressBar")
+import("spatial")
+import("viridis")
 
+import("concaveman")
+
+importFrom("utils", "hasName", "combn", "setTxtProgressBar", "txtProgressBar")
+importFrom("grDevices", "axisTicks")
+importFrom("graphics", ".filled.contour", "axis", "contour",
+                "filled.contour", "par", "points", "title")
 export("as_fnc_df")
 export("generate_weights")
+export("calcPoly")
+export("multiPoly")
 export("resample_grid")
 export("krige_surf")
 export("krige_new_data")
@@ -13,6 +22,14 @@ export("calcGrpWprime")
 export("calcWprimeBy")
 export("lands.grp.test")
 export("multi.lands.grp.test")
+
+
+S3method("plot", "poly_surf")
+S3method("summary", "poly_surf")
+
+S3method("plot", "multi_poly")
+S3method("print", "multi_poly")
+S3method("summary", "multi_poly")
 
 S3method("plot", "kriged_surfaces")
 S3method("print", "kriged_surfaces")

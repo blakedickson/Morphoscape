@@ -1,4 +1,4 @@
-krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = TRUE, hullmethod = c("alphahull", "concaveman"), alpha = 1, new_data = NULL){
+krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = NULL, alpha = 1, new_data = NULL){
   
   if (!inherits(fnc_df, "fnc_df")) {
     stop("'fnc_df' must be a fnc_df object, the output of a call to fnc.dataframe().", call. = FALSE)
@@ -17,7 +17,7 @@ krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull 
     grid2D <- as.data.frame(grid)[1:2]
     grid2D <- sp::SpatialPoints(grid2D)
     sp::gridded(grid2D) <- TRUE
-    hull <- isTRUE(attr(grid, "hull"))
+    hull <- attr(grid, "hull")
     alpha <- attr(grid, "alpha")
   }
   
@@ -46,7 +46,7 @@ krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull 
     grid.size = if (!is.null(grid)) c(x = length(unique(grid2D$x)), y = length(unique(grid2D$y)))
                 else c(x = resample, y = resample),
     hull = hull,
-    alpha = if (hull) alpha else NULL
+    alpha = if (!is.null(hull)) alpha else NULL
   )
   
   if (!is.null(new_data)){
@@ -97,7 +97,7 @@ krige_new_data <- function(x, new_data) {
 }
 
 #Create a hull around input data. Allows for subsampling the total morphospace
-resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, hullmethod = c("alphahull"), alpha = 1, plot = FALSE){
+resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = NULL, alpha = 1, plot = FALSE){
   coords2D <- check_coords(coords2D)
   
   if (!is.numeric(padding) || length(padding) != 1 || padding < 1) {
@@ -119,15 +119,15 @@ resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, 
   
   grid2D <- expand.grid(x = gridX, y = gridY, KEEP.OUT.ATTRS = FALSE)
   
-  if (hull) {
+  if(!is.null(hull)){
     
-    if(hullmethod == "concaveman"){
+    if(hull=="concaveman"){
       datahull <- concaveman::concaveman(as.matrix(coords2D), concavity = alpha)
       # Restrict full coordinates grid to points in hull
       in_hull <- as.logical(sp::point.in.polygon(grid2D[,1], grid2D[,2], datahull[,1], datahull[,2]))
     }
     
-    if(hullmethod == "alphahull"){
+    if(hull == "alphahull"){
       
       datahull <- suppressWarnings(alphahull::ahull(coords2D[[1]], coords2D[[2]], alpha = alpha))
       # Restrict full coordinates grid to points in hull
@@ -154,14 +154,14 @@ resample_grid <- function(coords2D, resample = 100, padding = 1.2, hull = TRUE, 
     }
     
     grid2D <- grid2D[in_hull,]
-    attr(grid2D, "hull") <- TRUE
+    attr(grid2D, "hull") <- hull
     attr(grid2D, "alpha") <- alpha
   }
   else {
-    attr(grid2D, "hull") <- FALSE
+    attr(grid2D, "hull") <- NULL
   }
   
-  if (hull && plot) {
+  if (!is.null(hull) && plot) {
     return(invisible(grid2D))
   }
   
@@ -204,7 +204,7 @@ print.kriged_surfaces <- function(x, ...) {
   
   cat("- surface size:\n")
   cat("\t", paste(attr(x, "info")$grid.size, collapse = " by "), "\n", sep = "")
-  if (attr(x, "info")$hull) {
+  if (!is.null(attr(x, "info")$hull)) {
     cat("\t\u03B1-hull applied (\u03B1 = ", round(attr(x, "info")$alpha, 2), ")\n", sep = "")
   }
   

@@ -20,9 +20,10 @@ LazyData: true
 Depends: R (>= 4.0.0)
 Imports: 
     concaveman,
-    alphahull,
     ggplot2,
+    spatial,
     sp,
+    viridis,
     automap
 Suggests: 
     alphahull,

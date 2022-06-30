@@ -11,7 +11,7 @@ Interpolate functional characteristics over a grid
 }
 \usage{
 krige_surf(fnc_df, grid = NULL, resample = 100,
-           padding = 1.2, hull = c("alphahull", "concaveman"), alpha = 1,
+           padding = 1.2, hull = c("alphahull", "concaveman", NULL), alpha = 1,
            new_data = NULL)
            
 krige_new_data(x, new_data)
@@ -30,8 +30,9 @@ the number of points (or pixels) in the x and y dimensions over which to create 
 a number representing how much to expand the grid beyond the ranges of the x- and y-coordinates. For example, \code{padding = 1.2} (the default) expands the grid by 20\% of the coordinates' ranges in each direction. Must be a number greater than or equal to 1. Large numbers imply greater extrapolation, and whatever padding is added will be negated if \code{hull = TRUE}. Passed to \code{\link{resample_grid}}. Ignored when \code{grid} is not \code{NULL}.
 }
   \item{hull}{
-whether to restrict kriging to an alpha hull to prevent extrapolation beyond the coordinates present in \code{fnc_df}. Passed to \code{\link{resample_grid}}, which uses \code{alphahull} or \code{concaveman} packages. Default is \code{\link[alphahull:ahull]{alphahull::ahull}}. If no hull is desired set \code{hull = NULL}. If \code{NULL}, kriging will take place over a rectangular grid that spans the boundaries of the coordinates in \code{fnc_df}. Ignored when \code{grid} is not \code{NULL}.
+method to to restrict kriging to an alpha hull to prevent extrapolation beyond the coordinates present in \code{fnc_df}. Passed to \code{\link{resample_grid}}, which uses \code{alphahull} or \code{concaveman} packages. Default is \code{\link[alphahull:ahull]{alphahull::ahull}}. If no hull is desired set \code{hull = NULL}. If \code{NULL}, kriging will take place over a rectangular grid that spans the boundaries of the coordinates in \code{fnc_df}. Ignored when \code{grid} is not \code{NULL}
 }
+
   \item{alpha}{
 the alpha value used to create the alpha hull. Passed to \code{\link{resample_grid}} and eventually to \code{\link[alphahull:ahull]{alphahull::ahull}}. Ignored when \code{grid} is not \code{NULL}.
 }
@@ -79,7 +80,7 @@ data("warps")
 
 warps_fnc <- as_fnc_df(warps)
 
-grid <- resample_grid(warps, hullmethod = "alphahull", plot = T)
+grid <- resample_grid(warps, hull = "alphahull", plot = TRUE)
 
 kr_surf <- krige_surf(warps_fnc, grid = grid)
 kr_surf
@@ -92,12 +93,12 @@ plot(kr_surf)
 
 # Doing it all in one step:
 \dontrun{
-kr_surf <- krige_surf(warps_fnc, new_data = turtles, hullmethod = "alphahull")
+kr_surf <- krige_surf(warps_fnc, new_data = turtles, hull = "alphahull")
 kr_surf
 }
 
 # No hull and padding
-kr_surf <- krige_surf(warps_fnc, new_data = turtles, hull = FALSE, padding = 1.2)
+kr_surf <- krige_surf(warps_fnc, new_data = turtles, hull = NULL, padding = 1.2)
 plot(kr_surf)
 
 

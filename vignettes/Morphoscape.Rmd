@@ -87,18 +87,18 @@ By default the `krige_surf()` function will interpolate within an alpha hull wra
 
 ```{r}
 # Create alpha-hulled grid for kriging
-grid <- resample_grid(warps, hull = TRUE, alpha = 3, plot = TRUE)
+grid <- resample_grid(warps, hull = "concaveman", alpha = 3, plot = TRUE)
 kr_surf <- krige_surf(warps_fnc, grid = grid)
 kr_surf
 plot(kr_surf)
 ```
 
-However, if one wishes to also extrapolate to the full extent of morphospace, set `hull = FALSE`. Because the `warps` dataset evenly samples morphospace, we can set `hull = FALSE` and reconstruct the full rectangle of morphospace. When `hull = FALSE` an amount of padding will also be applied to provide some space beyond the supplied datapoints and can be controlled using the `padding` argument.  Finally, we can also specify the density of interpolated points using the `resample` argument.
+However, if one wishes to also extrapolate to the full extent of morphospace, set `hull = NULL`. Because the `warps` dataset evenly samples morphospace, we can set `hull = NULL` and reconstruct the full rectangle of morphospace. When `hull = NULL` an amount of padding will also be applied to provide some space beyond the supplied datapoints and can be controlled using the `padding` argument.  Finally, we can also specify the density of interpolated points using the `resample` argument.
 
 
 ```{r}
 # Create alpha-hulled grid for kriging
-grid <- resample_grid(warps, hull = FALSE, padding = 1.1)
+grid <- resample_grid(warps, hull = NULL, padding = 1.1)
 
 # Do the kriging on the grid
 kr_surf <- krige_surf(warps_fnc, grid = grid)
@@ -119,7 +119,7 @@ This of course all can all be done in one step. `krige_surf` will automatically 
 
 ```{r}
 # Above steps all in one:
-kr_surf <- krige_surf(warps_fnc, hull = FALSE, padding = 1.1,
+kr_surf <- krige_surf(warps_fnc, hull = NULL, padding = 1.1,
                       new_data = turtles)
 kr_surf
 plot(kr_surf)
