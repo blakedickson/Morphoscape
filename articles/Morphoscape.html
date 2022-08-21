@@ -8,8 +8,8 @@
 <meta name="description" content="Morphoscape">
 <title>Morphoscape • Morphoscape</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Morphoscape">
 <meta property="og:description" content="Morphoscape">
@@ -70,7 +70,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blakedickson.github.io/Morphoscape/">Morphoscape</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blakedickson.github.io/Morphoscape/">Morphoscape</a></span><span class="op">)</span></span></code></pre></div>
 <p>The following provides a guide on the workflow of performing an adaptive landscape analysis, from the philosophies of morphospaces, and types of data required, to the details of how to use the functions in this “Morphoscape” package. This guide will cover the following topics:</p>
 <pre><code>1. Defining a Morphospace
   - Phenotype
@@ -96,23 +96,23 @@
 <p>Both these approaches are valid as long as morphospace is reasonably well covered. For an in-depth analysis of morphospace sampling see Smith et al (2021).</p>
 <p>This package comes with the turtle humerus dataset from Dickson and Pierce (2019), which uses performance data collected from warps.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"turtles"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"warps"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">turtles</span><span class="op">)</span>
-<span class="co">#&gt; 'data.frame':    40 obs. of  4 variables:</span>
-<span class="co">#&gt;  $ x      : num  0.03486 -0.07419 -0.07846 0.00972 -0.00997 ...</span>
-<span class="co">#&gt;  $ y      : num  -0.019928 -0.015796 -0.010289 -0.000904 -0.029465 ...</span>
-<span class="co">#&gt;  $ Group  : chr  "freshwater" "softshell" "softshell" "freshwater" ...</span>
-<span class="co">#&gt;  $ Ecology: chr  "S" "S" "S" "S" ...</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">warps</span><span class="op">)</span>
-<span class="co">#&gt; 'data.frame':    24 obs. of  6 variables:</span>
-<span class="co">#&gt;  $ x    : num  -0.189 -0.189 -0.189 -0.189 -0.134 ...</span>
-<span class="co">#&gt;  $ y    : num  -0.05161 -0.00363 0.04435 0.09233 -0.05161 ...</span>
-<span class="co">#&gt;  $ hydro: num  -1839 -1962 -2089 -2371 -1754 ...</span>
-<span class="co">#&gt;  $ curve: num  8.07 6.3 9.7 15.44 10.21 ...</span>
-<span class="co">#&gt;  $ mech : num  0.185 0.193 0.191 0.161 0.171 ...</span>
-<span class="co">#&gt;  $ fea  : num  -0.15516 -0.06215 -0.00435 0.14399 0.28171 ...</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"turtles"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"warps"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">turtles</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'data.frame':    40 obs. of  4 variables:</span></span>
+<span><span class="co">#&gt;  $ x      : num  0.03486 -0.07419 -0.07846 0.00972 -0.00997 ...</span></span>
+<span><span class="co">#&gt;  $ y      : num  -0.019928 -0.015796 -0.010289 -0.000904 -0.029465 ...</span></span>
+<span><span class="co">#&gt;  $ Group  : chr  "freshwater" "softshell" "softshell" "freshwater" ...</span></span>
+<span><span class="co">#&gt;  $ Ecology: chr  "S" "S" "S" "S" ...</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">warps</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'data.frame':    24 obs. of  6 variables:</span></span>
+<span><span class="co">#&gt;  $ x    : num  -0.189 -0.189 -0.189 -0.189 -0.134 ...</span></span>
+<span><span class="co">#&gt;  $ y    : num  -0.05161 -0.00363 0.04435 0.09233 -0.05161 ...</span></span>
+<span><span class="co">#&gt;  $ hydro: num  -1839 -1962 -2089 -2371 -1754 ...</span></span>
+<span><span class="co">#&gt;  $ curve: num  8.07 6.3 9.7 15.44 10.21 ...</span></span>
+<span><span class="co">#&gt;  $ mech : num  0.185 0.193 0.191 0.161 0.171 ...</span></span>
+<span><span class="co">#&gt;  $ fea  : num  -0.15516 -0.06215 -0.00435 0.14399 0.28171 ...</span></span></code></pre></div>
 <p><code>turtles</code> is a dataset of coordinate data for 40 turtle humerus specimens that have been ordinated in a bgPCA morphospace, the first two axes maximizing the differences between three ecological groups: Marine, Freshwater and Terrestrial turtles. This dataset also includes these and other ecological groupings.</p>
 <p><code>warps</code> is a dataset of 4x6 evenly spaced warps predicted from this morphospace and 4 performance metrics.</p>
 </div>
@@ -122,128 +122,128 @@
 </h2>
 <p>Once a morphospace is defined and performance data collected, the workflow of using Morphoscape is fairly straightforward. Using the <code>warp</code> and <code>turtles</code> datasets the first step is to make a functional dataframe using <code><a href="../reference/as_fnc_df.html">as_fnc_df()</a></code>. The input to this function is a dataframe containing both coordinate data and performance data (and also grouping factors if desired). The first two columns must be coordinates, while the other columns can be defined as performance data, or as grouping factors. It is best to have your performance data named at this point to keep track.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blakedickson.github.io/Morphoscape/">Morphoscape</a></span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"turtles"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"warps"</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">turtles</span><span class="op">)</span>
-<span class="co">#&gt; 'data.frame':    40 obs. of  4 variables:</span>
-<span class="co">#&gt;  $ x      : num  0.03486 -0.07419 -0.07846 0.00972 -0.00997 ...</span>
-<span class="co">#&gt;  $ y      : num  -0.019928 -0.015796 -0.010289 -0.000904 -0.029465 ...</span>
-<span class="co">#&gt;  $ Group  : chr  "freshwater" "softshell" "softshell" "freshwater" ...</span>
-<span class="co">#&gt;  $ Ecology: chr  "S" "S" "S" "S" ...</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">warps</span><span class="op">)</span>
-<span class="co">#&gt; 'data.frame':    24 obs. of  6 variables:</span>
-<span class="co">#&gt;  $ x    : num  -0.189 -0.189 -0.189 -0.189 -0.134 ...</span>
-<span class="co">#&gt;  $ y    : num  -0.05161 -0.00363 0.04435 0.09233 -0.05161 ...</span>
-<span class="co">#&gt;  $ hydro: num  -1839 -1962 -2089 -2371 -1754 ...</span>
-<span class="co">#&gt;  $ curve: num  8.07 6.3 9.7 15.44 10.21 ...</span>
-<span class="co">#&gt;  $ mech : num  0.185 0.193 0.191 0.161 0.171 ...</span>
-<span class="co">#&gt;  $ fea  : num  -0.15516 -0.06215 -0.00435 0.14399 0.28171 ...</span>
-
-<span class="co"># Create an fnc_df object for downstream use</span>
-<span class="va">warps_fnc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_fnc_df.html">as_fnc_df</a></span><span class="op">(</span><span class="va">warps</span>, func.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hydro"</span>, <span class="st">"curve"</span>, <span class="st">"mech"</span>, <span class="st">"fea"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">warps_fnc</span><span class="op">)</span>
-<span class="co">#&gt; Classes 'fnc_df' and 'data.frame':   24 obs. of  6 variables:</span>
-<span class="co">#&gt;  $ x    : num  -0.189 -0.189 -0.189 -0.189 -0.134 ...</span>
-<span class="co">#&gt;  $ y    : num  -0.05161 -0.00363 0.04435 0.09233 -0.05161 ...</span>
-<span class="co">#&gt;  $ hydro: num  0.763 0.627 0.487 0.174 0.858 ...</span>
-<span class="co">#&gt;  $ curve: num  0.0544 0 0.1045 0.281 0.1202 ...</span>
-<span class="co">#&gt;  $ mech : num  0.359 0.473 0.446 0 0.149 ...</span>
-<span class="co">#&gt;  $ fea  : num  0.372 0.458 0.512 0.65 0.777 ...</span>
-<span class="co">#&gt;  - attr(*, "func.names")= chr [1:4] "hydro" "curve" "mech" "fea"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://blakedickson.github.io/Morphoscape/">Morphoscape</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"turtles"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"warps"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">turtles</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'data.frame':    40 obs. of  4 variables:</span></span>
+<span><span class="co">#&gt;  $ x      : num  0.03486 -0.07419 -0.07846 0.00972 -0.00997 ...</span></span>
+<span><span class="co">#&gt;  $ y      : num  -0.019928 -0.015796 -0.010289 -0.000904 -0.029465 ...</span></span>
+<span><span class="co">#&gt;  $ Group  : chr  "freshwater" "softshell" "softshell" "freshwater" ...</span></span>
+<span><span class="co">#&gt;  $ Ecology: chr  "S" "S" "S" "S" ...</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">warps</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 'data.frame':    24 obs. of  6 variables:</span></span>
+<span><span class="co">#&gt;  $ x    : num  -0.189 -0.189 -0.189 -0.189 -0.134 ...</span></span>
+<span><span class="co">#&gt;  $ y    : num  -0.05161 -0.00363 0.04435 0.09233 -0.05161 ...</span></span>
+<span><span class="co">#&gt;  $ hydro: num  -1839 -1962 -2089 -2371 -1754 ...</span></span>
+<span><span class="co">#&gt;  $ curve: num  8.07 6.3 9.7 15.44 10.21 ...</span></span>
+<span><span class="co">#&gt;  $ mech : num  0.185 0.193 0.191 0.161 0.171 ...</span></span>
+<span><span class="co">#&gt;  $ fea  : num  -0.15516 -0.06215 -0.00435 0.14399 0.28171 ...</span></span>
+<span></span>
+<span><span class="co"># Create an fnc_df object for downstream use</span></span>
+<span><span class="va">warps_fnc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as_fnc_df.html">as_fnc_df</a></span><span class="op">(</span><span class="va">warps</span>, func.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hydro"</span>, <span class="st">"curve"</span>, <span class="st">"mech"</span>, <span class="st">"fea"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">warps_fnc</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Classes 'fnc_df' and 'data.frame':   24 obs. of  6 variables:</span></span>
+<span><span class="co">#&gt;  $ x    : num  -0.189 -0.189 -0.189 -0.189 -0.134 ...</span></span>
+<span><span class="co">#&gt;  $ y    : num  -0.05161 -0.00363 0.04435 0.09233 -0.05161 ...</span></span>
+<span><span class="co">#&gt;  $ hydro: num  0.763 0.627 0.487 0.174 0.858 ...</span></span>
+<span><span class="co">#&gt;  $ curve: num  0.0544 0 0.1045 0.281 0.1202 ...</span></span>
+<span><span class="co">#&gt;  $ mech : num  0.359 0.473 0.446 0 0.149 ...</span></span>
+<span><span class="co">#&gt;  $ fea  : num  0.372 0.458 0.512 0.65 0.777 ...</span></span>
+<span><span class="co">#&gt;  - attr(*, "func.names")= chr [1:4] "hydro" "curve" "mech" "fea"</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="creating-performance-surfaces">Creating Performance Surfaces<a class="anchor" aria-label="anchor" href="#creating-performance-surfaces"></a>
 </h3>
 <p>It is then a simple process to perform surface interpolation by automatic Kriging using the <code><a href="../reference/krige_surf.html">krige_surf()</a></code> function. This will autofit a kriging function to the data. This is performed by the <code><a href="https://rdrr.io/pkg/automap/man/autoKrige.html" class="external-link">automap::autoKrige()</a></code> function. For details on the fitting of variograms you should read the documentation of <code>automap</code>. All the <code>autoKrige</code> fitting data is kept in the <code>kriged_surfaces</code> object along with the output surface.</p>
 <p>By default the <code><a href="../reference/krige_surf.html">krige_surf()</a></code> function will interpolate within an alpha hull wrapped around the inputted datapoints. This is to avoid extrapolation beyond measured datapoints. This can be defined using the <code><a href="../reference/resample_grid.html">resample_grid()</a></code> function, which will supply a grid object defining the points to interpolate, and optionally plot the area to be reconstructed. The strength of wrapping can be controlled using the <code>alpha</code> argument, with smaller values producing a stronger wrapping.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create alpha-hulled grid for kriging</span>
-<span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resample_grid.html">resample_grid</a></span><span class="op">(</span><span class="va">warps</span>, hull <span class="op">=</span> <span class="cn">TRUE</span>, alpha <span class="op">=</span> <span class="fl">3</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Create alpha-hulled grid for kriging</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resample_grid.html">resample_grid</a></span><span class="op">(</span><span class="va">warps</span>, hull <span class="op">=</span> <span class="st">"concaveman"</span>, alpha <span class="op">=</span> <span class="fl">3</span>, plot <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Morphoscape_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_surf</a></span><span class="op">(</span><span class="va">warps_fnc</span>, grid <span class="op">=</span> <span class="va">grid</span><span class="op">)</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="va">kr_surf</span>
-<span class="co">#&gt; A kriged_surfaces object</span>
-<span class="co">#&gt; - functional characteristics:</span>
-<span class="co">#&gt;  hydro, curve, mech, fea</span>
-<span class="co">#&gt; - surface size:</span>
-<span class="co">#&gt;  70 by 70</span>
-<span class="co">#&gt;  α-hull applied (α = 3)</span>
-<span class="co">#&gt; - original data:</span>
-<span class="co">#&gt;  24 rows</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_surf</a></span><span class="op">(</span><span class="va">warps_fnc</span>, grid <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="va">kr_surf</span></span>
+<span><span class="co">#&gt; A kriged_surfaces object</span></span>
+<span><span class="co">#&gt; - functional characteristics:</span></span>
+<span><span class="co">#&gt;  hydro, curve, mech, fea</span></span>
+<span><span class="co">#&gt; - surface size:</span></span>
+<span><span class="co">#&gt;  70 by 70</span></span>
+<span><span class="co">#&gt;  α-hull applied (α = 3)</span></span>
+<span><span class="co">#&gt; - original data:</span></span>
+<span><span class="co">#&gt;  24 rows</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Morphoscape_files/figure-html/unnamed-chunk-4-2.png" width="768" style="display: block; margin: auto;"></p>
-<p>However, if one wishes to also extrapolate to the full extent of morphospace, set <code>hull = FALSE</code>. Because the <code>warps</code> dataset evenly samples morphospace, we can set <code>hull = FALSE</code> and reconstruct the full rectangle of morphospace. When <code>hull = FALSE</code> an amount of padding will also be applied to provide some space beyond the supplied datapoints and can be controlled using the <code>padding</code> argument. Finally, we can also specify the density of interpolated points using the <code>resample</code> argument.</p>
+<p>However, if one wishes to also extrapolate to the full extent of morphospace, set <code>hull = NULL</code>. Because the <code>warps</code> dataset evenly samples morphospace, we can set <code>hull = NULL</code> and reconstruct the full rectangle of morphospace. When <code>hull = NULL</code> an amount of padding will also be applied to provide some space beyond the supplied datapoints and can be controlled using the <code>padding</code> argument. Finally, we can also specify the density of interpolated points using the <code>resample</code> argument.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create alpha-hulled grid for kriging</span>
-<span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resample_grid.html">resample_grid</a></span><span class="op">(</span><span class="va">warps</span>, hull <span class="op">=</span> <span class="cn">FALSE</span>, padding <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span>
-
-<span class="co"># Do the kriging on the grid</span>
-<span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_surf</a></span><span class="op">(</span><span class="va">warps_fnc</span>, grid <span class="op">=</span> <span class="va">grid</span><span class="op">)</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="va">kr_surf</span>
-<span class="co">#&gt; A kriged_surfaces object</span>
-<span class="co">#&gt; - functional characteristics:</span>
-<span class="co">#&gt;  hydro, curve, mech, fea</span>
-<span class="co">#&gt; - surface size:</span>
-<span class="co">#&gt;  100 by 100</span>
-<span class="co">#&gt; - original data:</span>
-<span class="co">#&gt;  24 rows</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Create alpha-hulled grid for kriging</span></span>
+<span><span class="va">grid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/resample_grid.html">resample_grid</a></span><span class="op">(</span><span class="va">warps</span>, hull <span class="op">=</span> <span class="cn">NULL</span>, padding <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Do the kriging on the grid</span></span>
+<span><span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_surf</a></span><span class="op">(</span><span class="va">warps_fnc</span>, grid <span class="op">=</span> <span class="va">grid</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="va">kr_surf</span></span>
+<span><span class="co">#&gt; A kriged_surfaces object</span></span>
+<span><span class="co">#&gt; - functional characteristics:</span></span>
+<span><span class="co">#&gt;  hydro, curve, mech, fea</span></span>
+<span><span class="co">#&gt; - surface size:</span></span>
+<span><span class="co">#&gt;  100 by 100</span></span>
+<span><span class="co">#&gt; - original data:</span></span>
+<span><span class="co">#&gt;  24 rows</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Morphoscape_files/figure-html/unnamed-chunk-5-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>This reconstructed surface is missing actual specimen data points with associated ecological groupings, which are needed for later analyses. These can be added using the <code><a href="../reference/krige_surf.html">krige_new_data()</a></code> function.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Do kriging on the sample dataset</span>
-<span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_new_data</a></span><span class="op">(</span><span class="va">kr_surf</span>, new_data <span class="op">=</span> <span class="va">turtles</span><span class="op">)</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="va">kr_surf</span>
-<span class="co">#&gt; A kriged_surfaces object</span>
-<span class="co">#&gt; - functional characteristics:</span>
-<span class="co">#&gt;  hydro, curve, mech, fea</span>
-<span class="co">#&gt; - surface size:</span>
-<span class="co">#&gt;  100 by 100</span>
-<span class="co">#&gt; - original data:</span>
-<span class="co">#&gt;  24 rows</span>
-<span class="co">#&gt; - new data:</span>
-<span class="co">#&gt;  40 rows</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Do kriging on the sample dataset</span></span>
+<span><span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_new_data</a></span><span class="op">(</span><span class="va">kr_surf</span>, new_data <span class="op">=</span> <span class="va">turtles</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="va">kr_surf</span></span>
+<span><span class="co">#&gt; A kriged_surfaces object</span></span>
+<span><span class="co">#&gt; - functional characteristics:</span></span>
+<span><span class="co">#&gt;  hydro, curve, mech, fea</span></span>
+<span><span class="co">#&gt; - surface size:</span></span>
+<span><span class="co">#&gt;  100 by 100</span></span>
+<span><span class="co">#&gt; - original data:</span></span>
+<span><span class="co">#&gt;  24 rows</span></span>
+<span><span class="co">#&gt; - new data:</span></span>
+<span><span class="co">#&gt;  40 rows</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Morphoscape_files/figure-html/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>This of course all can all be done in one step. <code>krige_surf</code> will automatically call <code><a href="../reference/resample_grid.html">resample_grid()</a></code> if no <code>grid</code> argument is supplied, and <code>new_data</code> can be supplied as the data by which later group optimums are calculated against.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Above steps all in one:</span>
-<span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_surf</a></span><span class="op">(</span><span class="va">warps_fnc</span>, hull <span class="op">=</span> <span class="cn">FALSE</span>, padding <span class="op">=</span> <span class="fl">1.1</span>,
-                      new_data <span class="op">=</span> <span class="va">turtles</span><span class="op">)</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="co">#&gt; [using ordinary kriging]</span>
-<span class="va">kr_surf</span>
-<span class="co">#&gt; A kriged_surfaces object</span>
-<span class="co">#&gt; - functional characteristics:</span>
-<span class="co">#&gt;  hydro, curve, mech, fea</span>
-<span class="co">#&gt; - surface size:</span>
-<span class="co">#&gt;  100 by 100</span>
-<span class="co">#&gt; - original data:</span>
-<span class="co">#&gt;  24 rows</span>
-<span class="co">#&gt; - new data:</span>
-<span class="co">#&gt;  40 rows</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Above steps all in one:</span></span>
+<span><span class="va">kr_surf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/krige_surf.html">krige_surf</a></span><span class="op">(</span><span class="va">warps_fnc</span>, hull <span class="op">=</span> <span class="cn">NULL</span>, padding <span class="op">=</span> <span class="fl">1.1</span>,</span>
+<span>                      new_data <span class="op">=</span> <span class="va">turtles</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="co">#&gt; [using ordinary kriging]</span></span>
+<span><span class="va">kr_surf</span></span>
+<span><span class="co">#&gt; A kriged_surfaces object</span></span>
+<span><span class="co">#&gt; - functional characteristics:</span></span>
+<span><span class="co">#&gt;  hydro, curve, mech, fea</span></span>
+<span><span class="co">#&gt; - surface size:</span></span>
+<span><span class="co">#&gt;  100 by 100</span></span>
+<span><span class="co">#&gt; - original data:</span></span>
+<span><span class="co">#&gt;  24 rows</span></span>
+<span><span class="co">#&gt; - new data:</span></span>
+<span><span class="co">#&gt;  40 rows</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">kr_surf</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Morphoscape_files/figure-html/unnamed-chunk-7-1.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -252,181 +252,181 @@
 <p>The next step is to calculate a distribution of adaptive landscapes. Each adaptive landscape is constructed as the summation of the performance surfaces in differing magnitudes, Each performance surface is multiplied by a weight ranging from 0-1, and the total sum of weights is equal to 1. For four equally weighted performance surfaces, the weights would be the vector <code>c(0.25, 0.25, 0.25, 0.25)</code>. To generate a distribution of different combinations of these weights, use the <code><a href="../reference/generate_weights.html">generate_weights()</a></code> function. <code>generate_weights</code> must have either a <code>step</code> or <code>n</code> argument to determine how many allocations to generate, and <code>nvar</code> the number of variables. One can also provide either the <code>fnc_df</code> or <code>kr_surf</code> objects to the <code>data</code> argument. <code>step</code> determines the step size between weight values. <code>step = 0.1</code> will generate a vectors of <code>c(0, 0.1, 0.2 ... 1)</code>. Alternatively, one can set the number of values in the sequence set. <code>n = 10</code> will generate the same vectors of <code>c(0, 0.1, 0.2 ... 1)</code>. The function will then generate all combinations of <code>nvar</code> variables that sum to 1.</p>
 <p>For four variables, this will produce 286 combinations. A step size of 0.05 will produce 1771 rows. As the step size gets smaller, and the number of variables increases, the number of output rows will exponentially increase. It is recommended to start with large <code>step</code> sizes, or small <code>n</code> to ensure things are working correctly.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Generate weights to search for optimal landscapes</span>
-<span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights.html">generate_weights</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, nvar <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>
-<span class="co">#&gt; 286 rows generated</span>
-<span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights.html">generate_weights</a></span><span class="op">(</span>step <span class="op">=</span> <span class="fl">0.05</span> , data <span class="op">=</span> <span class="va">kr_surf</span><span class="op">)</span>
-<span class="co">#&gt; 1771 rows generated</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Generate weights to search for optimal landscapes</span></span>
+<span><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights.html">generate_weights</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, nvar <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 286 rows generated</span></span>
+<span><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_weights.html">generate_weights</a></span><span class="op">(</span>step <span class="op">=</span> <span class="fl">0.05</span> , data <span class="op">=</span> <span class="va">kr_surf</span><span class="op">)</span></span>
+<span><span class="co">#&gt; 1771 rows generated</span></span></code></pre></div>
 <p>This <code>weights</code> matrix is then provided to the <code>calc_all_landscapes()</code> along with the <code>kr_surf</code> object to calculate the landscapes for each set of weights. For calculations with a large number of weights, outputs can take some time and can be very large in size, and it is recommended to utilize the <code>file</code> argument to save the output to file.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Calculate all landscapes; setting verbose = TRUE produces</span>
-<span class="co"># a progress bar</span>
-<span class="va">all_landscapes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_all_lscps.html">calc_all_lscps</a></span><span class="op">(</span><span class="va">kr_surf</span>, grid_weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Calculate all landscapes; setting verbose = TRUE produces</span></span>
+<span><span class="co"># a progress bar</span></span>
+<span><span class="va">all_landscapes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_all_lscps.html">calc_all_lscps</a></span><span class="op">(</span><span class="va">kr_surf</span>, grid_weights <span class="op">=</span> <span class="va">weights</span><span class="op">)</span></span></code></pre></div>
 <p>With a distribution of landscapes, it is now possible to find landscapes that maximize ‘fitness’ for a given subset or group of your specimens in <code>new_data</code> using the <code><a href="../reference/calcWprimeBy.html">calcWprimeBy()</a></code> function. The <code>by</code> argument sets the grouping variable for the data provided in <code>new_data</code> from earlier. There are several ways <code>by</code> can be set: A one sided formula containing the name of a column in <code>new_data</code> or a vector containing a factor variable.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Calculate optimal landscapes by Group</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">turtles</span><span class="op">$</span><span class="va">Ecology</span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  M  S  T </span>
-<span class="co">#&gt;  4 29  7</span>
-
-<span class="va">wprime_by_Group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcWprimeBy.html">calcWprimeBy</a></span><span class="op">(</span><span class="va">all_landscapes</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">Ecology</span><span class="op">)</span>
-<span class="va">wprime_by_Group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcWprimeBy.html">calcWprimeBy</a></span><span class="op">(</span><span class="va">all_landscapes</span>, by <span class="op">=</span> <span class="va">turtles</span><span class="op">$</span><span class="va">Ecology</span><span class="op">)</span>
-
-<span class="va">wprime_by_Group</span>
-<span class="co">#&gt; - turtles$Ecology == "M"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Optimal weights:</span>
-<span class="co">#&gt;         Weight       SE      SD Min. Max.</span>
-<span class="co">#&gt; hydro 0.104167 0.029167 0.10104  0.0 0.30</span>
-<span class="co">#&gt; curve 0.008333 0.005618 0.01946  0.0 0.05</span>
-<span class="co">#&gt; mech  0.012500 0.006528 0.02261  0.0 0.05</span>
-<span class="co">#&gt; fea   0.875000 0.025746 0.08919  0.7 1.00</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Average fitness value at optimal weights:</span>
-<span class="co">#&gt;    Value       SE      SD   Min.   Max.</span>
-<span class="co">#&gt; Z 0.7612 0.004671 0.01618 0.7437 0.7927</span>
-<span class="co">#&gt; -----------------------------------------</span>
-<span class="co">#&gt; - turtles$Ecology == "S"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Optimal weights:</span>
-<span class="co">#&gt;        Weight       SE      SD Min. Max.</span>
-<span class="co">#&gt; hydro 0.85469 0.009878 0.05588  0.8 1.00</span>
-<span class="co">#&gt; curve 0.05312 0.010025 0.05671  0.0 0.20</span>
-<span class="co">#&gt; mech  0.05312 0.010025 0.05671  0.0 0.20</span>
-<span class="co">#&gt; fea   0.03906 0.007691 0.04350  0.0 0.15</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Average fitness value at optimal weights:</span>
-<span class="co">#&gt;    Value       SE      SD   Min.   Max.</span>
-<span class="co">#&gt; Z 0.7491 0.002325 0.01315 0.7326 0.7835</span>
-<span class="co">#&gt; -----------------------------------------</span>
-<span class="co">#&gt; - turtles$Ecology == "T"</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Optimal weights:</span>
-<span class="co">#&gt;       Weight      SE      SD Min. Max.</span>
-<span class="co">#&gt; hydro 0.0125 0.00559 0.02236 0.00 0.05</span>
-<span class="co">#&gt; curve 0.8500 0.02415 0.09661 0.65 1.00</span>
-<span class="co">#&gt; mech  0.1250 0.02661 0.10646 0.00 0.35</span>
-<span class="co">#&gt; fea   0.0125 0.00559 0.02236 0.00 0.05</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Average fitness value at optimal weights:</span>
-<span class="co">#&gt;    Value       SE      SD  Min.   Max.</span>
-<span class="co">#&gt; Z 0.7538 0.003712 0.01485 0.736 0.7852</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; - method: chi-squared, quantile = 0.05</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">wprime_by_Group</span><span class="op">)</span>
-<span class="co">#&gt; Optimal weights by turtles$Ecology:</span>
-<span class="co">#&gt;    W_hydro  W_curve   W_mech    W_fea        Z</span>
-<span class="co">#&gt; M 0.104167 0.008333 0.012500 0.875000 0.761245</span>
-<span class="co">#&gt; S 0.854688 0.053125 0.053125 0.039062 0.749055</span>
-<span class="co">#&gt; T 0.012500 0.850000 0.125000 0.012500 0.753825</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Calculate optimal landscapes by Group</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">turtles</span><span class="op">$</span><span class="va">Ecology</span><span class="op">)</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;  M  S  T </span></span>
+<span><span class="co">#&gt;  4 29  7</span></span>
+<span></span>
+<span><span class="va">wprime_by_Group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcWprimeBy.html">calcWprimeBy</a></span><span class="op">(</span><span class="va">all_landscapes</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">Ecology</span><span class="op">)</span></span>
+<span><span class="va">wprime_by_Group</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcWprimeBy.html">calcWprimeBy</a></span><span class="op">(</span><span class="va">all_landscapes</span>, by <span class="op">=</span> <span class="va">turtles</span><span class="op">$</span><span class="va">Ecology</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">wprime_by_Group</span></span>
+<span><span class="co">#&gt; - turtles$Ecology == "M"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Optimal weights:</span></span>
+<span><span class="co">#&gt;         Weight       SE      SD Min. Max.</span></span>
+<span><span class="co">#&gt; hydro 0.104167 0.029167 0.10104  0.0 0.30</span></span>
+<span><span class="co">#&gt; curve 0.008333 0.005618 0.01946  0.0 0.05</span></span>
+<span><span class="co">#&gt; mech  0.012500 0.006528 0.02261  0.0 0.05</span></span>
+<span><span class="co">#&gt; fea   0.875000 0.025746 0.08919  0.7 1.00</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average fitness value at optimal weights:</span></span>
+<span><span class="co">#&gt;    Value       SE      SD   Min.   Max.</span></span>
+<span><span class="co">#&gt; Z 0.7612 0.004671 0.01618 0.7437 0.7927</span></span>
+<span><span class="co">#&gt; -----------------------------------------</span></span>
+<span><span class="co">#&gt; - turtles$Ecology == "S"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Optimal weights:</span></span>
+<span><span class="co">#&gt;        Weight       SE      SD Min. Max.</span></span>
+<span><span class="co">#&gt; hydro 0.85469 0.009878 0.05588  0.8 1.00</span></span>
+<span><span class="co">#&gt; curve 0.05312 0.010025 0.05671  0.0 0.20</span></span>
+<span><span class="co">#&gt; mech  0.05312 0.010025 0.05671  0.0 0.20</span></span>
+<span><span class="co">#&gt; fea   0.03906 0.007691 0.04350  0.0 0.15</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average fitness value at optimal weights:</span></span>
+<span><span class="co">#&gt;    Value       SE      SD   Min.   Max.</span></span>
+<span><span class="co">#&gt; Z 0.7491 0.002325 0.01315 0.7326 0.7835</span></span>
+<span><span class="co">#&gt; -----------------------------------------</span></span>
+<span><span class="co">#&gt; - turtles$Ecology == "T"</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Optimal weights:</span></span>
+<span><span class="co">#&gt;       Weight      SE      SD Min. Max.</span></span>
+<span><span class="co">#&gt; hydro 0.0125 0.00559 0.02236 0.00 0.05</span></span>
+<span><span class="co">#&gt; curve 0.8500 0.02415 0.09661 0.65 1.00</span></span>
+<span><span class="co">#&gt; mech  0.1250 0.02661 0.10646 0.00 0.35</span></span>
+<span><span class="co">#&gt; fea   0.0125 0.00559 0.02236 0.00 0.05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average fitness value at optimal weights:</span></span>
+<span><span class="co">#&gt;    Value       SE      SD  Min.   Max.</span></span>
+<span><span class="co">#&gt; Z 0.7538 0.003712 0.01485 0.736 0.7852</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - method: chi-squared, quantile = 0.05</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">wprime_by_Group</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Optimal weights by turtles$Ecology:</span></span>
+<span><span class="co">#&gt;    W_hydro  W_curve   W_mech    W_fea        Z</span></span>
+<span><span class="co">#&gt; M 0.104167 0.008333 0.012500 0.875000 0.761245</span></span>
+<span><span class="co">#&gt; S 0.854688 0.053125 0.053125 0.039062 0.749055</span></span>
+<span><span class="co">#&gt; T 0.012500 0.850000 0.125000 0.012500 0.753825</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Morphoscape_files/figure-html/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;"></p>
 <p>It is also possible to use <code>calcGrpWprime</code> to enumerate a single group or for the entire sample:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Calculate landscapes for one Group at a time</span>
-
-<span class="va">i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">turtles</span><span class="op">$</span><span class="va">Ecology</span> <span class="op">==</span> <span class="st">"T"</span><span class="op">)</span>
-<span class="va">wprime_T</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span>, index <span class="op">=</span> <span class="va">i</span><span class="op">)</span>
-<span class="va">wprime_T</span>
-<span class="co">#&gt; Optimal weights:</span>
-<span class="co">#&gt;       Weight      SE      SD Min. Max.</span>
-<span class="co">#&gt; hydro 0.0125 0.00559 0.02236 0.00 0.05</span>
-<span class="co">#&gt; curve 0.8500 0.02415 0.09661 0.65 1.00</span>
-<span class="co">#&gt; mech  0.1250 0.02661 0.10646 0.00 0.35</span>
-<span class="co">#&gt; fea   0.0125 0.00559 0.02236 0.00 0.05</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Average fitness value at optimal weights:</span>
-<span class="co">#&gt;    Value       SE      SD  Min.   Max.</span>
-<span class="co">#&gt; Z 0.7538 0.003712 0.01485 0.736 0.7852</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; - method: chi-squared, quantile = 0.05</span>
-<span class="va">wprime_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span>, <span class="va">Group</span> <span class="op">==</span> <span class="st">"box turtle"</span><span class="op">)</span>
-<span class="va">wprime_b</span>
-<span class="co">#&gt; Optimal weights:</span>
-<span class="co">#&gt;        Weight       SE      SD Min. Max.</span>
-<span class="co">#&gt; hydro 0.01944 0.007162 0.03038  0.0  0.1</span>
-<span class="co">#&gt; curve 0.86944 0.018140 0.07696  0.7  1.0</span>
-<span class="co">#&gt; mech  0.09167 0.021862 0.09275  0.0  0.3</span>
-<span class="co">#&gt; fea   0.01944 0.007162 0.03038  0.0  0.1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Average fitness value at optimal weights:</span>
-<span class="co">#&gt;    Value       SE      SD   Min.   Max.</span>
-<span class="co">#&gt; Z 0.7746 0.003492 0.01482 0.7565 0.8073</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; - method: chi-squared, quantile = 0.05</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">wprime_b</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Calculate landscapes for one Group at a time</span></span>
+<span></span>
+<span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">turtles</span><span class="op">$</span><span class="va">Ecology</span> <span class="op">==</span> <span class="st">"T"</span><span class="op">)</span></span>
+<span><span class="va">wprime_T</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span>, index <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
+<span><span class="va">wprime_T</span></span>
+<span><span class="co">#&gt; Optimal weights:</span></span>
+<span><span class="co">#&gt;       Weight      SE      SD Min. Max.</span></span>
+<span><span class="co">#&gt; hydro 0.0125 0.00559 0.02236 0.00 0.05</span></span>
+<span><span class="co">#&gt; curve 0.8500 0.02415 0.09661 0.65 1.00</span></span>
+<span><span class="co">#&gt; mech  0.1250 0.02661 0.10646 0.00 0.35</span></span>
+<span><span class="co">#&gt; fea   0.0125 0.00559 0.02236 0.00 0.05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average fitness value at optimal weights:</span></span>
+<span><span class="co">#&gt;    Value       SE      SD  Min.   Max.</span></span>
+<span><span class="co">#&gt; Z 0.7538 0.003712 0.01485 0.736 0.7852</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - method: chi-squared, quantile = 0.05</span></span>
+<span><span class="va">wprime_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span>, <span class="va">Group</span> <span class="op">==</span> <span class="st">"box turtle"</span><span class="op">)</span></span>
+<span><span class="va">wprime_b</span></span>
+<span><span class="co">#&gt; Optimal weights:</span></span>
+<span><span class="co">#&gt;        Weight       SE      SD Min. Max.</span></span>
+<span><span class="co">#&gt; hydro 0.01944 0.007162 0.03038  0.0  0.1</span></span>
+<span><span class="co">#&gt; curve 0.86944 0.018140 0.07696  0.7  1.0</span></span>
+<span><span class="co">#&gt; mech  0.09167 0.021862 0.09275  0.0  0.3</span></span>
+<span><span class="co">#&gt; fea   0.01944 0.007162 0.03038  0.0  0.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average fitness value at optimal weights:</span></span>
+<span><span class="co">#&gt;    Value       SE      SD   Min.   Max.</span></span>
+<span><span class="co">#&gt; Z 0.7746 0.003492 0.01482 0.7565 0.8073</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - method: chi-squared, quantile = 0.05</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">wprime_b</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Morphoscape_files/figure-html/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">wprime_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span><span class="op">)</span>
-<span class="va">wprime_all</span>
-<span class="co">#&gt; Optimal weights:</span>
-<span class="co">#&gt;        Weight       SE      SD Min. Max.</span>
-<span class="co">#&gt; hydro 0.74853 0.008797 0.08885  0.6 1.00</span>
-<span class="co">#&gt; curve 0.10735 0.009984 0.10084  0.0 0.40</span>
-<span class="co">#&gt; mech  0.08578 0.008342 0.08425  0.0 0.35</span>
-<span class="co">#&gt; fea   0.05833 0.006156 0.06217  0.0 0.25</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Average fitness value at optimal weights:</span>
-<span class="co">#&gt;    Value       SE      SD   Min. Max.</span>
-<span class="co">#&gt; Z 0.6343 0.001179 0.01191 0.6193 0.67</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; - method: chi-squared, quantile = 0.05</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="va">wprime_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span><span class="op">)</span></span>
+<span><span class="va">wprime_all</span></span>
+<span><span class="co">#&gt; Optimal weights:</span></span>
+<span><span class="co">#&gt;        Weight       SE      SD Min. Max.</span></span>
+<span><span class="co">#&gt; hydro 0.74853 0.008797 0.08885  0.6 1.00</span></span>
+<span><span class="co">#&gt; curve 0.10735 0.009984 0.10084  0.0 0.40</span></span>
+<span><span class="co">#&gt; mech  0.08578 0.008342 0.08425  0.0 0.35</span></span>
+<span><span class="co">#&gt; fea   0.05833 0.006156 0.06217  0.0 0.25</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average fitness value at optimal weights:</span></span>
+<span><span class="co">#&gt;    Value       SE      SD   Min. Max.</span></span>
+<span><span class="co">#&gt; Z 0.6343 0.001179 0.01191 0.6193 0.67</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - method: chi-squared, quantile = 0.05</span></span></code></pre></div>
 <p>Finally, it is possible to compare the landscapes for each group using <code><a href="../reference/calcGrpWprime.html">calcGrpWprime()</a></code>. This is done by comparing the number of landscape combinations are shared by the upper percentile between groups.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># Test for differences between Group landscapes</span>
-<span class="va">tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lands.grp.test.html">multi.lands.grp.test</a></span><span class="op">(</span><span class="va">wprime_by_Group</span><span class="op">)</span>
-<span class="va">tests</span>
-<span class="co">#&gt; Pairwise landscape group tests</span>
-<span class="co">#&gt; - method: chi-squared | quantile: 0.05</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Results:</span>
-<span class="co">#&gt;   M S T</span>
-<span class="co">#&gt; M - 0 0</span>
-<span class="co">#&gt; S 0 - 0</span>
-<span class="co">#&gt; T 0 0 -</span>
-<span class="co">#&gt; (lower triangle: p-values | upper triangle: number of matches)</span>
-
-<span class="co"># Calculate landscapes for one Group at a time</span>
-<span class="va">wprime_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span>, <span class="va">Group</span> <span class="op">==</span> <span class="st">"box turtle"</span><span class="op">)</span>
-<span class="va">wprime_b</span>
-<span class="co">#&gt; Optimal weights:</span>
-<span class="co">#&gt;        Weight       SE      SD Min. Max.</span>
-<span class="co">#&gt; hydro 0.01944 0.007162 0.03038  0.0  0.1</span>
-<span class="co">#&gt; curve 0.86944 0.018140 0.07696  0.7  1.0</span>
-<span class="co">#&gt; mech  0.09167 0.021862 0.09275  0.0  0.3</span>
-<span class="co">#&gt; fea   0.01944 0.007162 0.03038  0.0  0.1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Average fitness value at optimal weights:</span>
-<span class="co">#&gt;    Value       SE      SD   Min.   Max.</span>
-<span class="co">#&gt; Z 0.7746 0.003492 0.01482 0.7565 0.8073</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; - method: chi-squared, quantile = 0.05</span>
-<span class="va">wprime_t</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span>, <span class="va">Group</span> <span class="op">==</span> <span class="st">"tortoise"</span><span class="op">)</span>
-<span class="va">wprime_t</span>
-<span class="co">#&gt; Optimal weights:</span>
-<span class="co">#&gt;        Weight       SE      SD Min. Max.</span>
-<span class="co">#&gt; hydro 0.01176 0.005302 0.02186 0.00 0.05</span>
-<span class="co">#&gt; curve 0.85294 0.022877 0.09432 0.65 1.00</span>
-<span class="co">#&gt; mech  0.11765 0.026059 0.10744 0.00 0.35</span>
-<span class="co">#&gt; fea   0.01765 0.007353 0.03032 0.00 0.10</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Average fitness value at optimal weights:</span>
-<span class="co">#&gt;    Value       SE      SD   Min.   Max.</span>
-<span class="co">#&gt; Z 0.7008 0.003571 0.01472 0.6829 0.7325</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; - method: chi-squared, quantile = 0.05</span>
-
-<span class="co"># Test for differences between Group landscapes</span>
-<span class="fu"><a href="../reference/lands.grp.test.html">lands.grp.test</a></span><span class="op">(</span><span class="va">wprime_b</span>, <span class="va">wprime_t</span><span class="op">)</span>
-<span class="co">#&gt; Landscape group test</span>
-<span class="co">#&gt; - method: chi-squared | quantile: 0.05</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Number of matches: 16</span>
-<span class="co">#&gt; P-value: 0.8889</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Test for differences between Group landscapes</span></span>
+<span><span class="va">tests</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lands.grp.test.html">multi.lands.grp.test</a></span><span class="op">(</span><span class="va">wprime_by_Group</span><span class="op">)</span></span>
+<span><span class="va">tests</span></span>
+<span><span class="co">#&gt; Pairwise landscape group tests</span></span>
+<span><span class="co">#&gt; - method: chi-squared | quantile: 0.05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Results:</span></span>
+<span><span class="co">#&gt;   M S T</span></span>
+<span><span class="co">#&gt; M - 0 0</span></span>
+<span><span class="co">#&gt; S 0 - 0</span></span>
+<span><span class="co">#&gt; T 0 0 -</span></span>
+<span><span class="co">#&gt; (lower triangle: p-values | upper triangle: number of matches)</span></span>
+<span></span>
+<span><span class="co"># Calculate landscapes for one Group at a time</span></span>
+<span><span class="va">wprime_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span>, <span class="va">Group</span> <span class="op">==</span> <span class="st">"box turtle"</span><span class="op">)</span></span>
+<span><span class="va">wprime_b</span></span>
+<span><span class="co">#&gt; Optimal weights:</span></span>
+<span><span class="co">#&gt;        Weight       SE      SD Min. Max.</span></span>
+<span><span class="co">#&gt; hydro 0.01944 0.007162 0.03038  0.0  0.1</span></span>
+<span><span class="co">#&gt; curve 0.86944 0.018140 0.07696  0.7  1.0</span></span>
+<span><span class="co">#&gt; mech  0.09167 0.021862 0.09275  0.0  0.3</span></span>
+<span><span class="co">#&gt; fea   0.01944 0.007162 0.03038  0.0  0.1</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average fitness value at optimal weights:</span></span>
+<span><span class="co">#&gt;    Value       SE      SD   Min.   Max.</span></span>
+<span><span class="co">#&gt; Z 0.7746 0.003492 0.01482 0.7565 0.8073</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - method: chi-squared, quantile = 0.05</span></span>
+<span><span class="va">wprime_t</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calcGrpWprime.html">calcGrpWprime</a></span><span class="op">(</span><span class="va">all_landscapes</span>, <span class="va">Group</span> <span class="op">==</span> <span class="st">"tortoise"</span><span class="op">)</span></span>
+<span><span class="va">wprime_t</span></span>
+<span><span class="co">#&gt; Optimal weights:</span></span>
+<span><span class="co">#&gt;        Weight       SE      SD Min. Max.</span></span>
+<span><span class="co">#&gt; hydro 0.01176 0.005302 0.02186 0.00 0.05</span></span>
+<span><span class="co">#&gt; curve 0.85294 0.022877 0.09432 0.65 1.00</span></span>
+<span><span class="co">#&gt; mech  0.11765 0.026059 0.10744 0.00 0.35</span></span>
+<span><span class="co">#&gt; fea   0.01765 0.007353 0.03032 0.00 0.10</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Average fitness value at optimal weights:</span></span>
+<span><span class="co">#&gt;    Value       SE      SD   Min.   Max.</span></span>
+<span><span class="co">#&gt; Z 0.7008 0.003571 0.01472 0.6829 0.7325</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; - method: chi-squared, quantile = 0.05</span></span>
+<span></span>
+<span><span class="co"># Test for differences between Group landscapes</span></span>
+<span><span class="fu"><a href="../reference/lands.grp.test.html">lands.grp.test</a></span><span class="op">(</span><span class="va">wprime_b</span>, <span class="va">wprime_t</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Landscape group test</span></span>
+<span><span class="co">#&gt; - method: chi-squared | quantile: 0.05</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Number of matches: 16</span></span>
+<span><span class="co">#&gt; P-value: 0.8889</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -451,7 +451,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>
