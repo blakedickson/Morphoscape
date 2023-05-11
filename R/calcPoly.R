@@ -1,37 +1,6 @@
 
-# set basic pars ----------------------------------------------------------
-
-# rm(list = (ls()))
-# 
-# require("Morphoscape")
-# 
-# data("warps")
-# data("turtles")
-# 
-# 
-# warps_fnc <- as_fnc_df(warps)
-# 
-# grid <- resample_grid(warps, hull = F, plot = T)
-# 
-
-# pars -----------------------------------------------------
-# 
-# fnc_df <- as_fnc_df(warps)
-# resample = 100
-# pad = 1.2
-# 
-# fnc <- warps_fnc[,1:3]
-# 
-# npoints = 100
-# fnc.name = NULL
-# range = NULL
-# npoly = 3
-# 
-# plot = T
-
-
-calcPoly <- function(fnc, npoly = 3, fnc.name = NULL, gls.covmod = NULL, 
-         pad = 1.2, resample = 100, range = NULL, verbose = TRUE){
+calcPoly <- function(fnc, npoly = 3, fnc.name = NULL, gls.covmod = list(covmod = expcov, d = 0.7, alpha = 0, se = 1), 
+         pad = 1.2, resample = 100, range = NULL, verbose = FALSE){
   
   
   if(is.null(fnc.name)){

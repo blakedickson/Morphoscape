@@ -22,6 +22,10 @@ export("calcGrpWprime")
 export("calcWprimeBy")
 export("lands.grp.test")
 export("multi.lands.grp.test")
+export("sum_lscps")
+export("sub_lscps")
+export("div_lscps")
+export("mult_lscps")
 
 
 S3method("plot", "poly_surf")

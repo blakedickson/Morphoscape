@@ -8,8 +8,7 @@ Create a full grid from a set of coordinates
 \code{resample_grid()} creates a rectangular grid around supplied coordinates by resampling evenly spaced points between the minimum and maximum values of each coordinate dimension. The grid can optionally be reduced to a convex or concave hull around the supplied coordinates.
 }
 \usage{
-resample_grid(coords2D, resample = 100, padding = 1.2,
-              hull = c("alphahull", "concaveman", NULL), alpha = 1, plot = FALSE)
+resample_grid(coords2D, resample = 100, padding = 1.2, hull = NULL, alpha = 1, plot = FALSE)
 }
 \arguments{
   \item{coords2D}{
@@ -48,8 +47,17 @@ data("warps")
 
 warps_fnc <- as_fnc_df(warps)
 
+# hull with plot to see the hull
+grid <- resample_grid(warps_fnc[c("x", "y")],
+                      hull = "concaveman", plot = TRUE)
+str(grid)
+
+\dontrun{
 # Alpha hull with plot to see the hull
 grid <- resample_grid(warps_fnc[c("x", "y")],
                       hull = "alphahull", plot = TRUE)
-str(grid)
 }
+
+
+}
+

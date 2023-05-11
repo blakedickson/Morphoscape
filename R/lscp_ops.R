@@ -1,4 +1,9 @@
 
+# getWprime <- function(lscp){
+#   lscp$Wprime$Wprime
+#   
+# }
+
   
 sum_lscps <- function(lscps, num = NULL, average = TRUE) {
   
@@ -30,7 +35,8 @@ sum_lscps <- function(lscps, num = NULL, average = TRUE) {
         }
         
       } else{
-        Wprimes[[l]] <- getWprime(lscps[[l]])
+        # Wprimes[[l]] <- getWprime(lscps[[l]])
+        Wprimes[[l]] <- lscps[[l]]$Wprime$Wprime
         
       }
     }
@@ -52,13 +58,16 @@ sum_lscps <- function(lscps, num = NULL, average = TRUE) {
     
     
   } else{
+    
+    grid.sum <- list()
+    
     if(length(num) == 1){
       
-      if(length(Wprimes) == length(num)){
+
         for(ii in 1:length(Wprimes)){
-          grid.mult <- Wprimes[[ii]]$grid * num
+          grid.sum <- Wprimes[[ii]]$grid + num
           
-        }
+        
       }
     }
     
@@ -66,14 +75,12 @@ sum_lscps <- function(lscps, num = NULL, average = TRUE) {
       
       if(length(Wprimes) == length(num)){
         for(ii in 1:length(Wprimes)){
-          grid.mult <- Wprimes[[ii]]$grid * num[[ii]]
+          grid.sum <- Wprimes[[ii]]$grid + num[[ii]]
           
         }
       }else{stop("numeric vector does not match number of landscapes")}
     }
     attr(grid.sum, "numeric vector") = num
-    
-    
   }
   
 
@@ -87,7 +94,7 @@ sum_lscps <- function(lscps, num = NULL, average = TRUE) {
   
 }
 
-div_lscps <- function(lscps, binary = F) {
+div_lscps <- function(lscps, binary = FALSE) {
     if(length(lscps) != 2){
       stop("lscps should be a named list of length 2")
     }  
@@ -116,7 +123,8 @@ div_lscps <- function(lscps, binary = F) {
       }
       
     } else{
-      Wprimes[[l]] <- getWprime(lscps[[l]])
+      # Wprimes[[l]] <- getWprime(lscps[[l]])
+      Wprimes[[l]] <- lscps[[l]]$Wprime$Wprime
       
     }
   }
@@ -144,7 +152,7 @@ div_lscps <- function(lscps, binary = F) {
 }
 
 
-sub_lscps <- function(lscps, binary = F) {
+sub_lscps <- function(lscps, binary = FALSE) {
   if(length(lscps) != 2){
     stop("lscps should be a named list of length 2")
   }  
@@ -173,7 +181,8 @@ sub_lscps <- function(lscps, binary = F) {
       }
       
     } else{
-      Wprimes[[l]] <- getWprime(lscps[[l]])
+      # Wprimes[[l]] <- getWprime(lscps[[l]])
+      Wprimes[[l]] <- lscps[[l]]$Wprime$Wprime
       
     }
   }
@@ -226,33 +235,39 @@ mult_lscps <- function(lscps, num = NULL) {
         
       } 
     } else{
-      Wprimes[[l]] <- getWprime(lscps[[l]])
+      # Wprimes[[l]] <- getWprime(lscps[[l]])
+      Wprimes[[l]] <- lscps[[l]]$Wprime$Wprime
+      
     }
   } 
 
   
   
   if(!is.null(num)){ #multiply landscapes by numeric vector
+    grid.mult <- list()
+    
     if(length(num) == 1){
       
-      if(length(Wprimes) == length(num)){
         for(ii in 1:length(Wprimes)){
-          grid.mult <- Wprimes[[ii]]$grid * num
+          grid.mult[[ii]] <- Wprimes[[ii]]$grid * num
           
         }
-      }
     }
     
     if(length(num) > 1){
       
       if(length(Wprimes) == length(num)){
         for(ii in 1:length(Wprimes)){
-          grid.mult <- Wprimes[[ii]]$grid * num[[ii]]
+          grid.mult[[ii]] <- Wprimes[[ii]]$grid * num[[ii]]
           
         }
       }else{stop("numeric vector does not match number of landscapes")}
     }
+    attr(grid.mult, "parents") <-  names(lscps)
+    attr(grid.mult, "operation") <- "mult"
+    attr(grid.mult, "mult vector") <-  num
     
+    return(grid.mult)
   } else{
     
     grids  <- lapply(Wprimes, FUN = function(X) X$grid)
@@ -266,19 +281,19 @@ mult_lscps <- function(lscps, num = NULL) {
     }
     
     grid.mult <- Reduce("*", grids)
+    class(grid.mult) <- "combined.surface"
+    attr(grid.mult, "parents") <-  names(lscps)
+    attr(grid.mult, "operation") <- "mult"
+    attr(grid.mult, "mult vector") <-  num
     
+    return(grid.mult)
     
   }
   
   
   
   
-  class(grid.mult) <- "combined.surface"
-  attr(grid.mult, "parents") <-  names(lscps)
-  attr(grid.mult, "operation") <- "mult"
-  attr(grid.mult, "mult vector") <-  num
-  
-  return(grid.mult)
+
   
 }
 

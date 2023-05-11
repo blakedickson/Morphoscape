@@ -54,7 +54,7 @@ warps_fnc <- as_fnc_df(warps, func.names = c("hydro", "curve", "mech", "fea"))
 Performance surfaces are calculated using `krige_surf()`, and can be used to just calculate surfaces, or also predict performance of `new_data` points.
 
 ```{r}
-kr_surf <- krige_surf(warps_fnc, hull = FALSE, new_data = turtles)
+kr_surf <- krige_surf(warps_fnc, hull = NULL, new_data = turtles)
 plot(kr_surf)
 ```
 
