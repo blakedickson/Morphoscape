@@ -6,7 +6,7 @@
 Calculate polynomial fits over a surface
 }
 \description{
-\code{calcPoly} calls on the \code{\link{spatial}} package to fit rectangular spatial polynomial surface models by least-squares, or GLS. These methods allow the user to test whether data have spatial trends in morphospace. Outputs are a polynomial trend surface, and ANOVA table for the model fit. \code{multiPoly} applies \code{calcPoly} to a \code{fnc_df} with outputs for each trait. For more extensive documentation for model fitting see the \code{\link{spatial}} package. 
+\code{calcPoly} calls on the \code{spatial} package to fit rectangular spatial polynomial surface models by least-squares, or GLS. These methods allow the user to test whether data have spatial trends in morphospace. Outputs are a polynomial trend surface, and ANOVA table for the model fit. \code{multiPoly} applies \code{calcPoly} to a \code{fnc_df} with outputs for each trait. For more extensive documentation for model fitting see the \code{spatial} package. 
 }
 \usage{
 calcPoly(fnc, npoly = 3, fnc.name = NULL, 
@@ -27,7 +27,7 @@ multiPoly(fnc_df, npoly = 3, ...)
   singular numeric. Degree of polynomial to fit ragning from 1-4. For \code{multiPoly} this can also be a vector with length equal to the numer of traits in order to specify the degree of polynomial to apply to each trait.
   }
   \item{gls.covmod}{
-  Optional list of arguments to pass to \code{surf.gls} if fitting by generalized least-squares is desired. Defaults to NULL, and fitting is performed by least-squares. See \code{\link{spatial::surf.gls}} and \code{\link{spatial::expcov}} documentation for a full list of arguments and usage.
+  Optional list of arguments to pass to \code{surf.gls} if fitting by generalized least-squares is desired. Defaults to NULL, and fitting is performed by least-squares. See \code{\link{surf.gls}} and \code{\link{expcov}} documentation for a full list of arguments and usage.
   }
   \item{fnc.name}{
   Optional speficiation of the trait name. Defaults to \code{NULL}, and will use column names instead.
@@ -50,17 +50,17 @@ multiPoly(fnc_df, npoly = 3, ...)
 }
 
 \details{
-Fits polynomial trend surfaces using the \code{\link{spatial}} package. First, an \code{npoly} polynomial trend surface is fit by least squares using \code{\link{spatial::surf.ls}} or generalized least-squares by \code{\link{spatial::surf.gls}}. GLS is fit by one of three covariance functions, exponential (\code{expcov}), gaussian (\code{gaucov}) or spherical (\code{sphercov}) and requires additional parameters to be passed as a list through \code{gls.covmod} (see examples). For a full description of arguments and usage see \code{\link{spatial::surf.gls}} and \code{\link{spatial::expcov}} documentation.
+Fits polynomial trend surfaces using the `spatial` package. First, an \code{npoly} polynomial trend surface is fit by least squares using \code{\link{surf.ls}} or generalized least-squares by \code{\link{surf.gls}}. GLS is fit by one of three covariance functions, exponential (\code{expcov}), gaussian (\code{gaucov}) or spherical (\code{sphercov}) and requires additional parameters to be passed as a list through \code{gls.covmod} (see examples). For a full description of arguments and usage see \code{\link{surf.gls}} and \code{\link{expcov}} documentation.
 
-The surface is then evaluated using \code{\link{spatial::trmat}} within limits set by input data, or manually using \code{range}. 
+The surface is then evaluated using \code{\link{trmat}} within limits set by input data, or manually using \code{range}. 
 }
 \value{
 An object of class \code{poly_surf}, or \code{multi_surf} with the following components:
 \item{fnc.name}{
 name of trait
 }
-\item{poly}{Polynomial trend fit output from \code{\link{spatial::surf.ls}}}
-\item{surface}{Evaluated trend surface output from \code{\link{spatial::trmat}}}
+\item{poly}{Polynomial trend fit output from \code{\link{surf.ls}}}
+\item{surface}{Evaluated trend surface output from \code{\link{trmat}}}
 \item{grid}{Expanded surface in long XZY dataframe format}
 \item{peak}{Coordinates and height of the peak of the surface}
 }
@@ -72,10 +72,10 @@ Blake V. Dickson}
 
 
 \seealso{
-\code{\link{spatial::surf.ls}}, 
-\code{\link{spatial::surf.gls}}, 
-\code{\link{spatial::expcov}},
-\code{\link{spatial::trmat}},
+\code{\link{surf.ls}}, 
+\code{\link{surf.gls}}, 
+\code{\link{expcov}},
+\code{\link{trmat}},
 }
 \examples{
 require(spatial)

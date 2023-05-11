@@ -10,9 +10,8 @@ Interpolate functional characteristics over a grid
 \code{krige_surf()} performs kriging (i.e., interpolation) of one or more functional characteristics that are spatially distributed over a morphospace to create a smoothly kriged surface. Interpolated values can also be produced for a new dataset given their coordinates in morphological space.
 }
 \usage{
-krige_surf(fnc_df, grid = NULL, resample = 100,
-           padding = 1.2, hull = c("alphahull", "concaveman", NULL), alpha = 1,
-           new_data = NULL)
+krige_surf(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = NULL, 
+  alpha = 1, new_data = NULL)
            
 krige_new_data(x, new_data)
 }
@@ -80,7 +79,7 @@ data("warps")
 
 warps_fnc <- as_fnc_df(warps)
 
-grid <- resample_grid(warps, hull = "alphahull", plot = TRUE)
+grid <- resample_grid(warps, hull = "concaveman", plot = TRUE)
 
 kr_surf <- krige_surf(warps_fnc, grid = grid)
 kr_surf

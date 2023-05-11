@@ -45,7 +45,7 @@ sub - substract one spatial dataset/landscape from another (\code{lscp1 - lscp2}
 
 div - divide one spatial dataset by another (\code{lscp1 / lscp2}).
 
-\code{sub_lscps()} and \code{div_lscps} can be used to construct transition landscapes per (Dickson et al 2020) which can compare performance between two adaptive regimes. If binary = T is used, the result will be a spatial representation of which parent landscapes dominates. However, it is recommended to use \code{trans_lscps} or \code{adpt_regions} to calculate transtional landscapes or adaptive regions.
+\code{sub_lscps()} and \code{div_lscps} can be used to construct transition landscapes per (Dickson et al 2020) which can compare performance between two adaptive regimes. If binary = T is used, the result will be a spatial representation of which parent landscape dominates. However, it is recommended to use \code{trans_lscps} or \code{adpt_regions} to calculate transtional landscapes or adaptive regions (not yet implemented).
 
 }
 \value{
@@ -55,7 +55,7 @@ An object of class "combined.surface" containing XYZ spatial data.
 Blake V. Dickson}
 
 \seealso{
-\code{\link{kr_surf}}, \code{\link{calcGrpWprime}}, \code{\link{calc_lscp}}, \code{\link{calcPoly}}, \code{\link{trans_lscps}}, \code{\link{adpt_regions}}
+\code{\link{krige_surf}}, \code{\link{calcGrpWprime}}, \code{\link{calc_lscp}}, \code{\link{calcPoly}}, \code{trans_lscps}, \code{adpt_regions}
 }
 \examples{
 require("Morphoscape")
@@ -66,7 +66,7 @@ data("warps")
 fnc_df <- as_fnc_df(warps, 
                        func.names = c("hydro", "curve", "mech", "fea"))
 
-kr_surf <- krige_surf(warps_fnc, new_data = turtles)
+kr_surf <- krige_surf(fnc_df, new_data = turtles)
 
 grid_weights <- generate_weights(n = 10, data = kr_surf)
 
@@ -87,7 +87,6 @@ summed_surfs <- sum_lscps(lscps, average = TRUE)
 
 # summing landscapes by one or more numeric scalars
 
-summed_surfs <- sum_lscps(lscps, num = 1.5) # single numeric
 summed_surfs <- sum_lscps(lscps, num = c(1.5, -1.15)) # multiple numeric, with subtraction
 
 # multiplying mutliple landscapes together
@@ -95,17 +94,17 @@ mult_surfs <- mult_lscps(lscps) # multiply landscapes together
 
 # multiplying landscapes by one or more numeric scalars
 mult_surfs <- mult_lscps(lscps, num = 2) # apply numeric multiplier to all landscapes
-mult_surfs <- mult_lscps(lscps, num = c(1.2, 0.8) # apply numeric elements to each landscape
+mult_surfs <- mult_lscps(lscps, num = c(1.2, 0.8)) # apply numeric elements to each landscape
 
 # substract or divide two landscapes
 
 sub_surf <- sub_lscps(lscps)
-div_surf div_lscps(lscps)
+div_surf <- div_lscps(lscps)
 
 # with binary result
 
 sub_surf <- sub_lscps(lscps, binary = TRUE)
 div_surf <- div_lscps(lscps, binary = TRUE)
 
-
+}
 

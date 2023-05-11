@@ -1,9 +1,9 @@
 Package: Morphoscape
 Type: Package
 Title: Computation and Visualization of Adaptive Landscapes
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: c(
-  person("Blake", "Dickson", email = "blake.dickson@duke.edu",
+  person("Blake", "Dickson", email = "b.dickson@unsw.edu.au",
          role = c("aut", "cre"),
          comment = c(ORCID="0000-0001-6299-5224")),
   person("Stephanie", "Pierce", email = "spierce@oeb.harvard.edu",
@@ -17,18 +17,19 @@ Description: Implements adaptive landscape methods first described by Polly et a
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 4.0.0)
+Depends: R (>= 4.2.0)
 Imports: 
     concaveman,
     ggplot2,
     spatial,
     sp,
-    viridis,
-    automap
+    automap,
+    scales,
+    viridisLite,
+    alphahull
 Suggests: 
-    alphahull,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
 URL: https://blakedickson.github.io/Morphoscape/
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3

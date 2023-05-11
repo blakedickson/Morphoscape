@@ -1,14 +1,16 @@
 import("stats")
 import("ggplot2")
 import("spatial")
-import("viridis")
-
+import("scales")
 import("concaveman")
+import("alphahull")
+import("viridisLite")
 
 importFrom("utils", "hasName", "combn", "setTxtProgressBar", "txtProgressBar")
 importFrom("grDevices", "axisTicks")
 importFrom("graphics", ".filled.contour", "axis", "contour",
                 "filled.contour", "par", "points", "title")
+
 export("as_fnc_df")
 export("generate_weights")
 export("calcPoly")
@@ -22,6 +24,10 @@ export("calcGrpWprime")
 export("calcWprimeBy")
 export("lands.grp.test")
 export("multi.lands.grp.test")
+export("sum_lscps")
+export("sub_lscps")
+export("div_lscps")
+export("mult_lscps")
 
 
 S3method("plot", "poly_surf")
