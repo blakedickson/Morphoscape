@@ -13,6 +13,7 @@ Interpolate functional characteristics over a grid
 krige_surf(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = NULL, 
   alpha = 1, new_data = NULL)
            
+  
 krige_new_data(x, new_data)
 }
 \arguments{
