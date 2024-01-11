@@ -1,0 +1,148 @@
+---
+title: "Pareto"
+output: html_vignette
+vignette: >
+  %\VignetteIndexEntry{Pareto}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  # eval = FALSE,
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=8, 
+  fig.height=5, 
+  fig.align = "center"
+)
+```
+
+
+```{r setup}
+library(Morphoscape)
+library(rPref)
+
+library(ape)
+library(phytools)
+# Load turtle phylogeny and new turtle dataframe names
+tTree <- ape::read.tree("C:/Users/Rob/Documents/Code Projects/Morphoscape/Turtle_Tree.nwk")
+new_names <- readLines("C:/Users/Rob/Documents/Code Projects/Morphoscape/Turtle_List.txt")
+
+data(warps)
+data(turtles)
+# Update rownames based on updated taxonomy
+rownames(turtles) <- new_names
+```
+
+The following provides a guide on the workflow of performing adaptive landscape analysis using Pareto optimality.
+
+If you haven't already, please read the accompanying "Morphoscape" vignette for an introduction to adaptive landscapes more generally aas well as some core functions of the package!
+
+# Considering Optimality
+## Functional Optimality
+
+Write something here about functional adaptive landscapes and quickly go through the Morphoscape workflow...
+
+```{r}
+data("turtles")
+data("warps")
+
+str(turtles)
+str(warps)
+
+# Make performance surfaces
+warps_fnc <- as_fnc_df(warps, func.names = c("hydro", "curve", "mech", "fea"))
+kr_surf <- krige_surf(warps_fnc, hull = FALSE, new_data = turtles)
+# Make functional adaptive landscapes
+weights <- generate_weights(n = 20, data = kr_surf)
+all_landscapes <- calc_all_lscps(kr_surf, grid_weights = weights)
+wprime_by_Group <- calcWprimeBy(all_landscapes, by = ~Ecology,method = "quantile")
+```
+
+Show off new functions for extracting data for custom plotting (e.g., on phylogenies)
+
+```{r}
+# Get heights on each landscape for individual species
+Landscape_Values <- sp_vals_from_grid(wprime_by_Group,turtles)
+# Plot landscape heights for different groups
+# Here using 'marine' as an example
+ggplot(Landscape_Values,aes(x=Ecology, y=`M`))+
+  geom_boxplot()
+# Plot landscape heights on phylogeny
+# Here using 'marine' as an example
+trait_2_plot <- Landscape_Values$M
+names(trait_2_plot) <- rownames(Landscape_Values)
+phytools::contMap(tTree,trait_2_plot)
+```
+
+## Pareto Optimality
+
+An alternative way of thinking about optimality comes from Pareto optimality. A structure might have to compromise between different functions due to inherent trade-offs. See the differences in the performance surfaces for two traits from the turtle dataset.
+```{r}
+# Make performance surfaces for individual traits
+plot_ggsurf(kr_surf,'hydro')
+plot_ggsurf(kr_surf,'curve')
+```
+
+While trade-offs inevitably exist, some morphologies handle them better than others. For example, a trade-off exists between curvature and hydrodynamic performance, and you cannot simultaeneously maximize both traits. 
+
+However, you can still maximize one trait *for a given value* of the second trait; morphologies that meet this criterion are referred to as 'Pareto optimal', and the paathway they make through morphospace is referred to as the 'Pareto front'.
+```{r}
+# Compute Pareto landscape for two traits
+KrSurfParOpt <- calc_lscp_Pareto(kr_surf,'hydro','curve')
+# Plot trade-offs between the traits
+plot_ggtrade(KrSurfParOpt)
+# Plot the Pareto landscape
+plot_ggPareto(KrSurfParOpt)
+
+# Get Pareto optimality values for individual species
+Ri_Values <- sp_vals_from_grid(KrSurfParOpt,turtles)
+
+# Plot species Pareto optimality values for different groups
+ggplot(Ri_Values,aes(x=Ecology, y=`hydro-curve`))+
+  geom_boxplot()
+# Plot species Pareto optimality values on a phylogeny
+trait_2_plot <- Ri_Values$`hydro-curve`
+names(trait_2_plot) <- rownames(Ri_Values)
+phytools::contMap(tTree,trait_2_plot)
+```
+
+Pareto optimality is generally defined in terms of trade-offs between traits, hence why the example above used performance surfaces as the input. 
+
+However, we can extend the same methods to a more abstract case, and examine trade-offs between performance on different adaptive landscapes, as shown below.
+
+```{r}
+#########
+# Plot individual group landscapes
+plot_ggsurf(wprime_by_Group,'M')
+plot_ggsurf(wprime_by_Group,'S')
+
+# Calculate Pareto landscape based on functional landscapes
+Lscp_Pareto_MS <- calc_lscp_Pareto(wprime_by_Group,'M','S')
+summary(Lscp_Pareto_MS)
+# Plot trade-offs between landscape heights
+plot_ggtrade(wprime_by_Group,'M','S')
+# Plot Pareto landscape between landscape heights
+plot_ggPareto(wprime_by_Group,'M','S')
+```
+
+We can even do all of that with just one function!
+
+```{r}
+plot_lscp_Pareto(wprime_by_Group,'M','S')
+```
+
+
+
+## References
+
+Bookstein, F. L. (2019). Pathologies of between-groups principal components analysis in geometric morphometrics. Evolutionary Biology, 46(4), 271-302.
+
+Cardini, A., O’Higgins, P., & Rohlf, F. J. (2019). Seeing distinct groups where there are none: spurious patterns from between-group PCA. Evolutionary Biology, 46(4), 303-316.
+
+Cardini, A., & Polly, P. D. (2020). Cross-validated between group PCA scatterplots: A solution to spurious group separation?. Evolutionary Biology, 47(1), 85-95.
+
+Dickson, B. V., & Pierce, S. E. (2019). Functional performance of turtle humerus shape across an ecological adaptive landscape. Evolution, 73(6), 1265-1277.
+
+Smith, S. M., Stayton, C. T., & Angielczyk, K. D. (2021). How many trees to see the forest? Assessing the effects of morphospace coverage and sample size in performance surface analysis. Methods in Ecology and Evolution, 12(8), 1411-1424.

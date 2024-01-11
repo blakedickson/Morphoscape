@@ -11,7 +11,10 @@ Authors@R: c(
          comment = c(ORCID="0000-0003-0717-1841")),
   person("Noah", "Greifer", email = "ngreifer@iq.harvard.edu",
          role = c("aut"),
-	       comment = c(ORCID="0000-0003-3067-7154"))
+	       comment = c(ORCID="0000-0003-3067-7154")),
+  person("Robert", "Brocklehurst", email = "rbrocklehurst@fas.harvard.edu",
+         role = c("aut"),
+	       comment = c(ORCID="0000-0002-3017-6838"))
   )
 Description: Implements adaptive landscape methods first described by Polly et al. (2016) <doi:10.1080/02724634.2016.1111225> for the integration, analysis and visualization of biological trait data on a phenotypic morphospace - typically defined by shape metrics.
 License: GPL (>= 2)
@@ -26,10 +29,12 @@ Imports:
     automap,
     scales,
     viridisLite,
-    alphahull
+    alphahull,
+    rPref
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    patchwork
 VignetteBuilder: knitr
 URL: https://blakedickson.github.io/Morphoscape/
 RoxygenNote: 7.2.3
