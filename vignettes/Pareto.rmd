@@ -28,12 +28,12 @@ data(turtles)
 
 The following provides a guide on the workflow of performing adaptive landscape analysis using Pareto optimality.
 
-If you haven't already, please read the accompanying "Morphoscape" vignette for an introduction to adaptive landscapes more generally aas well as some core functions of the package!
+If you haven't already, please read the accompanying "Morphoscape" vignette for an introduction to adaptive landscapes more generally as well as some core functions of the package!
 
 # Considering Optimality
 ## Functional Optimality
 
-Write something here about functional adaptive landscapes and quickly go through the Morphoscape workflow...
+Morphospace was originally built to produce functional adaptive landscapes, marrying phenotypic data (morphospace) and performance data. This illustrates one way of thinknig about optimality as it concerns adaptive landscapes: which traits, and in what combinations, do particular morphologies optimize?  
 
 ```{r}
 data("turtles")
