@@ -6,6 +6,8 @@ import("concaveman")
 import("alphahull")
 import("viridisLite")
 import("rPref")
+import("sp")
+import("automap")
 
 importFrom("utils", "hasName", "combn", "setTxtProgressBar", "txtProgressBar")
 importFrom("grDevices", "axisTicks")

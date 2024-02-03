@@ -89,10 +89,12 @@ plot_ggtrade <- function(x,n1=NULL,n2=NULL){
   } else {
     ParOpt <- x
   }
+  
   df <- ParOpt$grid
   v1 <- ParOpt$names[1]
   v2 <- ParOpt$names[2]
-  
+  ParFront <- df[df$Ri == max(df$Ri),]
+
   ggplot(df,
          aes(x=!!sym(v1),y=!!sym(v2),color=Ri))+
     #geom_tile(aes(fill=value))+
@@ -100,7 +102,7 @@ plot_ggtrade <- function(x,n1=NULL,n2=NULL){
     # geom_contour_tanaka(aes(z=.level))+
     scale_color_viridis_c(option="magma",direction=1,
                           name = "Pareto\nOptimality")+
-    geom_step(data=filter(df,Ri==max(Ri)),size=1.5,color='black')+
+    geom_step(data=ParFront,size=1.5,color='black')+
     theme_classic()
 }
 
@@ -121,12 +123,14 @@ plot_ggPareto <- function(x,n1=NULL,n2=NULL){
   } else {
     ParOpt <- x
   }
+  
   df <- ParOpt$grid
+  ParFront <- df[df$Ri == max(df$Ri),]
   
   ggplot(df,aes(x=x,y=y))+
     #geom_tile(aes(fill=value))+
     geom_raster(aes(fill=Ri))+
-    geom_smooth(data=filter(df,Ri==max(Ri)),
+    geom_smooth(data=ParFront,
                 color='black',se = FALSE)+
     # geom_contour_tanaka(aes(z=.level))+
     scale_fill_viridis_c(option="magma",direction=1,
