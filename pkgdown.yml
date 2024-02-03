@@ -3,7 +3,8 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   Morphoscape: Morphoscape.html
-last_built: 2023-05-12T02:22Z
+  Pareto: Pareto.html
+last_built: 2024-02-03T03:04Z
 urls:
   reference: https://blakedickson.github.io/Morphoscape/reference
   article: https://blakedickson.github.io/Morphoscape/articles
