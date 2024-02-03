@@ -7,9 +7,6 @@
     <loc>https://blakedickson.github.io/Morphoscape/articles/Morphoscape.html</loc>
   </url>
   <url>
-    <loc>https://blakedickson.github.io/Morphoscape/articles/Pareto.html</loc>
-  </url>
-  <url>
     <loc>https://blakedickson.github.io/Morphoscape/articles/index.html</loc>
   </url>
   <url>
@@ -34,25 +31,13 @@
     <loc>https://blakedickson.github.io/Morphoscape/reference/calcWprimeBy.html</loc>
   </url>
   <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/calc_Ri.html</loc>
-  </url>
-  <url>
     <loc>https://blakedickson.github.io/Morphoscape/reference/calc_all_lscps.html</loc>
   </url>
   <url>
     <loc>https://blakedickson.github.io/Morphoscape/reference/calc_lscp.html</loc>
   </url>
   <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/calc_lscp_Pareto.html</loc>
-  </url>
-  <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/calc_lscps_Pareto.html</loc>
-  </url>
-  <url>
     <loc>https://blakedickson.github.io/Morphoscape/reference/generate_weights.html</loc>
-  </url>
-  <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/get_grid.html</loc>
   </url>
   <url>
     <loc>https://blakedickson.github.io/Morphoscape/reference/index.html</loc>
@@ -73,22 +58,7 @@
     <loc>https://blakedickson.github.io/Morphoscape/reference/plot.wtd_lscp.html</loc>
   </url>
   <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/plot_ggPareto.html</loc>
-  </url>
-  <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/plot_ggsurf.html</loc>
-  </url>
-  <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/plot_ggtrade.html</loc>
-  </url>
-  <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/plot_lscp_Pareto.html</loc>
-  </url>
-  <url>
     <loc>https://blakedickson.github.io/Morphoscape/reference/resample_grid.html</loc>
-  </url>
-  <url>
-    <loc>https://blakedickson.github.io/Morphoscape/reference/sp_vals_from_grid.html</loc>
   </url>
   <url>
     <loc>https://blakedickson.github.io/Morphoscape/reference/turtles.html</loc>
