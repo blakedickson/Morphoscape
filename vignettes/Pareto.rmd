@@ -33,7 +33,7 @@ If you haven't already, please read the accompanying "Morphoscape" vignette for 
 # Considering Optimality
 ## Functional Optimality
 
-Morphospace was originally built to produce functional adaptive landscapes, marrying phenotypic data (morphospace) and performance data. This illustrates one way of thinknig about optimality as it concerns adaptive landscapes: which traits, and in what combinations, do particular morphologies optimize?  
+Morphospace was originally built to produce functional adaptive landscapes, marrying phenotypic data (morphospace) and performance data. This illustrates one way of thinking about optimality as it concerns adaptive landscapes: which traits, and in what combinations, are particular morphologies optimized for?  
 
 ```{r}
 data("turtles")

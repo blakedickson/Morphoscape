@@ -13,7 +13,7 @@
 
 get_grid <- function(x){
   # Get grid from a by_Wprime object
-  if (class(x) == "by_Wprime"){
+  if (inherits(x, "by_Wprime")){
     y <- x$grp_Wprimes[[1]]$Wprime$Wprime$grid
     y <- y[,!(names(y) %in% c('Z'))]
     y$gridID = 1:nrow(y)
@@ -30,7 +30,7 @@ get_grid <- function(x){
   }
   
   # Get grid from a kriged_surfaces object
-  else if (class(x) == "kriged_surfaces"){
+  else if (inherits(x, "kriged_surfaces")){
     y <- x$dataframes$grid
     y$gridID = 1:nrow(y)
     return(y)
@@ -58,9 +58,9 @@ get_grid <- function(x){
 #' with additional columns extracted from the landscape data
 #' 
 sp_vals_from_grid <- function(x,y){
-  if (class(x) == "by_Wprime"){
+  if (inherits(x, c("by_Wprime", "kriged_surfaces"))){
     g <- get_grid(x)
-  } else if(class(x) == 'PO_List'){
+  } else if(inherits(x, 'PO_List')){
     g <- x$grid
   } else {g <- x}
   grd2 <- g[,c('x','y')]
@@ -69,11 +69,15 @@ sp_vals_from_grid <- function(x,y){
     distance <- sqrt(rowSums((grd2-do.call(rbind,replicate(nrow(grd2),x,simplify = FALSE)))**2))
     nearest <- which.min(distance)
   })
-  if(class(x) == 'by_Wprime'){
+  if(inherits(x, c("by_Wprime"))){
     grd_sub <- g[clsst.indx,levels(x$by)]
     grd_sub <- as.data.frame(grd_sub)
   }
-  if(class(x) == 'PO_List'){
+  if(inherits(x, c("kriged_surfaces"))){
+    grd_sub <- g[clsst.indx,names(x$autoKrige)]
+    grd_sub <- as.data.frame(grd_sub)
+  }
+  if(inherits(x, 'PO_List')){
     grd_sub <- g[clsst.indx,'Ri']
     grd_sub <- as.data.frame(grd_sub)
     colnames(grd_sub)[1] <- paste0(x$names,collapse = '-')

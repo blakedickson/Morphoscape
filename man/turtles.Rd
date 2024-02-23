@@ -5,7 +5,7 @@
 Turtle Humeri
 }
 \description{
-A dataset containing a sample of 40 turtle humeri used in Dickson and Pierce (2019).
+A dataset containing a sample of 40 turtle humeri used in Dickson and Pierce (2019). New names added by Robert Brocklehurst to make them consistent with prevailing taxonomy.
 }
 \usage{data("turtles")}
 \format{

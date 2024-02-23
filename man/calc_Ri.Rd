@@ -20,7 +20,3 @@ Pareto optimality
 \description{
 Function for calculating Pareto optimality, using the formula of Deakin et al
 }
-\examples{
-Standard' optimality, get the rankings of each point on the grid
-Inverse' optimality, get the inverse rankings of each point on the grid
-}

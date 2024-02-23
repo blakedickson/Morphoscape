@@ -45,12 +45,12 @@ calc_lscp_Pareto <- function(x,n1,n2){
 #' @examples
 calc_Ri <- function(x,n1,n2){
   
-  #'Standard' optimality, get the rankings of each point on the grid
+  #Standard optimality, get the rankings of each point on the grid
   Ro <- psel(x,high(get(n1)) * high(get(n2)),top = nrow(x))
   Ro <- Ro[order(Ro$gridID),]
   Ro <- Ro$.level
   
-  #'Inverse' optimality, get the inverse rankings of each point on the grid
+  #Inverse optimality, get the inverse rankings of each point on the grid
   Rs <- psel(x,low(get(n1)) * low(get(n2)),top = nrow(x))
   Rs <- Rs[order(Rs$gridID),]
   Rs <- Rs$.level

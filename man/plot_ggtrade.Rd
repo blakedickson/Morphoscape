@@ -7,11 +7,11 @@
 plot_ggtrade(x, n1 = NULL, n2 = NULL)
 }
 \arguments{
-\item{df}{Dataframe or tibble containing trait values}
+\item{x}{PO_List object, result of calc_lscp_Pareto. Alternatively, a dataframe or tibble containing trait values}
 
-\item{v1}{First variable to plot}
+\item{n1}{First variable to plot}
 
-\item{v2}{Second variable to plot}
+\item{n2}{Second variable to plot}
 }
 \value{
 A ggplot object
