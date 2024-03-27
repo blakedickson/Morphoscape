@@ -34,7 +34,10 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    patchwork
+    patchwork,
+    ape,
+    phytools
 VignetteBuilder: knitr
 URL: https://blakedickson.github.io/Morphoscape/
 RoxygenNote: 7.2.3
+Config/testthat/edition: 3

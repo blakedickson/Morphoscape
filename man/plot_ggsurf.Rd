@@ -7,9 +7,9 @@
 plot_ggsurf(x, n1 = NULL)
 }
 \arguments{
-\item{x}{Dataframe or tibble containing trait values}
+\item{x}{PO_List object, result of calc_lscp_Pareto. Alternatively, a dataframe or tibble containing trait values}
 
-\item{v1}{Name of the trait variable or group landscape being plotted}
+\item{n1}{Name of the trait variable or group landscape being plotted}
 }
 \value{
 A ggplot object
