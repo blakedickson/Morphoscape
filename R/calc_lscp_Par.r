@@ -42,7 +42,6 @@ calc_lscp_Pareto <- function(x,n1,n2){
 #' @return Pareto optimality
 #' @export
 #'
-#' @examples
 calc_Ri <- function(x,n1,n2){
   
   #Standard optimality, get the rankings of each point on the grid
