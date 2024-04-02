@@ -44,6 +44,7 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/NewPlots.html">Plotting</a>
     <a class="dropdown-item" href="../articles/Pareto.html">Pareto</a>
   </div>
 </li>
@@ -94,9 +95,9 @@ well as some core functions of the package!</p>
 </h3>
 <p>Morphospace was originally built to produce functional adaptive
 landscapes, marrying phenotypic data (morphospace) and performance data.
-This illustrates one way of thinknig about optimality as it concerns
-adaptive landscapes: which traits, and in what combinations, do
-particular morphologies optimize?</p>
+This illustrates one way of thinking about optimality as it concerns
+adaptive landscapes: which traits, and in what combinations, are
+particular morphologies optimized for?</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"turtles"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"warps"</span><span class="op">)</span></span>
@@ -159,7 +160,7 @@ morphospace, the ‘Pareto optimal’ points fall along the top left edge of
 the plot.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Compute Pareto landscape for two traits</span></span>
-<span><span class="va">KrSurfParOpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://blakedickson.github.io/Morphoscape/reference/calc_lscp_Pareto.html">calc_lscp_Pareto</a></span><span class="op">(</span><span class="va">kr_surf</span>,<span class="st">'hydro'</span>,<span class="st">'curve'</span><span class="op">)</span></span>
+<span><span class="va">KrSurfParOpt</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_lscp_Pareto.html">calc_lscp_Pareto</a></span><span class="op">(</span><span class="va">kr_surf</span>,<span class="st">'hydro'</span>,<span class="st">'curve'</span><span class="op">)</span></span>
 <span><span class="co"># Plot trade-offs between the traits</span></span>
 <span><span class="fu"><a href="../reference/plot_ggtrade.html">plot_ggtrade</a></span><span class="op">(</span><span class="va">KrSurfParOpt</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Pareto_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;"></p>
@@ -182,42 +183,45 @@ as shown below.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#########</span></span>
 <span><span class="co"># Plot individual group landscapes</span></span>
-<span><span class="fu"><a href="../reference/plot_ggsurf.html">plot_ggsurf</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'M'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Pareto_files/figure-html/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_ggsurf.html">plot_ggsurf</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'S'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Pareto_files/figure-html/unnamed-chunk-6-2.png" width="768" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/plot_ggsurf.html">plot_ggsurf</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'M'</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/plot_ggsurf.html">plot_ggsurf</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'S'</span><span class="op">)</span></span>
+<span></span>
 <span><span class="co"># Calculate Pareto landscape based on functional landscapes</span></span>
-<span><span class="va">Lscp_Pareto_MS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://blakedickson.github.io/Morphoscape/reference/calc_lscp_Pareto.html">calc_lscp_Pareto</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'M'</span>,<span class="st">'S'</span><span class="op">)</span></span>
+<span><span class="va">Lscp_Pareto_MS</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calc_lscp_Pareto.html">calc_lscp_Pareto</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'M'</span>,<span class="st">'S'</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">Lscp_Pareto_MS</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       Length Class      Mode     </span></span>
 <span><span class="co">#&gt; grid  5      data.frame list     </span></span>
 <span><span class="co">#&gt; names 2      -none-     character</span></span>
 <span><span class="co"># Plot trade-offs between landscape heights</span></span>
 <span><span class="fu"><a href="../reference/plot_ggtrade.html">plot_ggtrade</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'M'</span>,<span class="st">'S'</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Pareto_files/figure-html/unnamed-chunk-6-3.png" width="768" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p><img src="Pareto_files/figure-html/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot Pareto landscape between landscape heights</span></span>
 <span><span class="fu"><a href="../reference/plot_ggPareto.html">plot_ggPareto</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'M'</span>,<span class="st">'S'</span><span class="op">)</span></span>
 <span><span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span></span></code></pre></div>
-<p><img src="Pareto_files/figure-html/unnamed-chunk-6-4.png" width="768" style="display: block; margin: auto;"></p>
+<p><img src="Pareto_files/figure-html/unnamed-chunk-6-2.png" width="768" style="display: block; margin: auto;"></p>
 <p>We can even do all of that with just one function!</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_lscp_Pareto.html">plot_lscp_Pareto</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'M'</span>,<span class="st">'S'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: patchwork</span></span>
-<span><span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span></span></code></pre></div>
+<span><span class="co">#&gt; [[1]]</span></span></code></pre></div>
 <p><img src="Pareto_files/figure-html/unnamed-chunk-7-1.png" width="768" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span></span></code></pre>
+<p><img src="Pareto_files/figure-html/unnamed-chunk-7-2.png" width="768" style="display: block; margin: auto;"></p>
 <p>It should be noted that there may be times where the shape of the
 performance surfaces or adaptive landscapes are such that a smooth
 transition between optima is not possible. The example below
 demonstrates this for two other adaptive landscapes from the turtle
 dataset: marine and terrestrial.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_lscp_Pareto.html">plot_lscp_Pareto</a></span><span class="op">(</span><span class="va">wprime_by_Group</span>,<span class="st">'M'</span>,<span class="st">'T'</span><span class="op">)</span></span>
-<span><span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span></span></code></pre></div>
+<span><span class="co">#&gt; [[1]]</span></span></code></pre></div>
 <p><img src="Pareto_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;"></p>
+<pre><code><span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span></span></code></pre>
+<p><img src="Pareto_files/figure-html/unnamed-chunk-8-2.png" width="768" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
