@@ -7,10 +7,10 @@
 Interpolate functional characteristics over a grid
 }
 \description{
-\code{krige_surf()} performs kriging (i.e., interpolation) of one or more functional characteristics that are spatially distributed over a morphospace to create a smoothly kriged surface. Interpolated values can also be produced for a new dataset given their coordinates in morphological space.
+\code{krige_surf()} performs automatic or manual kriging (i.e., interpolation) of one or more functional characteristics that are spatially distributed over a morphospace to create a smoothly kriged surface. Interpolated values can also be produced for a new dataset given their coordinates in morphological space.
 }
 \usage{
-krige_surf(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = NULL, 
+krige_surf(fnc_df, vgm = NULL, grid = NULL, resample = 100, padding = 1.2, hull = NULL, 
   alpha = 1, new_data = NULL)
            
   
@@ -20,9 +20,16 @@ krige_new_data(x, new_data)
   \item{fnc_df}{
 a \code{fnc_df} object; the output of a call to \code{\link{as_fnc_df}}, which contains coordinates in morphological space and values of functional characteristics for the warps used to create the kriged surface.
 }
+
+  \item{vgm}{
+a user supplied list of variogram models generated from \code{\link{gstat::vgm()}}. When this is supplied, a manual kriging is performed using \code{\link{gstat::krige}}. Else, \code{autoKrige} is called. When supplied, list length should match the number of variables
+  }
+  
   \item{grid}{
 a matrix or data frame containing the grid of points over which the surface is to be interpolated. Should be the output of a call to \code{\link{resample_grid}}. If \code{NULL}, the grid will be formed by calling \code{resample_grid()} on the inputs.
 }
+
+
   \item{resample}{
 the number of points (or pixels) in the x and y dimensions over which to create the grid. Default is 100 for a kriged surface of 100x100=10,000 pixels. Passed to \code{\link{resample_grid}}. Ignored when \code{grid} is not \code{NULL}.
 }
@@ -39,6 +46,10 @@ the alpha value used to create the alpha hull. Passed to \code{\link{resample_gr
   \item{new_data}{
 a dataset of coordinates for a new sample; the values of the functional characteristics for this sample will be interpolated using the kriged surface.
 }
+
+
+    \item{debug}{
+shows all warnings called from autoKrige. Only used for debugging purposes}
   \item{x}{
 a \code{"kriged_surfaces"} object; the output of a call to \code{krige_surf()}.
 }

@@ -1,4 +1,4 @@
-krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull = NULL, alpha = 1, new_data = NULL){
+krige_surf <- function(fnc_df, vgm = NULL, grid = NULL, resample = 100, padding = 1.2, hull = NULL, alpha = 1, new_data = NULL, debug = FALSE){
   
   if (!inherits(fnc_df, "fnc_df")) {
     stop("'fnc_df' must be a fnc_df object, the output of a call to fnc.dataframe().", call. = FALSE)
@@ -23,11 +23,47 @@ krige_surf <- function(fnc_df, grid = NULL, resample = 100, padding = 1.2, hull 
   
   #Creates a krige of the full grid in grid2D based on the original data
   #in fnc_df for each functional characteristic
-  krige_grid <- lapply(func.names, function(i) {
+  
+  #user supplied variograms
+  if(!is.null(vgm)){
+    
+    if(!is.list(vgm)) stop("vgm is not a list")
+    if(length(vgm) != length(func.names)) stop("vgm list is not of the same length as variables")
+
+    if(is.null(names))   names(vgm) <- func.names
+
+
+    krige_grid <- lapply(func.names, function(i) {
+      d <- as.data.frame(fnc_df[c("x", "y", i)])
+      m <- vgm[[i]]
+      sp::coordinates(d) <- ~x+y
+      
+
+      krige(z~1, locations = d, newdata = grid2D)
+
+    })
+    
+    
+    
+    
+  }
+  else{krige_grid <- lapply(func.names, function(i) {
     d <- as.data.frame(fnc_df[c("x", "y", i)])
     sp::coordinates(d) <- 1:2
-    suppressWarnings(automap::autoKrige(d, new_data = grid2D))
+    if(debug){
+      
+      automap::autoKrige(d, new_data = grid2D, verbose = T)
+      
+    } else{
+      
+      suppressWarnings(automap::autoKrige(d, new_data = grid2D))
+      
+    }
   })
+  }
+  
+  
+  
   names(krige_grid) <- func.names
   
   #Extracts interpolated values from grid krige for each functional characteristic
