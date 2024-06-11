@@ -1,11 +1,11 @@
 pandoc: 3.1.11
-pkgdown: 2.0.7
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   Morphoscape: Morphoscape.html
   NewPlots: NewPlots.html
   Pareto: Pareto.html
-last_built: 2024-04-02T04:45Z
+last_built: 2024-06-11T10:07Z
 urls:
   reference: https://blakedickson.github.io/Morphoscape/reference
   article: https://blakedickson.github.io/Morphoscape/articles
