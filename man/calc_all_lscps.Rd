@@ -29,7 +29,9 @@ Because the resulting objects are so large, it can be a good idea to save them a
 \value{
 An \code{all_lscps} object containing the following components:
 \item{dataframe}{a list of the \code{grid} and \code{new_data} data frames stored in \code{kr_data}.}
-\item{wtd_lscps}{a list containing the weightred fitness values for each set of weights for the \code{grid} and \code{new_data} datasets. These are stored in matrices with a row for each data point in \code{grid} and \code{new_data} and a column for each set of weights.}
+\item{wtd_lscps}{a list containing the normalized weighted fitness values for each set of weights for the \code{grid} and \code{new_data} datasets. These are stored in matrices with a row for each data point in \code{grid} and \code{new_data} and a column for each set of weights. Values are normalized 0-1}
+\item{raw_lscps}{a list containing the raw weighted fitness values for each set of weights for the \code{grid} and \code{new_data} datasets. These are stored in matrices with a row for each data point in \code{grid} and \code{new_data} and a column for each set of weights.}
+
 \item{grid_weights}{the \code{grid_weights} object supplied to \code{grid_weights}.}
 }
 

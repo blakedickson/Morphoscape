@@ -22,10 +22,19 @@ calc_all_lscps <- function(kr_data, grid_weights, file = NULL){
   
   wtd_lscps <- lapply(kr_data$dataframes, function(x) {
     as.matrix(x[func.names]) %*% t(grid_weights)
+    
   })
+  
+  norm_lscps <- lapply(wtd_lscps, function(x){
+      apply(as.matrix(x),2, scale.z)
+      
+    })
+    
+
 
   all_lscps <- list(dataframes = kr_data$dataframes, 
-                    wtd_lscps = wtd_lscps,
+                    wtd_lscps = norm_lscps,
+                    raw_lscps = wtd_lscps,
                     grid_weights = grid_weights)
   
   class(all_lscps) <- "all_lscps"
